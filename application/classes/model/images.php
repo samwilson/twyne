@@ -7,7 +7,12 @@ class Model_Images extends ORM {
 	protected $_table_name = 'images';
 
 	protected $_has_many = array(
-		'tags'=>array('model'=>'tags', 'through'=>'tags_to_images', 'far_key'=>'tag', 'foreign_key'=>'image'),
+		'tags'=>array(
+			'model'=>'tags',
+			'through'=>'image_tags',
+			'far_key'=>'tag',
+			'foreign_key'=>'image'
+		),
 	);
 
 	protected $_belongs_to = array(

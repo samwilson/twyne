@@ -10,8 +10,8 @@ class Model_Images extends ORM {
 		'tags'=>array(
 			'model'=>'tags',
 			'through'=>'image_tags',
-			'far_key'=>'tag',
-			'foreign_key'=>'image'
+			'far_key'=>'tag_id',
+			'foreign_key'=>'image_id'
 		),
 	);
 

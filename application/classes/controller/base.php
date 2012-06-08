@@ -16,9 +16,6 @@ abstract class Controller_Base extends Controller_Template {
 	/** @var Model_People */
 	public $user;
 
-	/** @var boolean Whether to include the JQuery library or not. */
-	public $jquery = FALSE;
-
 	public function before()
 	{
 		parent::before();
@@ -45,7 +42,7 @@ abstract class Controller_Base extends Controller_Template {
 		if (empty($this->user))
 		{
 			$this->user = ORM::factory('People');
-			$this->user->auth_level = ORM::factory('AuthLevels', 0);
+			$this->user->auth_level = ORM::factory('AuthLevels', 1);
 		}
 		$this->template->bind_global('user', $this->user);
 
@@ -70,6 +67,7 @@ abstract class Controller_Base extends Controller_Template {
 		if ($this->user->auth_level_id >= 10)
 		{
 			$toplinks = array_merge($toplinks, array(
+				//array('url'=>'/images/upload', 'title'=>'New Image'),
 				array('url'=>'/journal/edit', 'title'=>'New Journal Entry'),
 				array('url'=>'/emails', 'title'=>'Emails'),
 				array('url'=>'/emails/inbox', 'title'=>'Inbox'),
@@ -84,7 +82,6 @@ abstract class Controller_Base extends Controller_Template {
 		/** @var string Starts with a slash. */
 		$this->selected_toplink = '/'.$this->request->controller();
 		$this->template->bind_global('selected_toplink', $this->selected_toplink);
-		$this->template->bind_global('jquery', $this->jquery);
 	}
 
 	protected function log($type, $message)

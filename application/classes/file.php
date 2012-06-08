@@ -5,10 +5,9 @@ class File extends Kohana_File
 
 	public static function check_directory($dir)
 	{
-		global $page;
 		if (!is_dir($dir))
 		{
-			if (!@mkdir($dir, 0755, true))
+			if (!@mkdir($dir, 0700, true))
 			{
 				throw new Exception('Unable to create new directory:<br />'.
 					'<code>'.$dir.'</code></p>'

@@ -33,50 +33,18 @@
 		<?php echo Form::select('author_id', $people, $image->author_id, array('id'=>'author_id')) ?>
     </p>
 	<p>
-		<?php echo Form::label('auth_level', 'Auth Level:') ?>
-		<?php echo Form::input('auth_level', $image->auth_level, array('size'=>2)) ?>
+		<?php echo Form::label('auth_level_id', 'Auth Level:') ?>
+		<?php echo Form::input('auth_level_id', $image->auth_level_id, array('size'=>2)) ?>
     </p>
 	<p>
 		<?php echo Form::textarea('caption', $image->caption) ?>
 	</p>
 	<script type="text/javascript">
-	var tags=[
-		<?php foreach (ORM::factory('tags')->order_by('title')->find_all() as $tag) {echo '"'.$tag->title.'",';} ?>
-	]
-	$(function(){
-		function split(val) {
-			return val.split(/,\s*/);
-		}
-		function extractLast(term) {
-			return split(term).pop();
-		}
-		$("#tags").autocomplete({
-			minLength: 0,
-			source: function(request, response) {
-				// delegate back to autocomplete, but extract the last term
-				response($.ui.autocomplete.filter(tags, extractLast(request.term)));
-			},
-			focus: function() {
-				// prevent value inserted on focus
-				return false;
-			},
-			select: function(event, ui) {
-				var terms = split( this.value );
-				// remove the current input
-				terms.pop();
-				// add the selected item
-				terms.push( ui.item.value );
-				// add placeholder to get the comma-and-space at the end
-				terms.push("");
-				this.value = terms.join(", ");
-				return false;
-			}
-		});
-	});
+	var tags = ["<?php echo ORM::factory('Tags')->get_list(TRUE) ?>"]
 	</script>
 	<p>
 		<label for="tags">Tags:</label>
-		<input id="tags" type="text" name="tags" value="<?php echo $image->tags->get_list() ?>" />
+		<input id="tags" type="text" name="tags" value="<?php echo htmlspecialchars($image->tags->get_list(FALSE)) ?>" />
 	</p>
     <p>
         <label for="licence_id">Licence:</label>

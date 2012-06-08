@@ -68,7 +68,7 @@ class Controller_Blog extends Controller_Base {
 		$imgs = ORM::factory('images')
 				->or_where_open()
 				->where('auth_level_id', '<=', $this->user->auth_level)
-				->or_where('auth_level_id', '=', 0)
+				->or_where('auth_level_id', '=', 1)
 				->or_where_close()
 				->and_where(DB::expr('YEAR(date_and_time)'), '=', $this->view->current_year)
 				->and_where(DB::expr('MONTH(date_and_time)'), '=', $this->view->current_month_number)
@@ -83,7 +83,7 @@ class Controller_Blog extends Controller_Base {
 		$jes = ORM::factory('JournalEntries')
 				->or_where_open()
 				->where('auth_level_id', '<=', $this->user->auth_level)
-				->or_where('auth_level_id', '=', 0)
+				->or_where('auth_level_id', '=', 1)
 				->or_where_close()
 				->and_where(DB::expr('YEAR(date_and_time)'), '=', $this->view->current_year)
 				->and_where(DB::expr('MONTH(date_and_time)'), '=', $this->view->current_month_number)
@@ -123,10 +123,12 @@ class Controller_Blog extends Controller_Base {
 
 	public function action_tag()
 	{
+		$this->view = View::factory('blog/index');
+		$this->template->content = $this->view;
 
 		$sql = "SELECT DATE_FORMAT(date_and_time, '%Y') AS year FROM images
-            UNION SELECT DATE_FORMAT(date_and_time, '%Y') AS year FROM journal_entries
-            GROUP BY YEAR(date_and_time) ORDER BY year DESC";
+			UNION SELECT DATE_FORMAT(date_and_time, '%Y') AS year FROM journal_entries
+			GROUP BY YEAR(date_and_time) ORDER BY year DESC";
 		$this->view->years = Database::instance()->query(Database::SELECT, $sql, TRUE);
 
 		$tag = urldecode($this->request->param('tag', FALSE));
@@ -134,7 +136,7 @@ class Controller_Blog extends Controller_Base {
 		$imgs = ORM::factory('images')
 				->or_where_open()
 				->where('auth_level_id', '<=', $this->user->auth_level)
-				->or_where('auth_level_id', '=', 0)
+				->or_where('auth_level_id', '=', 1)
 				->or_where_close()
 				->join('image_tags')->on('image_id', '=', 'images.id')
 				->join('tags')->on('tag_id', '=', 'tags.id')
@@ -144,13 +146,13 @@ class Controller_Blog extends Controller_Base {
 		$item_id = 1;
 		foreach ($imgs as $img)
 		{
-			$images[$img->date_and_time.' '.$item_id] = $img;
+			$images[$img->date_and_time.$item_id.'i'] = $img;
 			$item_id++;
 		}
 		$jes = ORM::factory('JournalEntries')
 				->or_where_open()
 				->where('auth_level_id', '<=', $this->user->auth_level)
-				->or_where('auth_level_id', '=', 0)
+				->or_where('auth_level_id', '=', 1)
 				->or_where_close()
 				->join('journal_entry_tags')->on('journal_entry_id', '=', 'journalentries.id')
 				->join('tags')->on('tag_id', '=', 'tags.id')
@@ -159,13 +161,12 @@ class Controller_Blog extends Controller_Base {
 		$journal_entries = array();
 		foreach ($jes as $je)
 		{
-			$journal_entries[$je->date_and_time.' '.$item_id] = $je;
+			$journal_entries[$je->date_and_time.$item_id.'je'] = $je;
 			$item_id++;
 		}
 		$this->view->items = array_merge($images, $journal_entries);
 		ksort($this->view->items);
-
-
+		
 		$this->title = 'All items tagged &lsquo;'.$tag.'&rsquo;';
 		$this->template->tag = $tag;
 	}
@@ -188,7 +189,7 @@ class Controller_Blog extends Controller_Base {
 				FROM images
 				  LEFT JOIN image_tags ON (image_tags.image_id=images.id)
 				  LEFT JOIN tags ON (tags.id=image_tags.tag_id)
-				WHERE auth_level_id = 0 AND $tag_clause
+				WHERE auth_level_id = 1 AND $tag_clause
 				ORDER BY date_and_time DESC
 				LIMIT 10) as x
 			UNION
@@ -201,7 +202,7 @@ class Controller_Blog extends Controller_Base {
 				FROM journal_entries
 				  LEFT JOIN journal_entry_tags ON (journal_entry_tags.journal_entry_id=journal_entries.id)
 				  LEFT JOIN tags ON (tags.id=journal_entry_tags.tag_id)
-				WHERE auth_level_id = 0 AND $tag_clause
+				WHERE auth_level_id = 1 AND $tag_clause
 				ORDER BY date_and_time DESC
 				LIMIT 10)
 			ORDER BY date_and_time DESC", TRUE

@@ -11,15 +11,16 @@ class Model_Tags extends ORM {
 		'journal_entries'=>array('model'=>'journal_entries', 'through'=>'tags_to_journal_entries', 'far_key'=>'journal_entry', 'foreign_key'=>'tag'),
 	);
 
-	public function get_list()
+	public function get_list($quoted)
 	{
 		$out = array();
 		$tags = $this->order_by('name')->find_all();
 		foreach ($tags as $tag)
 		{
-			$out[] = $tag->name;
+			$out[] = ($quoted) ? addcslashes($tag->name, '"') : $tag->name;
 		}
-		return implode(', ', $out);
+		$glue = ($quoted) ? '", "' : ', ';
+		return implode($glue, $out);
 	}
 
 }

@@ -40,6 +40,8 @@ $email_config = array(
  */
 define('TWYNE_USER_ID', 1);
 
+define('RST2HTML_CMD', '/usr/bin/rst2html');
+
 define('KOHANA_LANG', 'en-au');
 
 define('KOHANA_ENV', 'production');

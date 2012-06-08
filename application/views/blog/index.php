@@ -73,14 +73,13 @@
 		{
 			$item_controller_name = 'journal';
 			if (!empty($item->title)) echo '<h2>'.HTML::anchor('journal/view/'.$item->id, $item->title).'</h2>';
-			//echo '<div class="date_and_time">'.date('j F Y', strtotime($item->date_and_time)).'</div>';
 			echo '<div class="prose">'.Text::typeset($item->entry_text).'</div>';
 		}
 		?>
 
 		<p class="metadata">&middot; <?php
 				echo HTML::anchor($item_controller_name.'/view/'.$item->id, $item->date_and_time, array('title'=>'Permalink'));
-				if($user->auth_level->id > 0) echo ' &middot; Auth level '.$item->auth_level->name.'.';
+				if($user->auth_level->id > 1) echo ' &middot; Auth level '.$item->auth_level->name.'.';
 				if ($user->auth_level->id >= 10)
 				{
 					echo ' &middot; '.HTML::anchor($item_controller_name.'/edit/'.$item->id.'#form', 'Edit');

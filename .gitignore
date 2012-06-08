@@ -1,3 +1,5 @@
 nbproject
 .htaccess
 config.php
+application/cache/*
+application/logs/*

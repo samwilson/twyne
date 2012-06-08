@@ -11,18 +11,18 @@
         &middot;
     </p>
 
-	<?php if (count($tags = $image->tags->order_by('title')->find_all()) > 0): ?>
+	<?php if (count($tags = $image->tags->order_by('name')->find_all()) > 0): ?>
 	<p class="tags">&middot;
 			<?php foreach ($tags as $tag): ?>
-				<?php echo HTML::anchor('tag/'.urlencode($tag->title), $tag->title, array('rel'=>'tag')) ?> &middot;
+				<?php echo HTML::anchor('tag/'.urlencode($tag->name), $tag->name, array('rel'=>'tag')) ?> &middot;
 			<?php endforeach ?>
 	</p>
 	<?php endif ?>
 
 	<p>
-		<?php if($user->auth_level > 0) echo " &middot; Auth level $image->auth_level." ?>
+		<?php if($user->auth_level_id > 1) echo " &middot; Auth level $image->auth_level_id." ?>
 		<?php
-		if ($user->auth_level >= 10)
+		if ($user->auth_level_id >= 10)
 			echo ' &middot; '.HTML::anchor('images/edit/'.$image->id.'#form', 'Edit')
 				.' &middot; '.HTML::anchor('images/delete/'.$image->id, 'Delete')
 		?>

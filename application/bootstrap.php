@@ -50,7 +50,7 @@ Kohana::modules(array(
  * Set the routes. Each route must have a minimum of a name, a URI and a set of
  * defaults for the URI.
  */
-$months = '(month-not-known|January|February|March|April|May|June|July|August|September|October|November|December)';
+$months = '(unknown|January|February|March|April|May|June|July|August|September|October|November|December)';
 Route::set('blog', 'blog/(<year>(/<month>))', array(
 	'year'=>'[0-9]{1,4}',
 	'month'=>$months,

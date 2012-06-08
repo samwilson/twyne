@@ -23,7 +23,7 @@
 	echo HTML::anchor($uri,$title, $attrs);
 	?> &middot;</p>
 
-	<?php if ($user->auth_level->id > 0): ?>
+	<?php if ($user->auth_level->id > 1): ?>
 	<p>
 		&middot;
 		Auth level <?php echo $entry->auth_level->id ?>

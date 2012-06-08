@@ -123,7 +123,10 @@ class Model_Images extends ORM {
 			throw new Kohana_Exception($msg);
 		}
 
-		$thumb = DATAPATH.'images/thumb/'.$this->id.'.jpg';
+		// Make thumbnail
+		$thumbdir = DATAPATH.'images/thumb';
+		File::check_directory($thumbdir);
+		$thumb = $thumbdir.'/'.$this->id.'.jpg';
 		if (!file_exists($thumb) || $force)
 		{
 			$image = Image::factory($full);
@@ -134,7 +137,10 @@ class Model_Images extends ORM {
 			}
 		}
 
-		$view = DATAPATH.'images/view/'.$this->id.'.jpg';
+		// Make view-size
+		$viewdir = DATAPATH.'images/view';
+		File::check_directory($viewdir);
+		$view = $viewdir.'/'.$this->id.'.jpg';
 		if (!file_exists($view) || $force)
 		{
 			$image = Image::factory($full);

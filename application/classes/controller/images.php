@@ -23,8 +23,8 @@ class Controller_Images extends Controller_Base {
 		$this->view->images = ORM::factory('images')
 				->where(DB::expr('YEAR(date_and_time)'), '=', $this->view->year)
 				->and_where_open()
-				->where('auth_level_id', '>=', $this->user->auth_level)
-				->or_where('auth_level_id', '=', 0)
+				->where('auth_level_id', '<=', $this->user->auth_level)
+				->or_where('auth_level_id', '=', 1)
 				->and_where_close()
 				->order_by('date_and_time', 'ASC')
 				->find_all();
@@ -55,16 +55,21 @@ class Controller_Images extends Controller_Base {
 		$this->request->redirect('blog/'.$year);
 	}
 
-	public function action_render($id, $size = 'view')
+	public function action_render()
 	{
-		$image = ORM::factory('images')
-				->or_where_open()
-				->where('auth_level', '<=', $this->user->auth_level)
-				->or_where('auth_level', '=', 0)
-				->or_where_close()
-				->find($id);
+		$id = $this->request->param('id');
+		$size = $this->request->param('format');
+		$image = ORM::factory('Images')
+				->where('id', '=', $id)
+				->and_where_open()
+				->where('auth_level_id', '<=', $this->user->auth_level_id)
+				->or_where('auth_level_id', '=', 1)
+				->and_where_close()
+				->find();
 		if ($size != 'full' && $size != 'thumb')
+		{
 			$size = 'view';
+		}
 		if ($image->loaded())
 		{
 			$filename = DATAPATH."images/$size/$image.jpg";
@@ -72,57 +77,19 @@ class Controller_Images extends Controller_Base {
 			{
 				$image->make_smaller_versions();
 			}
-			$this->request->send_file($filename, NULL, array('inline'=>TRUE));
-
-//			$this->request->headers['Content-Type'] = "image/jpeg";
-//			$this->request->headers['Content-Disposition'] = "attachment; filename=\"$filename\"";
-//			$this->request->headers['X-Sendfile'] = $filename;
-//			$this->request->headers['Content-length'] = filesize($filename);
-//			$this->request->response = '';
+			$this->response->send_file($filename, NULL, array('inline'=>TRUE));
 		}
 		else
 		{
 			$this->add_template_message("Image #$id could not be found; "
 					."perhaps you do not have permission to view it?");
 		}
-
-//		$image = new Model_Image($id);
-//		$user = new Model_User();
-//
-//		if ( $image->auth_level == 0 || Auth::instance()->logged_in($image->required_role) )
-//		{
-//			$this->request->send_file($image->get_filename($size), NULL, array('inline'=>TRUE));
-//		} else
-//		{
-//			exit('Access Denied');
-//		}
-
-		/* $filename = DATAPATH."/images/$size/$id.jpg";
-		  if (file_exists($filename))
-		  {
-		  $image_data = $db->fetchRow("SELECT * FROM images WHERE id='".$db->esc($_GET['id'])."' LIMIT 1");
-		  if ( $image_data['auth_level'] == 0
-		  || $image_data['auth_level'] <= $auth->getAuthData('auth_level') )
-		  {
-		  $length = filesize($filename);
-		  header('Content-type: image/jpeg');
-		  header('Content-Length: '.$length);
-		  header('Content-Disposition: inline; filename="image-'.basename($filename).'"');
-		  readfile($filename);
-		  die();
-		  } else
-		  {
-		  die("Access denied.");
-		  }
-		  } else
-		  {
-		  exit("Image not found: $filename");
-		  } */
 	}
 
-	public function action_edit($id)
+	public function action_edit()
 	{
-		if ($this->user->auth_level < 10)
+		$id = $this->request->param('id');
+		if ($this->user->auth_level_id < 10)
 		{
 			$this->add_flash_message('You are not allowed to edit images.');
 			$this->request->redirect('images');
@@ -131,8 +98,8 @@ class Controller_Images extends Controller_Base {
 		if (!$this->view->image->loaded())
 		{
 			$this->add_flash_message('The requested image could not be found.', 'error');
-			$this->request->status = 404;
-			$this->request->redirect('images');
+			$this->response->status(404);
+			$this->response->body('Not Found');
 		}
 		$this->template->title = $this->title = "Editing Image #".$this->view->image->id;
 		$this->jquery = TRUE;
@@ -148,7 +115,7 @@ class Controller_Images extends Controller_Base {
 		// Authors
 		$this->view->people = array();
 		$people = ORM::factory('People')
-				->order_by('auth_level', 'DESC')->order_by('name', 'ASC')
+				->order_by('auth_level_id', 'DESC')->order_by('name', 'ASC')
 				->find_all();
 		foreach ($people as $person)
 		{
@@ -170,78 +137,61 @@ class Controller_Images extends Controller_Base {
 		$this->view->accession_next = ORM::factory('images')
 						->where('id', '>', $this->view->image->id)
 						->order_by('id', 'ASC')->limit(1)->find();
-
-		/*
-		  $fullFilePath = DATADIR.'/images/full/'.$this_image['id'].'.jpg';
-		  if (file_exists($fullFilePath))
-		  {
-		  if ($exifData = @exif_read_data($fullFilePath))
-		  {
-		  foreach ($exifData as $name=>$value)
-		  {
-		  $page->addBodyContent("<tr><th>$name</th><td>$value</td></tr>");
-		  }
-		  } else
-		  {
-		  $page->addBodyContent("<tr><th>Error:</th><td>Could not read EXIF data.</td></tr>");
-		  }
-		  }
-		  $page->addBodyContent("</table></div>");
-		 *
-		 */
 	}
 
-	/* public function action_upload()
-	  {
-	  if (isset($_POST['upload_image']))
-	  {
-	  require_once "HTTP/Upload.php";
-	  $uploadTo = DATADIR.'/images/IN';
-	  checkDirectory($uploadTo);
-	  $upload = new HTTP_Upload('en');
-	  $file = $upload->getFiles('image');
-	  if ($file->isValid())
-	  {
-	  $moved = $file->moveTo($uploadTo, false);
-	  if (PEAR::isError($moved))
-	  {
-	  $page->addBodyContent("<p class='message error'>Could not move uploaded file.<br />".$moved->getMessage()."</p>");
-	  $page->display();
-	  die();
-	  }
-	  } elseif ($file->isError())
-	  {
-	  $page->addBodyContent("<p class='message error'>File is erroneous.<br />".$file->getMessage()."</p>");
-	  $page->display();
-	  die();
-	  } elseif ($file->isMissing())
-	  {
-	  $page->addBodyContent("<p class='message error'>File is missing.<br />".$file->getMessage()."</p>");
-	  } else
-	  {
-	  die(var_dump($file->getProp()));
-	  $uploadedImageFilename = "$uploadTo/".$file->getProp('tmp_name');
-	  if (!realpath($uploadedImageFilename))
-	  {
-	  $page->addBodyContent("<p class='message error'>Can't see $uploadedImageFilename</p>");
-	  $page->display();
-	  die();
-	  }
-	  $page->addBodyContent("<p class='notice message'>Uploading $uploadedImageFilename</p>");
-	  $id = importImage($uploadedImageFilename);
-	  header("Location:?action=edit_image&id=$id");
-	  die();
-	  }
-	  }
-
-	  } */
+	public function action_upload()
+	{
+//		$this->template->title = 'Upload Images';
+//		if (isset($_POST['upload_image']))
+//		{
+//			require_once "HTTP/Upload.php";
+//			$uploadTo = DATADIR.'/images/IN';
+//			$upload = new HTTP_Upload('en');
+//			$file = $upload->getFiles('image');
+//			if ($file->isValid())
+//			{
+//				$moved = $file->moveTo($uploadTo, false);
+//				if (PEAR::isError($moved))
+//				{
+//					$msg = 'Could not move uploaded file.<br />'.$moved->getMessage();
+//					$this->add_template_message($msg);
+//					return;
+//				}
+//			}
+//			elseif ($file->isError())
+//			{
+//				$msg = 'File is erroneous.<br />'.$file->getMessage();
+//				$this->add_template_message($msg);
+//				return;
+//			}
+//			elseif ($file->isMissing())
+//			{
+//				$page->addBodyContent("<p class='message error'>File is missing.<br />".$file->getMessage()."</p>");
+//			}
+//			else
+//			{
+//				die(var_dump($file->getProp()));
+//				$uploadedImageFilename = "$uploadTo/".$file->getProp('tmp_name');
+//				if (!realpath($uploadedImageFilename))
+//				{
+//					$page->addBodyContent("<p class='message error'>Can't see $uploadedImageFilename</p>");
+//					$page->display();
+//					die();
+//				}
+//				$page->addBodyContent("<p class='notice message'>Uploading $uploadedImageFilename</p>");
+//				$id = importImage($uploadedImageFilename);
+//				header("Location:?action=edit_image&id=$id");
+//				die();
+//			}
+//		}
+	}
 
 	/**
 	 * Process a single image from the IN directory.
 	 */
 	public function action_process()
 	{
-		if ($this->user->auth_level < 10 && !Kohana::$is_cli)
+		if ($this->user->auth_level_id < 10 && !Kohana::$is_cli)
 		{
 			$this->add_flash_message('You are not allowed to process images.');
 			$this->request->redirect('images');
@@ -254,7 +204,8 @@ class Controller_Images extends Controller_Base {
 				continue;
 			}
 			$fullname = $images_in_dir.'/'.$file;
-			$image = ORM::factory('images');
+			$image = ORM::factory('Images');
+			$image->author = $this->user;
 			$image->import($fullname);
 			break;
 		}
@@ -281,8 +232,11 @@ class Controller_Images extends Controller_Base {
 		if (is_dir($inDir))
 		{
 			$pendingCount = count(preg_grep("/^[^\.]/", scandir($inDir)));
+		} else {
+			$msg = "Unable to find $inDir";
+			$this->add_template_message($msg);
 		}
-		if ($pendingCount > 0 && $this->user->auth_level >= 10)
+		if ($pendingCount > 0 && $this->user->auth_level_id >= 10)
 		{
 			$this->add_template_message("$pendingCount images remain to be "
 					."accessioned.  ".html::anchor('images/process', 'Process one.'));
@@ -334,21 +288,21 @@ class Controller_Images extends Controller_Base {
 	public function action_save()
 	{
 
-		if (isset($_POST['save_image']) && $this->user->auth_level >= 10)
+		if (isset($_POST['save_image']) && $this->user->auth_level_id >= 10)
 		{
 			$image = ORM::factory('images', $_POST['id']);
 
 			// Save tags
 			$tags = array_unique(array_map('trim', explode(',', $_POST['tags'])));
-			DB::delete('tags_to_images')->where('image', '=', $image->id)->execute();
-			foreach ($tags as $tag_title)
+			DB::delete('image_tags')->where('image_id', '=', $image->id)->execute();
+			foreach ($tags as $tag_name)
 			{
-				if (!empty($tag_title))
+				if (!empty($tag_name))
 				{
-					$tag = ORM::factory('tags', array('title'=>$tag_title));
+					$tag = ORM::factory('tags')->where('name', '=', $tag_name)->find();
 					if (!$tag->loaded())
 					{
-						$tag->title = $tag_title;
+						$tag->name = $tag_name;
 					}
 					$tag->save();
 					$image->add('tags', $tag);
@@ -356,7 +310,12 @@ class Controller_Images extends Controller_Base {
 			}
 
 			// Save image data.
-			if ($image->save_from_post())
+			$image->date_and_time = $_POST['date_and_time'];
+			$image->caption = $_POST['caption'];
+			$image->auth_level_id  = $_POST['auth_level_id'];
+			$image->author_id  = $_POST['author_id'];
+			$image->licence_id   = $_POST['licence_id'];
+			if ($image->save())
 			{
 				$this->add_flash_message('Image #'.$image->id.' saved.', 'success');
 				if (isset($_POST['save_and_edit']))
@@ -380,22 +339,24 @@ class Controller_Images extends Controller_Base {
 		}
 	}
 
-	public function action_view($id = NULL)
+	public function action_view()
 	{
+		$id = $this->request->param('id');
 		// If no image ID specified, redirect.
 		if ($id == NULL)
 			$this->request->redirect('images');
 		$this->view->image = ORM::factory('images')
 				->where('id', '=', $id)
 				->and_where_open()
-				->where('auth_level', '<=', $this->user->auth_level)
-				->or_where('auth_level', '=', 0)
+				->where('auth_level_id', '<=', $this->user->auth_level_id)
+				->or_where('auth_level_id', '=', 1)
 				->and_where_close()
 				->find();
 		if (!$this->view->image->loaded())
 		{
-			$this->add_flash_message('The requested image could not be found.', 'error');
-			$this->request->redirect('images');
+			$this->response->status(404);
+			$this->add_template_message('The requested image could not be found.');
+			$this->template->content = NULL;
 		}
 		$this->template->title = "Image #".$this->view->image->id;
 	}

@@ -20,14 +20,12 @@
 		<?php endif ?>
 
 		<?php
-		if ($jquery)
-			echo HTML::style('http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/themes/humanity/jquery-ui.css')."\n\t\t"
-			.HTML::script('http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js')."\n\t\t"
-			.HTML::script('http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui.min.js')."\n\t\t"
-			.HTML::script('resources/js/scripts.js')."\n\t\t"
-			?>
-
-		<?php echo HTML::style('resources/css/style.css')."\n\t\t" ?>
+		echo HTML::style('resources/css/jquery-ui/jquery-ui-1.8.20.custom.css')."\n\t\t"
+		.HTML::style('resources/css/style.css')."\n\t\t"
+		.HTML::script('resources/js/jquery-1.7.2.min.js')."\n\t\t"
+		.HTML::script('resources/js/jquery-ui-1.8.20.custom.min.js')."\n\t\t"
+		.HTML::script('resources/js/scripts.js')."\n\t\t";
+		?>
 		<!-- Background images included here for portability. -->
 		<style type="text/css">
 			#openid_identifier { background-image: url("<?php echo URL::site('resources/img/openid.gif') ?>") }
@@ -48,20 +46,14 @@
 
 				<ol class="tabs" id="toplinks">
 					<?php foreach ($toplinks as $link): ?>
-						<?php if ($link['url'] == $selected_toplink): ?>
-							<li class="selected">
-								<a><?php echo $link['title'] ?></a>
-							</li>
-						<?php else: ?>
-							<li>
-								<?php echo HTML::anchor($link['url'], $link['title']) ?>
-							</li>
-						<?php endif ?>
+						<li class="<?php if ($link['url'] == $selected_toplink) echo 'selected' ?>">
+						<?php echo HTML::anchor($link['url'], $link['title']) ?>
+						</li>
 					<?php endforeach ?>
-                </ol>
-            </div>
+				</ol>
+			</div>
 
-            <div id="view">
+			<div id="view">
 
 				<?php if (count($messages) > 0): ?>
 					<ul class="messages noprint">

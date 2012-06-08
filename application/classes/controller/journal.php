@@ -8,7 +8,6 @@ class Controller_Journal extends Controller_Base {
 	{
 		parent::before();
 		$this->template->title = 'Journal';
-		$this->jquery = TRUE;
 	}
 
 	public function action_edit()
@@ -33,6 +32,7 @@ class Controller_Journal extends Controller_Base {
 			{
 				$_POST['title'] = NULL;
 			}
+			$_POST['auth_level_id'] = (int) $_POST['auth_level_id'];
 			$expected = array('date_and_time', 'title', 'auth_level_id', 'entry_text');
 			$entry->values($_POST, $expected);
 			if ($entry->check())
@@ -76,7 +76,7 @@ class Controller_Journal extends Controller_Base {
 				->where(DB::expr('YEAR(date_and_time)'), '=', $this->view->year)
 				->and_where_open()
 				->where('auth_level_id', '<=', $this->user->auth_level)
-				->or_where('auth_level_id', '=', 0)
+				->or_where('auth_level_id', '=', 1)
 				->and_where_close()
 				->order_by('date_and_time', 'ASC')
 				->find_all();
@@ -124,7 +124,7 @@ class Controller_Journal extends Controller_Base {
 				->where('id', '=', $id)
 				->and_where_open()
 				->where('auth_level_id', '<=', $this->user->auth_level)
-				->or_where('auth_level_id', '=', 0)
+				->or_where('auth_level_id', '=', 1)
 				->and_where_close()
 				->find();
 		if (!$entry->loaded())
@@ -136,8 +136,8 @@ class Controller_Journal extends Controller_Base {
 			//$this->response
 		}
 		$this->view->entry = $entry;
-		$this->controller_view->title = (!empty($entry->title)) ? $entry->title : 'Journal Entry #'.$entry->id;
-		$this->template->title = $this->controller_view->title;
+		$this->view->title = (!empty($entry->title)) ? $entry->title : 'Journal Entry #'.$entry->id;
+		$this->template->title = $this->view->title;
 	}
 
 }

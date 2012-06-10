@@ -22,18 +22,24 @@ foreach ($emails as $email): ?>
 $last_email = $email;
 $count++;
 endforeach;
+$subject = '';
 ?>
 
 
-<?php if ($last_email): ?>
+<?php if ($with->loaded()): ?>
 <form action="<?php echo URL::site("emails/index?year=$year&with=$with") ?>" method="post" class="email from-me">
+	
 	<p class="hide">
 		<?php
-		echo Form::hidden('to_id', $with->id)
-		.Form::hidden('last_date_and_time', $last_email->date_and_time)
-		.Form::hidden('last_body', $last_email->message_body);
+		echo Form::hidden('to_id', $with->id);
+		if ($last_email) {
+			echo Form::hidden('last_date_and_time', $last_email->date_and_time);
+			echo Form::hidden('last_body', $last_email->message_body);
+			$subject = (stristr($last_email->subject,'re')!=0) ? 'RE: '.$last_email->subject : $last_email->subject;
+		}
 		?>
 	</p>
+	
 	<p id="form">
 		<?php
 		echo Form::label('to', 'To:');
@@ -43,7 +49,7 @@ endforeach;
 	<p class="subject">
 		<?php
 		echo Form::label('subject','Subject:');
-		$subject = (stristr($last_email->subject,'re')!=0) ? 'RE: '.$last_email->subject : $last_email->subject;
+		
 		echo Form::input('subject', $subject, array('size'=>50));
 		?>
 	</p>
@@ -59,11 +65,12 @@ endforeach;
 
 <ol class="columnar">
 <?php foreach ($people as $person):
-	if (!$person->most_recent_email->loaded()) continue;
+	//if (!$person->most_recent_email->loaded()) continue;
+	$year = ($person->most_recent_email->loaded()) ? $person->most_recent_email->year() : date('Y');
 	?>
 
-<li class="<?php if (!$person->most_recent_email->from->is_main_user()) echo 'unanswered' ?>">
-	<?php echo HTML::anchor('emails/index?year='.$person->most_recent_email->year().'&with='.$person.'#most-recent', $person->name) ?>
+<li class="<?php //if (!$person->most_recent_email->from->is_main_user()) echo 'unanswered' ?>">
+	<?php echo HTML::anchor('emails/index?year='.$year.'&with='.$person.'#most-recent', $person->name) ?>
 </li>
 
 <?php endforeach ?>

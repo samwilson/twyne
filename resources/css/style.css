@@ -186,7 +186,9 @@ color: blue }
     clear:right; font-variant:small-caps }
 
 .emails .email {text-align:left; border:2px solid #600; width:120ex; margin:1em auto; padding:0.4em}
-.emails .email.from-me {border:2px solid #060}
+.emails.index .from {color:#600;font-variant:small-caps}
+.emails.index .email.from-me {border:2px solid #060}
+.emails.index .email.from-me .from { color:#060 }
 .emails form.email { background-color:#efefef; text-align:center }
 .emails form.email p { margin:0.3em 0 }
 .emails form.email label { width:15%; display:inline-block; text-align:left }
@@ -196,8 +198,6 @@ color: blue }
 .emails form.email .subject { font-size:1.4em }
 .emails form.email .submit { text-align:right }
 .emails form.email .submit input { width:auto }
-.emails.index .from {color:#600;font-variant:small-caps}
-.emails.index .from.from-me {color:#060}
 .emails.index .unanswered a { background-color:#FF0 }
 .emails.index .columnar li { text-align:center }
 

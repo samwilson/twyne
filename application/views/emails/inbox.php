@@ -24,11 +24,10 @@
 		echo Form::input('subject', $email->subject, array('size'=>50));
 		?>
 	</p>
-	<p>
 		<?php
-		//var_dump($email->message_body);
-		//echo Form::textarea('message_body', $email->message_body, array('rows'=>24, 'cols'=>80));
+		//echo $email->message_body;
 		?>
+	<p>
 		<textarea rows="24" cols="80" name="message_body"><?php echo $email->message_body ?></textarea>
 	</p>
 	<p class="submit">

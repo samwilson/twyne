@@ -6,7 +6,7 @@
 		<?php echo Form::label('email_address', 'Email address:').Form::input('email_address', $person->email_address) ?>
 	</p>
 	<p>
-		<?php echo Form::label('auth_level', 'Auth Level:').Form::input('auth_level', $person->auth_level) ?>
+		<?php echo Form::label('auth_level_id', 'Auth Level:').Form::input('auth_level_id', $person->auth_level_id) ?>
 	</p>
 	<p>
 		<?php echo Form::label('notes', 'Notes:').Form::textarea('notes', $person->notes) ?>

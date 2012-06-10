@@ -160,7 +160,7 @@ class Controller_Emails extends Controller_Base {
 			}
 		}
 		else
-		{ // If no parts, then must be plain.
+		{
 			if ($structure->type == 'TEXT' && $structure->subType == 'HTML')
 			{
 				$message_body = ($structure->encoding == 'BASE64') ? base64_decode($imap->getBody(1)) : $imap->getBody(1);
@@ -205,7 +205,7 @@ class Controller_Emails extends Controller_Base {
 				->and_where_close()
 				->order_by('date_and_time')
 				->find_all();
-		if (count($this->view->emails) > 0)
+		if ($this->view->with->loaded())
 		{
 			$this->template->title = 'Emails with '.$this->view->with->name.' in '.$this->view->year;
 		}
@@ -241,7 +241,7 @@ From: ".$this->user->name." <".$this->user->email_address.">
 			$headers = "From: ".$this->user->name." <".$this->user->email_address.">\r\n";
 			if (!mail($_POST['to'], $_POST['subject'], $body, $headers))
 			{
-				die("Something bad happened when sending email to: ".$_POST['to']);
+				throw new Exception("Something bad happened when sending email to: ".$_POST['to']);
 			}
 			$new_email->save();
 			$this->request->redirect('emails/index?with='.$this->view->with.'&year='.$this->view->year.'#reply-form');

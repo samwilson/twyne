@@ -255,19 +255,22 @@ class Controller_Images extends Controller_Base {
 	  $page->addBodyContent($form->toHtml());
 	  } */
 
-	public function action_rotate($id, $degrees)
+	public function action_rotate()
 	{
+		$id = $this->request->param('id');
+		$degrees = $this->request->param('format');
 		$image = ORM::factory('images', $id);
-		if ($image->loaded() && $this->user->auth_level >= 10 && $degrees > 0)
+		if ($image->loaded() && $this->user->is_main_user() && $degrees > 0)
 		{
 			$image->rotate($degrees);
 			$this->request->redirect("images/edit/$id#form");
 		}
 	}
 
-	public function action_delete($id = NULL)
+	public function action_delete()
 	{
-		if ($id == NULL || !is_numeric($id) || $this->user->auth_level < 10)
+		$id = $this->request->param('id');
+		if ($id == NULL || !is_numeric($id) || !$this->user->is_main_user())
 		{
 			$this->add_template_message('Access Denied', 'error');
 			$this->request->response = '';

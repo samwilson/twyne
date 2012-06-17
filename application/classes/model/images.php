@@ -129,7 +129,7 @@ class Model_Images extends ORM {
 		$thumb = $thumbdir.'/'.$this->id.'.jpg';
 		if (!file_exists($thumb) || $force)
 		{
-			$image = Image::factory($full);
+			$image = Image::factory($full, 'Imagick');
 			$image->resize(80, 80);
 			if (!$image->save($thumb))
 			{
@@ -143,7 +143,7 @@ class Model_Images extends ORM {
 		$view = $viewdir.'/'.$this->id.'.jpg';
 		if (!file_exists($view) || $force)
 		{
-			$image = Image::factory($full);
+			$image = Image::factory($full, 'Imagick');
 			$image->resize(500, 500);
 			if (!$image->save($view))
 			{
@@ -155,7 +155,7 @@ class Model_Images extends ORM {
 	public function rotate($degrees)
 	{
 		$full = realpath(DATAPATH.'images/full/'.$this->id.'.jpg');
-		$image = Image::factory($full);
+		$image = Image::factory($full, 'Imagick');
 		$image->rotate($degrees);
 		if (!$image->save($full))
 		{

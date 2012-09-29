@@ -36,22 +36,16 @@
 
 		<div id="wrapper">
 
-			<div id="header">
+			<ol class="tabs" id="toplinks">
+				<?php foreach ($toplinks as $url => $title): ?>
+					<li class="<?php if ($url == $selected_toplink) echo 'selected' ?>">
+						<a href="<?php echo $url ?>">
+							<?php echo $title ?>
+						</a>
+					</li>
+				<?php endforeach ?>
+			</ol>
 
-				<?php if ($user->loaded()): ?>
-					<p class="user">Logged in as 
-						<?php echo "$user->name (Auth level $user->auth_level)" ?>
-					</p>
-				<?php endif ?>
-
-				<ol class="tabs" id="toplinks">
-					<?php foreach ($toplinks as $link): ?>
-						<li class="<?php if ($link['url'] == $selected_toplink) echo 'selected' ?>">
-						<?php echo HTML::anchor($link['url'], $link['title']) ?>
-						</li>
-					<?php endforeach ?>
-				</ol>
-			</div>
 
 			<div id="view">
 
@@ -67,18 +61,13 @@
 
 				<div class="content">
 
-					<?php if ($title) echo "<h2>$title</h2>" ?>
-
 					<?php echo $content ?>
 
 				</div>
 
-                <div class="clear"></div>
+			</div>
 
-            </div>
-
-            <div id="footer">
-                <p>Th</p>
+			<div id="footer">
 
 				<?php if (Kohana::$environment == Kohana::DEVELOPMENT): ?>
 					<div class="kohana-profiler noprint">
@@ -86,7 +75,7 @@
 					</div>
 				<?php endif ?>
 
-            </div>
-        </div>
-    </body>
+			</div>
+		</div>
+	</body>
 </html>

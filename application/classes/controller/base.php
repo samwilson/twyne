@@ -20,25 +20,25 @@ abstract class Controller_Base extends Controller_Template {
 	{
 		parent::before();
 
-		/*
-		 * View.  There is a hierarchy from template, to controller_view, to $this->view.
-		 */
-		if (Kohana::find_file('views/'.$this->request->controller(), $this->request->action()))
+		if (Kohana::find_file('views/', $this->request->action()))
 		{
-			$this->view = View::factory($this->request->controller().'/'.$this->request->action());
+			$this->view = View::factory($this->request->action());
 		}
 		$this->template->bind_global('title', $this->title);
 		$this->template->messages = array();
 		$this->template->content = $this->view;
 		$this->template->controller = $this->request->controller();
 		$this->template->action = $this->request->action();
-
+		
 		/*
 		 * User and Session.
 		 */
 		require_once(Kohana::find_file('vendor', 'openid'));
 		$this->session = Session::instance();
 		$this->user = $this->session->get('user');
+		if (TWYNE_AUTOLOGIN) {
+			$this->user = ORM::factory('People', 1);
+		}
 		if (empty($this->user))
 		{
 			$this->user = ORM::factory('People');
@@ -46,7 +46,23 @@ abstract class Controller_Base extends Controller_Template {
 		}
 		$this->template->bind_global('user', $this->user);
 
-
+		/*
+		 * Top Links
+		 */
+		$this->template->toplinks = array(
+			Route::url('home') => 'Home',
+			Route::url('dates') => 'Dates',
+			Route::url('tags') => 'Tags',
+			Route::url('upload') => 'Upload',
+		);
+		if ($this->user->name) {
+			$this->template->toplinks[Route::url('people')] = 'Your Profile';
+			$this->template->toplinks[Route::url('logout')] = 'Log Out';
+		} else {
+			$this->template->toplinks[Route::url('login')] = 'Log In';
+		}
+		$this->template->selected_toplink = '';
+		
 		/*
 		 * Add flash messages to the template, then clear them from the session.
 		 */
@@ -56,32 +72,6 @@ abstract class Controller_Base extends Controller_Template {
 		}
 		Session::instance()->set('flash_messages', array());
 
-		/*
-		 * Top links.  'url' should start with a slash.
-		 */
-		$toplinks = array(
-			array('url'=>'/blog', 'title'=>'Blog'),
-			array('url'=>'/images', 'title'=>'Images'),
-			array('url'=>'/journal', 'title'=>'Journal'),
-		);
-		if ($this->user->auth_level_id >= 10)
-		{
-			$toplinks = array_merge($toplinks, array(
-				//array('url'=>'/images/upload', 'title'=>'New Image'),
-				array('url'=>'/journal/edit', 'title'=>'New Journal Entry'),
-				array('url'=>'/emails', 'title'=>'Emails'),
-				array('url'=>'/emails/inbox', 'title'=>'Inbox'),
-				array('url'=>'/people', 'title'=>'People'),
-			));
-		}
-		if ($this->user->loaded())
-			$toplinks[] = array('url'=>'logout', 'title'=>'Log Out');
-		else
-			$toplinks[] = array('url'=>'login', 'title'=>'Log In');
-		$this->template->bind_global('toplinks', $toplinks);
-		/** @var string Starts with a slash. */
-		$this->selected_toplink = '/'.$this->request->controller();
-		$this->template->bind_global('selected_toplink', $this->selected_toplink);
 	}
 
 	protected function log($type, $message)

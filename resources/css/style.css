@@ -27,7 +27,6 @@ pre,code,kbd,samp,tt{ font-family:monospace;font-size:108%;line-height:100% }
 /******************************************************************************/
 /* General                                                                    */
 body { background-color:white }
-#wrapper { }
 #view { padding-top:1em }
 a:link { color:blue; text-decoration:none; font-weight:bolder }
 a:link:hover { text-decoration:underline }
@@ -97,10 +96,9 @@ table.docutils.footnote td { border:0 }
 /******************************************************************************/
 /* Header & Footer                                                            */
 #header .user { float:right; font-size:90%; margin-right:1em }
-#header h1 { font-size:2em; text-align:right; margin-right:50px; height:170px; color:#e19003 }
-#header h1 a { color:#e19003; text-decoration:none;
-    letter-spacing:0.1em; word-spacing:0.2em}
+#header h1 { font-size:1em; float:left }
 
+#footer { clear:both }
 #footer p { clear:both; line-height:2em; text-align:right; font-size:smaller;
     padding:4em 1em; color:white; letter-spacing:0.07em }
 #footer .kohana { margin:1em 0 2em 0 }
@@ -165,14 +163,20 @@ color: blue }
 /******************************************************************************/
 /* Individual views                                                           */
 
-.blog .menu { position:absolute; left:0; border:1px solid black; border-width:0 1px 1px 1px; margin:1em 0 0 20px; width:16em }
-.blog .menu ol { margin:0 }
-.blog .menu li { padding:0 }
-.blog .menu li a { display:block; border-top:1px solid black; padding:0.3em 1em }
-.blog .menu li li.selected a { font-weight:bolder; letter-spacing:0.1em; color:black }
-.blog .menu li li.selected a:hover { text-decoration:none }
-.blog .menu li li a { padding:0.2em 1em 0.1em 3em; font-size:smaller; border-top:0 }
-.blog .items { width:66em; margin:auto }
+.upload form { text-align:center }
+
+.index.index .content { margin-left:200px }
+.index.index .photo { width:510px; padding:5px 0; float:left; border:1px solid #ccc; background-color:#efefef; margin:0 1em 1em 1em; font-size:smaller;
+	text-align:center }
+.index.index .photo .caption { font-size:larger }
+.index.index .menu { position:absolute; left:0; border:1px solid black; border-width:0 1px 1px 1px; margin:0 0 0 20px; width:180px }
+.index.index .menu ol { margin:0 }
+.index.index .menu li { padding:0 }
+.index.index .menu li a { display:block; border-top:1px solid black; padding:0.3em 1em }
+.index.index .menu li li.selected a { font-weight:bolder; letter-spacing:0.1em; color:black }
+.index.index .menu li li.selected a:hover { text-decoration:none }
+.index.index .menu li li a { padding:0.2em 1em 0.1em 3em; font-size:smaller; border-top:0 }
+
 .blog .item { margin:1em auto; border:1px solid black; border-width:1px 0 }
 .blog .item.image { width:506px; border:1px solid #999 }
 .blog .item h2 { font-size:1.3em; font-variant:small-caps }
@@ -185,69 +189,25 @@ color: blue }
 .blog .tags { text-align:right; margin-right:3px; font-size:smaller; margin-bottom:0.3em;
     clear:right; font-variant:small-caps }
 
-.emails .email {text-align:left; border:2px solid #600; width:120ex; margin:1em auto; padding:0.4em}
-.emails.index .from {color:#600;font-variant:small-caps}
-.emails.index .email.from-me {border:2px solid #060}
-.emails.index .email.from-me .from { color:#060 }
-.emails form.email { background-color:#efefef; text-align:center }
-.emails form.email p { margin:0.3em 0 }
-.emails form.email label { width:15%; display:inline-block; text-align:left }
-.emails form.email input,
-.emails form.email select { width:82% }
-.emails form.email textarea { width:98% }
-.emails form.email .subject { font-size:1.4em }
-.emails form.email .submit { text-align:right }
-.emails form.email .submit input { width:auto }
-.emails.index .unanswered a { background-color:#FF0 }
-.emails.index .columnar li { text-align:center }
-
-.images.edit .view { margin:auto; width:900px; text-align:right }
-.images.edit .image { float:left; margin:0 1em 1em 1em; width:500px; height:500px; text-align:center }
-.images.edit form { margin-left:500px; text-align:right }
-.images.edit form p { margin:0.3em }
-.images.edit textarea,
-.images.edit select,
-.images.edit input[type=text] { width:380px }
-.images.view #view,
-.images.edit #view,
-.images.view .tabs li.selected a,
-.images.edit .tabs li.selected a { background-color:black; color:white }
-.images.view .content { text-align:center; max-width:510px; margin:3em auto 2px auto; color:white }
-.images.view .caption { text-align:left; margin:1.3em; font-size:larger }
-.images.view .metadata { margin-bottom:3em; font-variant:small-caps; font-size:smaller; color:#9f9a4e }
-.images.view .metadata .licence { font-size:smaller }
-.images.index .columnar li { width:4em; text-align:center }
-.images.index .thumbs a { float:left; margin:0.3em }
-.images.index .thumbs img { border:1px solid #9F9A4E }
-.images.index .thumbs a:hover img { border:1px solid white }
-
-.journal .content { width:66em; margin:auto }
-.journal.edit h2 { text-align:center; width:100%; position:relative }
-.journal.edit h2 input { width:100%; padding:0.1em 0.2em }
-.journal.edit .auth_level { float:right }
-.journal.edit textarea { padding:0.7em; display:block; clear:both; width:100% }
-.journal.edit .tags { text-align:right }
-.journal.edit .tags label { width:10% }
-.journal.edit .tags input { width:90% }
-.journal.edit .submit { text-align:right; margin-top:0.5em }
-.journal.edit .docs { margin:1em }
-/*.journal.index #view .content a,
-.journal.view #view .content a,
-.journal.view #view .metadata a { color:blue }*/
-.journal.index #view,
-.journal.view #view,
-.journal.edit #view,
-.journal.index .tabs li.selected a,
-.journal.view .tabs li.selected a,
-.journal.edit .tabs li.selected a,
-.journal h2 { background-color:white; color:black }
-.journal h3 { color:black; padding:0 0 2px 0; border-bottom:3px double #9a9a9a }
-.journal.index h4 { font-size:larger; font-weight:bolder; font-variant:small-caps }
-.journal.view .date_and_time { text-align:center }
-.journal hr { width:18%; margin:1em auto }
-.journal .metadata { text-align:center }
-.journal #view { padding-bottom:2em }
-.journal .metadata { text-align:right; font-size:smaller; padding-bottom:2em; border-bottom:1px dashed #9a9a9a }
+.image.edit .view { margin:auto; text-align:right }
+.image.edit .image { float:left; margin:0 1em 1em 1em; width:500px; text-align:center }
+.image.edit form { margin-left:500px; text-align:left }
+.image.edit form p { margin:0.3em }
+.image.edit textarea,
+.image.edit select,
+.image.edit input[type=text] { width:380px }
+.image.view #view,
+.image.edit #view,
+.image.view .tabs li.selected a,
+.image.edit .tabs li.selected a {  }
+.image.view .content { text-align:center; max-width:510px; margin:3em auto 2px auto }
+.image.view .caption { text-align:left; margin:1.3em; font-size:larger }
+.image.view .metadata { margin-bottom:3em; font-variant:small-caps }
+.image.view .metadata .licence { font-size:smaller }
+.image.index .columnar li { width:4em; text-align:center }
+.image.index .thumbs a { float:left; margin:0.3em }
+.image.index .thumbs img { border:1px solid #9F9A4E }
+.image.index .thumbs a:hover img { border:1px solid white }
 
 .people.index .new { text-align:center }
 .people.person form { margin:auto; width:90ex; text-align:center }

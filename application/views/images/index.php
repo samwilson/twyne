@@ -1,6 +1,8 @@
 <ol class="columnar">
 	<?php foreach ($years as $y): ?>
-	<li><?php echo HTML::anchor('images/index/'.$y->year, $y->year) ?></li>
+	<li>
+		<a href="<?php echo Route::url('dates', array('year'=>$y, 'month'=>))"
+		<?php echo HTML::anchor('images/index/'.$y->year, $y->year) ?></li>
 	<?php endforeach ?>
 </ol>
 

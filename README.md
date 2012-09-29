@@ -1,12 +1,16 @@
 Twyne
 =====
 
+A photograph database system.
+
 Installing
 ----------
 
-1. Copy `config_sample.php` to `config.php` and edit it to include database connection informtion.
-2. Copy `htaccess_sample` to `.htaccess` and change the `RewriteBase` if required.
-3. Run `resources/sql/*.sql` files in chronological order.  **Don't run any of them more than once.**
+1. Clone the git repository: `git clone https://github.com/samwilson/twyne.git`
+2. Initialise and update the submodules: `git submodule init; git submodule update`
+3. Copy `config_sample.php` to `config.php` and edit it to include database connection informtion.
+4. Copy `htaccess_sample` to `.htaccess` and change the `RewriteBase` if required.
+5. Run `resources/sql/*.sql` files in chronological order.  **Don't run any of them more than once.**
 
 Licence
 -------

@@ -37,6 +37,8 @@ Kohana::$log->attach(new Kohana_Log_File(APPPATH.'logs'));
  */
 Kohana::$config->attach(new Kohana_Config_File);
 
+Upload::$default_directory = DATAPATH.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'IN';
+
 /**
  * Enable modules. Modules are referenced by a relative or absolute path.
  */
@@ -50,25 +52,49 @@ Kohana::modules(array(
  * Set the routes. Each route must have a minimum of a name, a URI and a set of
  * defaults for the URI.
  */
-$months = '(unknown|January|February|March|April|May|June|July|August|September|October|November|December)';
-Route::set('blog', 'blog/(<year>(/<month>))', array(
+Route::set('dates', 'dates(/<year>(/<month>)(.<format>))', array(
 	'year'=>'[0-9]{1,4}',
-	'month'=>$months,
+	'month'=> '[0-9]{1,2}',
+	'format'=>'(html|pdf)',
 ))->defaults(array(
-	'controller'=>'blog',
+	'controller'=>'index',
 	'action'=>'index',
+	'format'=>'html',
 ));
-Route::set('tag', 'tag/(<tag>)')->defaults(array(
-	'controller'=>'blog',
+Route::set('tags', 'tags(/<tag>)')->defaults(array(
+	'controller'=>'index',
 	'action'=>'tag',
 ));
-/* Route::set('images', '(/<controller>(/<action>(/<id>(/<size>))))')
-  ->defaults(array(
-  'controller' => 'images',
-  'action' => 'render',
-  'id' => '',
-  'size' => ''
-  )); */
+Route::set('view', '<id>(.<format>)', array(
+	'id' => '[0-9]+',
+	'format'=>'(pdf|html)',
+))->defaults(array(
+	'controller'=>'image',
+	'action'=>'view',
+	'format' => 'html',
+));
+Route::set('render', '<id>(_<size>).(<format>)', array(
+	'id' => '[0-9]+',
+	'size' => '(thumb|view|full)',
+	'format'=>'(png|jpg)',
+))->defaults(array(
+	'controller'=>'image',
+	'action'=>'render',
+	'size' => 'max',
+	'format' => 'view',
+));
+Route::set('image', '<id>/<action>',array(
+	'action' => '(edit|delete|save)'
+))->defaults(array(
+	'controller'=>'image',
+	'action'=>'edit'
+));
+Route::set('upload', 'upload(/<filename>)', array(
+	'filename'=>'.*'
+))->defaults(array(
+	'controller'=>'image',
+	'action'=>'upload'
+));
 Route::set('people', 'people')->defaults(
 		array('controller'=>'people', 'action'=>'index')
 );
@@ -81,9 +107,12 @@ Route::set('login', 'login')->defaults(
 Route::set('logout', 'logout')->defaults(
 		array('controller'=>'people', 'action'=>'logout')
 );
+Route::set('home', '')->defaults(
+		array('controller'=>'index', 'action'=>'index')
+);
 Route::set('default', '(<controller>(/<action>(/<id>(/<format>))))')->defaults(
 		array(
-			'controller'=>'blog',
+			'controller'=>'index',
 			'action'=>'index',
 			'id'=>NULL,
 			'format'=>NULL,

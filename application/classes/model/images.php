@@ -46,6 +46,26 @@ class Model_Images extends ORM {
 	}
 
 	/**
+	 * Get a list of filenames currently in the 'pending' directory.
+	 * 
+	 * @return array Array of strings
+	 */
+	public function get_pending()
+	{
+		$images_in_dir = DATAPATH.'images'.DIRECTORY_SEPARATOR.'IN';
+		$out = array();
+		foreach (scandir($images_in_dir) as $file)
+		{
+			if (!is_file($images_in_dir.'/'.$file))
+			{
+				continue;
+			}
+			$out[] = $file;
+		}
+		return $out;
+	}
+
+	/**
 	 * Import the given image into the system.
 	 *
 	 * @param string $fullname Full filesystem path to file to import.

@@ -9,8 +9,8 @@
 	| Chronological |
 	<?php echo HTML::anchor('images/edit/'.$chronology_next->id.'#form', $chronology_next->date_and_time.' &rarr;') ?><br />
 
-	<a href="<?php echo URL::site('images/view/'.$image->id) ?>">
-		<img src='<?php echo url::site("images/render/$image->id/view") ?>' style='max-width:100%' />
+	<a href="<?php echo Route::url('view', array('id'=>$image->id)) ?>">
+		<img src='<?php echo Route::url('render', array('id'=>$image->id)) ?>' title="View this photo" />
 	</a><br />
 	Rotate
 	<?php echo html::anchor("images/rotate/$image->id/90", "90&deg;") ?>,
@@ -19,7 +19,7 @@
 	&nbsp;
 	<?php echo html::anchor("images/delete/$image->id", "Delete") ?>.
 </div>
-<form action='<?php echo URL::site("images/save") ?>' method='post'>
+<form action='<?php echo Route::url('image',array('action'=>'save', 'id'=>$image->id)) ?>' method='post'>
 	<p class='hide'>
 		<input type='hidden' name='save_image' />
 		<input type='hidden' name='id' value='<?php echo $image->id ?>' />
@@ -34,7 +34,7 @@
     </p>
 	<p>
 		<?php echo Form::label('auth_level_id', 'Auth Level:') ?>
-		<?php echo Form::input('auth_level_id', $image->auth_level_id, array('size'=>2)) ?>
+		<?php echo Form::select('auth_level_id', $auth_levels, $image->auth_level_id) ?>
     </p>
 	<p>
 		<?php echo Form::textarea('caption', $image->caption) ?>

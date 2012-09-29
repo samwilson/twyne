@@ -2,118 +2,110 @@
 
 defined('SYSPATH') or die('No direct script access.');
 
-class Controller_Blog extends Controller_Base {
+class Controller_Index extends Controller_Base {
 
 	public function before()
 	{
 		parent::before();
-		$false = FALSE;
-		$this->template->bind_global('current_year', $false);
-		$this->template->bind_global('current_month_name', $false);
-		$this->template->bind_global('current_month_number', $false);
+		//$false = FALSE;
+		//$this->template->bind_global('current_year', $false);
+		//$this->template->bind_global('current_month_name', $false);
+		//$this->template->bind_global('current_month_number', $false);
 	}
 
 	public function action_index()
 	{
+		$this->template->selected_toplink = Route::url('dates');
 
-		$year = $this->request->param('year', date('Y'));
-		$month_name = $this->request->param('month', date('F'));
+		$year = $this->request->param('year');
+		$month = $this->request->param('month');
 
 		// Redirect to current month if no date given.
-		if (!$year && !$month_name)
+		if (!$year && !$month)
 		{
-			$last_entry = Database::instance()->query(Database::SELECT, "SELECT
-					(SELECT MAX(date_and_time) AS date_and_time
-					FROM images
-					GROUP BY date_and_time ORDER BY date_and_time DESC
-					LIMIT 1) AS date_and_time
-				UNION
-					(SELECT MAX(date_and_time) AS date_and_time
-					FROM journal_entries 
-					GROUP BY date_and_time ORDER BY date_and_time DESC
-					LIMIT 1)
-				ORDER BY date_and_time DESC LIMIT 1", TRUE
-			)->current();
-			//$this->add_flash_message("(This blog is in <em>chronological</em> order; the most recent items are at the bottom.)", 'success');
-			$this->request->redirect('blog/'.date('Y/F', strtotime($last_entry->date_and_time)));
+			$sql = "SELECT
+				YEAR(MAX(date_and_time)) AS year,
+				MONTH(MAX(date_and_time)) AS month
+				FROM images
+				GROUP BY date_and_time ORDER BY date_and_time DESC
+				LIMIT 1";
+			$last_entry = Database::instance()
+				->query(Database::SELECT, $sql, TRUE)
+				->current();
+			$params = array('year'=>$last_entry->year, 'month'=>$last_entry->month);
+			$this->request->redirect(Route::get('dates')->uri($params));
 		}
-		if (!$month_name || stripos($month_name, 'unknown') !== FALSE)
+		
+		// Redirect to zero-padded dates if required.
+		$redirect = false;
+		if (strlen($year)!=4)
 		{
-			$month_number = '00';
+			$year = str_pad($year, 4, '0', STR_PAD_LEFT);
+			$redirect = true;
 		}
-		else
+		if (strlen($month)!=2)
 		{
-			$month_number = $month_name ? date('m', strtotime("1 $month_name 2010")) : date('m');
+			$month = str_pad($month, 2, '0', STR_PAD_LEFT);
+			$redirect = true;
 		}
+		if ($redirect)
+		{
+			$params = array('year'=>$year, 'month'=>$month);
+			$this->request->redirect(Route::get('dates')->uri($params));
+		}
+		
+		// Account for 'zero' date-parts as meaning 'unknown'.
+//		if (!$month || stripos($month, 'unknown') !== FALSE)
+//		{
+//			$month_number = '00';
+//		}
+//		else
+//		{
+//			$month_number = $month ? date('m', strtotime("1 $month 2010")) : date('m');
+//		}
 
 		$this->template->bind_global('current_year', $year);
-		$this->template->bind_global('current_month_name', $month_name);
-		$this->template->bind_global('current_month_number', $month_number);
-		$this->template->current_toplink = 'blog';
+		$this->template->bind_global('current_month', $month);
+		$this->template->current_toplink = Route::url('dates');
 
-		$sql = "SELECT DATE_FORMAT(date_and_time, '%Y') AS year FROM images 
-            UNION SELECT DATE_FORMAT(date_and_time, '%Y') AS year FROM journal_entries 
-            GROUP BY YEAR(date_and_time) ORDER BY year DESC";
+		$sql = "SELECT DATE_FORMAT(date_and_time, '%Y') AS year
+			FROM images 
+			GROUP BY YEAR(date_and_time)
+			ORDER BY year DESC";
 		$this->view->years = Database::instance()->query(Database::SELECT, $sql, TRUE);
-		$this->view->months = Database::instance()->query(
-				Database::SELECT, "
-            SELECT DATE_FORMAT(date_and_time,'%m') AS month FROM images WHERE YEAR(date_and_time) = ".$this->view->current_year." 
-            UNION 
-            SELECT DATE_FORMAT(date_and_time, '%m') AS month FROM journal_entries WHERE YEAR(date_and_time) = ".$this->view->current_year." 
-			GROUP BY MONTH(date_and_time) ORDER BY month DESC
-            ", TRUE
-		);
-
+		$sql = "SELECT DATE_FORMAT(date_and_time,'%m') AS month
+			FROM images
+			WHERE YEAR(date_and_time) = ".$year." 
+			GROUP BY MONTH(date_and_time)
+			ORDER BY month DESC";
+		$this->view->months = Database::instance()->query(Database::SELECT, $sql, TRUE);
 
 		$imgs = ORM::factory('images')
 				->or_where_open()
 				->where('auth_level_id', '<=', $this->user->auth_level)
 				->or_where('auth_level_id', '=', 1)
 				->or_where_close()
-				->and_where(DB::expr('YEAR(date_and_time)'), '=', $this->view->current_year)
-				->and_where(DB::expr('MONTH(date_and_time)'), '=', $this->view->current_month_number)
-				->find_all();
-		$images = array();
-		$item_id = 1;
-		foreach ($imgs as $img)
-		{
-			$images[$img->date_and_time.' '.$item_id] = $img;
-			$item_id++;
-		}
-		$jes = ORM::factory('JournalEntries')
-				->or_where_open()
-				->where('auth_level_id', '<=', $this->user->auth_level)
-				->or_where('auth_level_id', '=', 1)
-				->or_where_close()
-				->and_where(DB::expr('YEAR(date_and_time)'), '=', $this->view->current_year)
-				->and_where(DB::expr('MONTH(date_and_time)'), '=', $this->view->current_month_number)
-				->find_all();
-		$journal_entries = array();
-		foreach ($jes as $je)
-		{
-			$journal_entries[$je->date_and_time.' '.$item_id] = $je;
-			$item_id++;
-		}
-		$this->view->items = array_merge($images, $journal_entries);
-		ksort($this->view->items);
+				->and_where(DB::expr('YEAR(date_and_time)'), '=', $year)
+				->and_where(DB::expr('MONTH(date_and_time)'), '=', $month);
+		$this->view->photos = $imgs->find_all();
 
 		// Title
-		if ($this->view->current_year > 0 && $this->view->current_month_number > 0)
+		if ($this->view->current_year > 0 && $this->view->current_month > 0)
 		{
-			$this->title = date('F', strtotime('2010-'.$this->view->current_month_number.'-01'))
+			$this->title = date('F', strtotime('2010-'.$this->view->current_month.'-01'))
 					.' '.$this->view->current_year;
 		}
-		elseif ($this->view->current_year > 0 && $this->view->current_month_number == '00')
+		elseif ($this->view->current_year > 0 && $this->view->current_month == '00')
 		{
 			$this->title = $this->view->current_year.' (Month Unknown)';
 		}
-		elseif ($this->view->current_year == '0000' && $this->view->current_month_number == 0)
+		elseif ($this->view->current_year == '0000' && $this->view->current_month == 0)
 		{
 			$this->title = 'Year and Month Unknown';
 		}
-		elseif ($this->view->current_year == '0000' && $this->view->current_month_number > 0)
+		elseif ($this->view->current_year == '0000' && $this->view->current_month > 0)
 		{
-			$this->title = date('F', strtotime("2010-$this->view->current_month_number-01")).' (Year Unknown)';
+			$this->title = date('F', strtotime('2010-'.$this->view->current_month.'-01')).' (Year Unknown)';
 		}
 		else
 		{

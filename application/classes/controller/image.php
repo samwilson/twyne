@@ -2,32 +2,31 @@
 
 defined('SYSPATH') or die('No direct script access.');
 
-class Controller_Images extends Controller_Base {
+class Controller_Image extends Controller_Base {
 
 	public function before()
 	{
 		parent::before();
-		$this->template->title = 'Images';
-		$this->template->pending_file_count = $this->get_pending_file_count();
+		$this->template->title = 'Photos';
 	}
 
 	public function action_index()
 	{
-		$year = $this->request->param('id');
-		$sql = "SELECT DATE_FORMAT(date_and_time, '%Y') AS year
-			FROM images
-			GROUP BY YEAR(date_and_time)
-			ORDER BY year ASC";
-		$this->view->years = Database::instance()->query(Database::SELECT, $sql, TRUE);
-		$this->view->year = (!$year) ? date('Y') : $year;
-		$this->view->images = ORM::factory('images')
-				->where(DB::expr('YEAR(date_and_time)'), '=', $this->view->year)
-				->and_where_open()
-				->where('auth_level_id', '<=', $this->user->auth_level)
-				->or_where('auth_level_id', '=', 1)
-				->and_where_close()
-				->order_by('date_and_time', 'ASC')
-				->find_all();
+//		$year = $this->request->param('id');
+//		$sql = "SELECT DATE_FORMAT(date_and_time, '%Y') AS year
+//			FROM images
+//			GROUP BY YEAR(date_and_time)
+//			ORDER BY year ASC";
+//		$this->view->years = Database::instance()->query(Database::SELECT, $sql, TRUE);
+//		$this->view->year = (!$year) ? date('Y') : $year;
+//		$this->view->images = ORM::factory('images')
+//				->where(DB::expr('YEAR(date_and_time)'), '=', $this->view->year)
+//				->and_where_open()
+//				->where('auth_level_id', '<=', $this->user->auth_level)
+//				->or_where('auth_level_id', '=', 1)
+//				->and_where_close()
+//				->order_by('date_and_time', 'ASC')
+//				->find_all();
 	}
 
 	public function action_latex($year = NULL)
@@ -58,7 +57,11 @@ class Controller_Images extends Controller_Base {
 	public function action_render()
 	{
 		$id = $this->request->param('id');
-		$size = $this->request->param('format');
+		$size = $this->request->param('size');
+		if ($size != 'full' && $size != 'thumb')
+		{
+			$size = 'view';
+		}
 		$image = ORM::factory('Images')
 				->where('id', '=', $id)
 				->and_where_open()
@@ -66,10 +69,6 @@ class Controller_Images extends Controller_Base {
 				->or_where('auth_level_id', '=', 1)
 				->and_where_close()
 				->find();
-		if ($size != 'full' && $size != 'thumb')
-		{
-			$size = 'view';
-		}
 		if ($image->loaded())
 		{
 			$filename = DATAPATH."images/$size/$image.jpg";
@@ -104,6 +103,14 @@ class Controller_Images extends Controller_Base {
 		$this->template->title = $this->title = "Editing Image #".$this->view->image->id;
 		$this->jquery = TRUE;
 
+		// Auth Levels
+		$this->view->auth_levels = array();
+		$auth_levels = ORM::factory('AuthLevels')->order_by('id', 'ASC')->find_all();
+		foreach ($auth_levels as $auth_level)
+		{
+			$this->view->auth_levels[$auth_level->id] = $auth_level->id.': '.$auth_level->name;
+		}
+		
 		// Licences
 		$this->view->licences = array();
 		$licences = ORM::factory('Licences')->find_all();
@@ -141,49 +148,37 @@ class Controller_Images extends Controller_Base {
 
 	public function action_upload()
 	{
-//		$this->template->title = 'Upload Images';
-//		if (isset($_POST['upload_image']))
-//		{
-//			require_once "HTTP/Upload.php";
-//			$uploadTo = DATADIR.'/images/IN';
-//			$upload = new HTTP_Upload('en');
-//			$file = $upload->getFiles('image');
-//			if ($file->isValid())
-//			{
-//				$moved = $file->moveTo($uploadTo, false);
-//				if (PEAR::isError($moved))
-//				{
-//					$msg = 'Could not move uploaded file.<br />'.$moved->getMessage();
-//					$this->add_template_message($msg);
-//					return;
-//				}
-//			}
-//			elseif ($file->isError())
-//			{
-//				$msg = 'File is erroneous.<br />'.$file->getMessage();
-//				$this->add_template_message($msg);
-//				return;
-//			}
-//			elseif ($file->isMissing())
-//			{
-//				$page->addBodyContent("<p class='message error'>File is missing.<br />".$file->getMessage()."</p>");
-//			}
-//			else
-//			{
-//				die(var_dump($file->getProp()));
-//				$uploadedImageFilename = "$uploadTo/".$file->getProp('tmp_name');
-//				if (!realpath($uploadedImageFilename))
-//				{
-//					$page->addBodyContent("<p class='message error'>Can't see $uploadedImageFilename</p>");
-//					$page->display();
-//					die();
-//				}
-//				$page->addBodyContent("<p class='notice message'>Uploading $uploadedImageFilename</p>");
-//				$id = importImage($uploadedImageFilename);
-//				header("Location:?action=edit_image&id=$id");
-//				die();
-//			}
-//		}
+		if ($this->user->auth_level_id < 10)
+		{
+			$this->add_flash_message('You are not allowed to upload photos.');
+			$this->view->content = null;
+			return;
+		}
+		$this->template->selected_toplink = Route::url('upload');
+		$this->template->title = 'Upload Photos';
+		$this->view->pending_files = ORM::factory('Images')->get_pending();
+		if (isset($_FILES['uploaded_file']))
+		{
+			$file = $_FILES['uploaded_file'];
+			if (Upload::not_empty($file) AND Upload::valid($file)) {
+				$path = Upload::save($file);
+				$this->add_flash_message($file['name'].' uploaded', 'success');
+				$this->request->redirect('upload');
+			} else {
+				$this->add_template_message('Upload error', 'error');
+			}
+		}
+		elseif ($this->request->param('filename'))
+		{
+			$filename = Upload::$default_directory.DIRECTORY_SEPARATOR.$this->request->param('filename');
+			if (file_exists($filename))
+			{
+				$image = ORM::factory('Images');
+				$image->author = $this->user;
+				$image->import($filename);
+				$this->request->redirect($image->id.'/edit#form');
+			}
+		}
 	}
 
 	/**
@@ -223,37 +218,6 @@ class Controller_Images extends Controller_Base {
 			exit();
 		}
 	}
-
-	public function get_pending_file_count()
-	{
-		// Pending file count:
-		$inDir = DATAPATH.'images/IN';
-		$pendingCount = 0;
-		if (is_dir($inDir))
-		{
-			$pendingCount = count(preg_grep("/^[^\.]/", scandir($inDir)));
-		} else {
-			$msg = "Unable to find $inDir";
-			$this->add_template_message($msg);
-		}
-		if ($pendingCount > 0 && $this->user->auth_level_id >= 10)
-		{
-			$this->add_template_message("$pendingCount images remain to be "
-					."accessioned.  ".html::anchor('images/process', 'Process one.'));
-		}
-	}
-
-	/* public function get_upload_form()
-	  {
-	  // Upload form:
-	  $form = new HTML_QuickForm('','post',$_SERVER['PHP_SELF']);
-	  $form->setMaxFileSize(1020 * 1024 * 10);
-	  $file_element = new HTML_QuickForm_file('image', null, array('size'=>80));
-	  $submit_element = new HTML_QuickForm_submit('upload_image','Upload');
-	  $uploadLabel = 'Upload (maximum '.ini_get('upload_max_filesize').'): ';
-	  $form->addGroup(array($file_element,$submit_element), null, $uploadLabel);
-	  $page->addBodyContent($form->toHtml());
-	  } */
 
 	public function action_rotate()
 	{
@@ -323,21 +287,22 @@ class Controller_Images extends Controller_Base {
 				$this->add_flash_message('Image #'.$image->id.' saved.', 'success');
 				if (isset($_POST['save_and_edit']))
 				{
-					$this->request->redirect('images/edit/'.$image->id.'#form');
+					$url = Route::url('image',array('action'=>'edit', 'id'=>$image->id), TRUE).'#form';
 				}
 				if (isset($_POST['save_and_view']))
 				{
-					$this->request->redirect('blog/'.$image->year().'/'.$image->month_name().'#'.$image->id);
+					$url = Route::url('view',array('id'=>$image->id), TRUE);
 				}
 				if (isset($_POST['save_and_process']))
 				{
-					$this->request->redirect('images/process');
+					// TODO
 				}
 				if (isset($_POST['save_and_next']))
 				{
-					$im = ORM::factory('images')->where('id', '>', $image->id)->order_by('id', 'ASC')->limit(1)->find();
-					$this->request->redirect('images/edit/'.$im->id.'#form');
+					//$im = ORM::factory('images')->where('id', '>', $image->id)->order_by('id', 'ASC')->limit(1)->find();
+					//$this->request->redirect('images/edit/'.$im->id.'#form');
 				}
+				$this->request->redirect($url);
 			}
 		}
 	}
@@ -347,7 +312,9 @@ class Controller_Images extends Controller_Base {
 		$id = $this->request->param('id');
 		// If no image ID specified, redirect.
 		if ($id == NULL)
+		{
 			$this->request->redirect('images');
+		}
 		$this->view->image = ORM::factory('images')
 				->where('id', '=', $id)
 				->and_where_open()

@@ -149,7 +149,7 @@ class Model_Images extends ORM {
 		$thumb = $thumbdir.'/'.$this->id.'.jpg';
 		if (!file_exists($thumb) || $force)
 		{
-			$image = Image::factory($full, 'Imagick');
+			$image = Image::factory($full);
 			$image->resize(80, 80);
 			if (!$image->save($thumb))
 			{
@@ -163,7 +163,7 @@ class Model_Images extends ORM {
 		$view = $viewdir.'/'.$this->id.'.jpg';
 		if (!file_exists($view) || $force)
 		{
-			$image = Image::factory($full, 'Imagick');
+			$image = Image::factory($full);
 			$image->resize(500, 500);
 			if (!$image->save($view))
 			{

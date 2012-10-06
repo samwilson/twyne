@@ -148,14 +148,14 @@ class Controller_Image extends Controller_Base {
 
 	public function action_upload()
 	{
-		if ($this->user->auth_level_id < 10)
-		{
-			$this->add_flash_message('You are not allowed to upload photos.');
-			$this->view->content = null;
-			return;
-		}
 		$this->template->selected_toplink = Route::url('upload');
 		$this->template->title = 'Upload Photos';
+		if ($this->user->auth_level->id < 10)
+		{
+			$this->add_template_message('You are not allowed to upload photos.');
+			$this->template->content = null;
+			return;
+		}
 		$this->view->pending_files = ORM::factory('Images')->get_pending();
 		if (isset($_FILES['uploaded_file']))
 		{

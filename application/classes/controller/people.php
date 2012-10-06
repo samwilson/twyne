@@ -48,6 +48,7 @@ class Controller_People extends Controller_Base {
 
 	public function action_login()
 	{
+		$this->template->selected_toplink = Route::url('login');
 		try
 		{
 			if (!isset($_GET['openid_mode']))

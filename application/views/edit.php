@@ -1,9 +1,16 @@
 <a name="form"></a>
 <div class="image">
 
-	<?php echo HTML::anchor('images/edit/'.$accession_prev->id.'#form', '&larr; #'.$accession_prev->id) ?>
+	<?php if ($accession_prev->loaded()): ?>
+	<?php $url = Route::url('image', array('action'=>'edit', 'id'=>$accession_prev->id), TRUE) ?>
+	<a href="<?php echo $url ?>#form" title="View previous photo">&larr; #<?php echo $accession_prev->id ?></a>
+	<?php endif ?>
 	| Accessional |
-	<?php echo HTML::anchor('images/edit/'.$accession_next->id.'#form', '#'.$accession_next->id.' &rarr;') ?><br />
+	<?php if ($accession_next->loaded()): ?>
+	<?php $url = Route::url('image', array('action'=>'edit', 'id'=>$accession_next->id), TRUE) ?>
+	<a href="<?php echo $url ?>#form" title="View previous photo">#<?php echo $accession_next->id ?> &rarr;</a>
+	<?php endif ?>
+	<br />
 
 	<?php echo HTML::anchor('images/edit/'.$chronology_prev->id.'#form', '&larr; '.$chronology_prev->date_and_time) ?>
 	| Chronological |

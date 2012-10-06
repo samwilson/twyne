@@ -12,6 +12,10 @@ if (!file_exists($config_filename)) {
     exit();
 }
 require_once('config.php');
+if (!defined('TWYNE_AUTOLOGIN'))
+{
+	define('TWYNE_AUTOLOGIN', FALSE);
+}
 
 /**
  * The directory in which your application specific resources are located.

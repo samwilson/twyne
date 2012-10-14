@@ -166,8 +166,8 @@ color: blue }
 .upload form { text-align:center }
 
 .index.index .photos { margin-left:200px }
-.index.index .photo { padding:5px 0; border:1px solid #ccc; background-color:#efefef;
-	margin:0 1em 1em 1em; font-size:smaller; text-align:center; width:200px }
+.index.index .photo { padding:5px; border:1px solid #ccc; background-color:#efefef;
+	margin:0 1em 1em 1em; font-size:smaller; text-align:right; width:200px; height:100px }
 .index.index .photo img { float:left }
 .index.index .photo .caption { font-size:larger }
 .index.index .photo .clear { clear:left }

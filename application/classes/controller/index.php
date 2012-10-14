@@ -86,7 +86,8 @@ class Controller_Index extends Controller_Base {
 				->or_where('auth_level_id', '=', 1)
 				->or_where_close()
 				->and_where(DB::expr('YEAR(date_and_time)'), '=', $year)
-				->and_where(DB::expr('MONTH(date_and_time)'), '=', $month);
+				->and_where(DB::expr('MONTH(date_and_time)'), '=', $month)
+				->order_by('date_and_time', 'ASC');
 		$this->view->photos = $imgs->find_all();
 
 		// Title

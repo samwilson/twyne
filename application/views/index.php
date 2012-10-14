@@ -61,36 +61,29 @@
 	<div class="photo">
 		<a name="<?php echo $photo->id ?>"></a>
 		<p class="img">
-			<a href="<?php echo Route::url('view', array('id'=>$photo->id), true) ?>">
-				<img src="<?php echo Route::url('render', array('id'=>$photo->id, 'size'=>'view')) ?>" title="" alt="" />
+			<a href="<?php echo Route::url('view', array('id'=>$photo->id), true) ?>" title="<?php echo htmlentities($photo->caption, ENT_QUOTES) ?>">
+				<img src="<?php echo Route::url('render', array('id'=>$photo->id, 'size'=>'thumb')) ?>" title="" alt="" />
 			</a>
-		</p>
-		<p class="caption">
-			<?php echo $photo->caption ?>
 		</p>
 		
 		<p class="metadata">
-			&middot; 
-			<a href="<?php echo Route::url('view', array('id'=>$photo->id), true) ?>">
-				<?php echo $photo->date_and_time ?>
-			</a>
-			<?php if($user->auth_level->id > 1) echo ' &middot; Auth level: '.$photo->auth_level->name.'.' ?>
-			
+			&middot;
+			<?php echo date('D jS', strtotime($photo->date_and_time)) ?>
+			<?php if($user->auth_level->id > 1) echo ' &middot; <dfn title="Auth Level">'.$photo->auth_level->name.'</dfn>' ?>
 			<?php if ($user->auth_level_id >= 10): ?>
 			&middot; <a href="<?php echo Route::url('image',array('action'=>'edit', 'id'=>$photo->id)) ?>#form">Edit</a>
 			&middot; <a href="<?php echo Route::url('image',array('action'=>'delete', 'id'=>$photo->id)) ?>#form">Delete</a>
 			<?php endif ?>
 			&middot;
-		</p>
-
-		<p class="tags">
 			<?php if (count($tags = $photo->tags->order_by('name')->find_all()) > 0): ?>
+				Tags:
+				<?php $tag_links = array(); foreach ($tags as $tag): ?>
+					<?php $tag_links[] = HTML::anchor('tag/'.urlencode($tag->name), $tag->name, array('rel'=>'tag')) ?>
+				<?php endforeach; echo join(', ', $tag_links); ?>
 				&middot;
-				<?php foreach ($tags as $tag): ?>
-					<?php echo HTML::anchor('tag/'.urlencode($tag->name), $tag->name, array('rel'=>'tag')) ?> &middot;
-				<?php endforeach ?>
 			<?php endif ?>
 		</p>
+		<div class="clear"></div>
 	</div>
 
 	<?php endforeach ?>

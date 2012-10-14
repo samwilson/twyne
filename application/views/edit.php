@@ -26,7 +26,7 @@
 	&nbsp;
 	<?php echo html::anchor("images/delete/$image->id", "Delete") ?>.
 </div>
-<form action='<?php echo Route::url('image',array('action'=>'save', 'id'=>$image->id)) ?>' method='post'>
+<form action='<?php echo Route::url('image', array('action'=>'save', 'id'=>$image->id)) ?>' method='post'>
 	<p class='hide'>
 		<input type='hidden' name='save_image' />
 		<input type='hidden' name='id' value='<?php echo $image->id ?>' />
@@ -35,34 +35,35 @@
 		<?php echo Form::label('date_and_time', 'Date and time:') ?>
 		<?php echo Form::input('date_and_time', $image->date_and_time, array('size'=>12)) ?>
 	</p>
-    <p>
-        <label for="author_id">Author:</label>
-		<?php echo Form::select('author_id', $people, $image->author_id, array('id'=>'author_id')) ?>
-    </p>
 	<p>
 		<?php echo Form::label('auth_level_id', 'Auth Level:') ?>
 		<?php echo Form::select('auth_level_id', $auth_levels, $image->auth_level_id) ?>
-    </p>
+	</p>
 	<p>
-		<?php echo Form::textarea('caption', $image->caption) ?>
+		<label for="author_id">Author:</label>
+		<?php echo Form::select('author_id', $people, $image->author_id, array('id'=>'author_id')) ?>
+	</p>
+	<p>
+		<label for="caption">Caption:</label>
+		<?php echo Form::textarea('caption', $image->caption, array('id'=>'caption')) ?>
 	</p>
 	<script type="text/javascript">
 	var tags = ["<?php echo ORM::factory('Tags')->get_list(TRUE) ?>"]
 	</script>
 	<p>
 		<label for="tags">Tags:</label>
-		<input id="tags" type="text" name="tags" value="<?php echo htmlspecialchars($image->tags->get_list(FALSE)) ?>" />
+		<textarea id="tags" name="tags"><?php echo htmlspecialchars($image->tags->get_list(FALSE)) ?></textarea>
 	</p>
-    <p>
-        <label for="licence_id">Licence:</label>
+	<p>
+		<label for="licence_id">Licence:</label>
 		<?php echo Form::select('licence_id', $licences, $image->licence_id, array('id'=>'licence_id')) ?>
-    </p>
+	</p>
 	<p>
 		<strong>Save</strong> and:
+		<input type='submit' name='save_and_view' value='view' />
 		<input type='submit' name='save_and_edit' value='keep editing' />
 		<input type='submit' name='save_and_process' value='process next image' />
-		<input type='submit' name='save_and_next' value='go to next image' />
 		or
-		<input type='submit' name='save_and_view' value='view' />
+		<input type='submit' name='save_and_next' value='go to next image' />
 	</p>
 </form>

@@ -299,8 +299,13 @@ class Controller_Image extends Controller_Base {
 				}
 				if (isset($_POST['save_and_next']))
 				{
-					//$im = ORM::factory('images')->where('id', '>', $image->id)->order_by('id', 'ASC')->limit(1)->find();
-					//$this->request->redirect('images/edit/'.$im->id.'#form');
+					$im = ORM::factory('images')
+						->where('id', '>', $image->id)
+						->order_by('id', 'ASC')
+						->limit(1)
+						->find();
+					$url = Route::url('image', array('action'=>'edit','id'=>$im->id), TRUE);
+					$this->request->redirect($url.'#form');
 				}
 				$this->request->redirect($url);
 			}

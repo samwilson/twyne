@@ -31,11 +31,11 @@
 		&middot;
 	</p>
 
-    <p class="licence">
-        &middot; By
-        <?php echo $image->author->name ?>,
-        <?php echo HTML::anchor($image->licence->link_url, $image->licence->name) ?>.
-        &middot;
-    </p>
+	<p class="licence">
+		&middot; By
+		<?php echo $image->author->name ?>,
+		<?php echo HTML::anchor($image->licence->link_url, $image->licence->name) ?>.
+		&middot;
+	</p>
 
 </div>

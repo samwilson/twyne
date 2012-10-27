@@ -58,12 +58,16 @@ Route::set('dates', 'dates(/<year>(/<month>)(.<format>))', array(
 	'format'=>'(html|pdf)',
 ))->defaults(array(
 	'controller'=>'index',
-	'action'=>'index',
+	'action'=>'dates',
 	'format'=>'html',
 ));
-Route::set('tags', 'tags(/<tag>)')->defaults(array(
+Route::set('tags', 'tags(/<tag_ids>(.<format>))', array(
+	'tag_ids'=>'[-+0-9]*',
+	'format'=>'(html|pdf)',
+))->defaults(array(
 	'controller'=>'index',
-	'action'=>'tag',
+	'action'=>'tags',
+	'format'=>'html',
 ));
 Route::set('view', '<id>(.<format>)', array(
 	'id' => '[0-9]+',

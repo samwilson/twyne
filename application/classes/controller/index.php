@@ -13,7 +13,7 @@ class Controller_Index extends Controller_Base {
 		//$this->template->bind_global('current_month_number', $false);
 	}
 
-	public function action_index()
+	public function action_dates()
 	{
 		$this->template->selected_toplink = Route::url('dates');
 
@@ -114,54 +114,87 @@ class Controller_Index extends Controller_Base {
 		}
 	}
 
-	public function action_tag()
+	public function action_tags()
 	{
-		$this->view = View::factory('blog/index');
+		$this->template->selected_toplink = Route::url('tags');
+		$this->view = View::factory('tags');
 		$this->template->content = $this->view;
 
-		$sql = "SELECT DATE_FORMAT(date_and_time, '%Y') AS year FROM images
-			UNION SELECT DATE_FORMAT(date_and_time, '%Y') AS year FROM journal_entries
-			GROUP BY YEAR(date_and_time) ORDER BY year DESC";
-		$this->view->years = Database::instance()->query(Database::SELECT, $sql, TRUE);
-
-		$tag = urldecode($this->request->param('tag', FALSE));
-
-		$imgs = ORM::factory('images')
-				->or_where_open()
-				->where('auth_level_id', '<=', $this->user->auth_level)
-				->or_where('auth_level_id', '=', 1)
-				->or_where_close()
-				->join('image_tags')->on('image_id', '=', 'images.id')
-				->join('tags')->on('tag_id', '=', 'tags.id')
-				->where('name', 'LIKE', $tag)
-				->find_all();
-		$images = array();
-		$item_id = 1;
-		foreach ($imgs as $img)
-		{
-			$images[$img->date_and_time.$item_id.'i'] = $img;
-			$item_id++;
+		// Get the tag IDs
+		$this->view->current_tags = $this->request->param('tag_ids', '');
+		$tags = Model_Tags::parse($this->view->current_tags);
+		$included_tags = array();
+		$excluded_tags = array();
+		foreach ($tags as $tag=>$sign) {
+			if ($sign == '-') {
+				$excluded_tags[] = $tag;
+			} else {
+				$included_tags[] = $tag;
+			}
 		}
-		$jes = ORM::factory('JournalEntries')
-				->or_where_open()
-				->where('auth_level_id', '<=', $this->user->auth_level)
-				->or_where('auth_level_id', '=', 1)
-				->or_where_close()
-				->join('journal_entry_tags')->on('journal_entry_id', '=', 'journalentries.id')
-				->join('tags')->on('tag_id', '=', 'tags.id')
-				->where('tags.name', 'LIKE', $tag)
-				->find_all();
-		$journal_entries = array();
-		foreach ($jes as $je)
+
+		// Get all photos.
+		$photos = ORM::factory('images')
+			->or_where_open()
+			->where('auth_level_id', '<=', $this->user->auth_level)
+			->or_where('auth_level_id', '=', 1)
+			->or_where_close()
+			->group_by('images.id');
+		if (count($included_tags) > 0)
 		{
-			$journal_entries[$je->date_and_time.$item_id.'je'] = $je;
-			$item_id++;
+			foreach ($included_tags as $included_tag) {
+				$alias = uniqid('it_');
+				$photos->join(array('image_tags', $alias))
+					->on($alias.'.image_id', '=', 'images.id')
+					->on($alias.'.tag_id', '=', DB::expr($included_tag));
+			}
 		}
-		$this->view->items = array_merge($images, $journal_entries);
-		ksort($this->view->items);
+		if (count($excluded_tags) > 0)
+		{
+			$exclude = DB::select()
+				->from('image_tags')
+				->where('image_id', '=', DB::expr('images.id'))
+				->where('tag_id', 'IN', $excluded_tags);
+			$photos->where(DB::expr('NOT EXISTS'), '', $exclude);
+		}
+		$this->view->photos = $photos->order_by('date_and_time')->find_all();
 		
-		$this->title = 'All items tagged &lsquo;'.$tag.'&rsquo;';
-		$this->template->tag = $tag;
+		// Get all tags.
+		$all_tags = ORM::factory('Tags')
+			->select(array('tags.id', 'id'))
+			->select(array('tags.name', 'name'))
+			->select(array(DB::expr('COUNT(DISTINCT it2.image_id)'), 'count'))
+			->join('image_tags')->on('tags.id', '=', 'image_tags.tag_id')
+			->join(array('images','i1'))->on('image_tags.image_id', '=', 'i1.id')
+			->join(array('image_tags','it2'))->on('i1.id', '=', 'it2.image_id')
+			->join(array('images','i2'))->on('image_tags.image_id', '=', 'i2.id')
+			->and_where_open()
+			->where('i1.auth_level_id', '<=', $this->user->auth_level)
+			->or_where('i1.auth_level_id', '=', 1)
+			->and_where_close()
+			->and_where_open()
+			->where('i2.auth_level_id', '<=', $this->user->auth_level)
+			->or_where('i2.auth_level_id', '=', 1)
+			->and_where_close()
+			->order_by('tags.name')
+			->group_by('tags.id'); // ->group_by('it2.image_id');
+		if (count($included_tags) > 0)
+		{
+			foreach ($included_tags as $included_tag) {
+				$alias = uniqid('it_');
+				$photos->join(array('image_tags', $alias))
+					->on($alias.'.image_id', '=', 'images.id')
+					->on($alias.'.tag_id', '=', DB::expr($included_tag));
+			}
+			//$all_tags->where('it2.tag_id', 'IN', $included_tags);
+		}
+		if (count($excluded_tags) > 0)
+		{
+			$all_tags->where('it2.tag_id', 'NOT IN', $excluded_tags);
+		}
+		$this->view->tags = $all_tags->find_all();
+		
+		$this->title = 'Tagged Photos';
 	}
 
 	/**

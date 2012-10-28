@@ -1,7 +1,8 @@
 
 <ol class="tag-cloud">
 	<?php foreach ($tags as $tag): ?>
-	<li class="tag count-<?php echo $tag->count ?>">
+	
+	<li class="tag count-<?php echo $tag->count ?> weight-<?php echo round(($tag->count/$max) * 10) ?>">
 		<?php echo $tag->name.' <span class="count">('.$tag->count.')</span>' ?>
 		
 		<?php if (strpos($current_tags, '+'.$tag->id)===FALSE): ?>

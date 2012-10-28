@@ -169,9 +169,16 @@ color: blue }
 .tag-cloud li:hover span.count { visibility:visible }
 .tag-cloud li a.include { color:green }
 .tag-cloud li a.exclude { color:orange }
-.tag-cloud li.count-1 { font-size:0.8em; color:#555 }
-.tag-cloud li.count-2 { font-size:0.9em }
-.tag-cloud li.count-3 { font-size:1em }
+.tag-cloud li.weight-1 { font-size:0.8em; color:#999 }
+.tag-cloud li.weight-2 { font-size:0.8em; color:#777 }
+.tag-cloud li.weight-3 { font-size:0.8em; color:#555 }
+.tag-cloud li.weight-4 { font-size:0.9em; color:#333 }
+.tag-cloud li.weight-5 { font-size:1.0em; color:black }
+.tag-cloud li.weight-6 { font-size:1.1em; color:black }
+.tag-cloud li.weight-7 { font-size:1.2em; color:black }
+.tag-cloud li.weight-8 { font-size:1.3em; color:black }
+.tag-cloud li.weight-9 { font-size:1.4em; color:black }
+.tag-cloud li.weight-10 { font-size:1.5em; color:black }
 
 .current-filters { text-align:center; margin:1em }
 .current-filters li { display:inline-block; margin:0 1em}

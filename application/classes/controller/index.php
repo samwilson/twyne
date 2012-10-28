@@ -180,19 +180,27 @@ class Controller_Index extends Controller_Base {
 			->group_by('tags.id'); // ->group_by('it2.image_id');
 		if (count($included_tags) > 0)
 		{
-			foreach ($included_tags as $included_tag) {
+			/*foreach ($included_tags as $included_tag) {
 				$alias = uniqid('it_');
 				$photos->join(array('image_tags', $alias))
 					->on($alias.'.image_id', '=', 'images.id')
 					->on($alias.'.tag_id', '=', DB::expr($included_tag));
-			}
-			//$all_tags->where('it2.tag_id', 'IN', $included_tags);
+			}*/
+			$all_tags->where('it2.tag_id', 'IN', $included_tags);
 		}
 		if (count($excluded_tags) > 0)
 		{
 			$all_tags->where('it2.tag_id', 'NOT IN', $excluded_tags);
 		}
+		
 		$this->view->tags = $all_tags->find_all();
+
+		// Get tag with max count
+		$this->view->max = 0;
+		foreach ($this->view->tags as $tag)
+		{
+			if ($tag->count > $this->view->max) $this->view->max = $tag->count;
+		}
 		
 		$this->title = 'Tagged Photos';
 	}

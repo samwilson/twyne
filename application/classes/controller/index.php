@@ -7,10 +7,13 @@ class Controller_Index extends Controller_Base {
 	public function before()
 	{
 		parent::before();
-		//$false = FALSE;
-		//$this->template->bind_global('current_year', $false);
-		//$this->template->bind_global('current_month_name', $false);
-		//$this->template->bind_global('current_month_number', $false);
+		$format = $this->request->param('format');
+		$this->view = View::factory($this->request->action().'/'.$format);
+		$this->template->content = $this->view;
+		if ($format != 'html')
+		{
+			$this->auto_render = FALSE;
+		}
 	}
 
 	public function action_dates()
@@ -89,7 +92,7 @@ class Controller_Index extends Controller_Base {
 				->and_where(DB::expr('MONTH(date_and_time)'), '=', $month)
 				->order_by('date_and_time', 'DESC');
 		$this->view->photos = $imgs->find_all();
-
+		
 		// Title
 		if ($this->view->current_year > 0 && $this->view->current_month > 0)
 		{
@@ -112,25 +115,42 @@ class Controller_Index extends Controller_Base {
 		{
 			$this->title = 'Date Unknown';
 		}
+		
+		$url = Route::url('dates', array('format'=>'pdf','year'=>$this->view->current_year,'month'=>$this->view->current_month), TRUE);
+		$this->add_template_message(HTML::anchor($url, "Download a PDF album of these photos."), 'success');
+		
+		// Output PDF, via LaTeX
+		if ($this->request->param('format')=='pdf')
+		{
+			$this->output_pdf(URL::title($this->title));
+		}
+
 	}
 
 	public function action_tags()
 	{
 		$this->template->selected_toplink = Route::url('tags');
-		$this->view = View::factory('tags');
-		$this->template->content = $this->view;
 
 		// Get the tag IDs
 		$this->view->current_tags = $this->request->param('tag_ids', '');
 		$tags = Model_Tags::parse($this->view->current_tags);
 		$included_tags = array();
 		$excluded_tags = array();
+		$canonical_tag_string = '';
 		foreach ($tags as $tag=>$sign) {
 			if ($sign == '-') {
 				$excluded_tags[] = $tag;
 			} else {
 				$included_tags[] = $tag;
 			}
+			$canonical_tag_string .= $sign.$tag;
+		}
+		
+		// Redirect to canonical tag URL
+		if ($this->view->current_tags != $canonical_tag_string)
+		{
+			$url = Route::url('tags', array('tag_ids'=>$canonical_tag_string), TRUE);
+			$this->request->redirect($canonical_tag_string);
 		}
 
 		// Get all photos.
@@ -203,12 +223,39 @@ class Controller_Index extends Controller_Base {
 		}
 		
 		$this->title = 'Tagged Photos';
+		
+		// Output PDF, via LaTeX
+		if ($this->request->param('format')=='pdf')
+		{
+			$this->output_pdf($canonical_tag_string);
+		}
+	}
+	
+	protected function output_pdf($filename)
+	{
+		// Get LaTeX
+		$tex = $this->view->render();
+
+		// Write to temp file
+		$dir = DATAPATH.'images'.DIRECTORY_SEPARATOR.'pdf';
+		$filename = URL::title($this->user->name).'_'.$filename;
+		$filepath = $dir.DIRECTORY_SEPARATOR.$filename;
+		file_put_contents($filepath.'.tex', $tex);
+
+		// Process to PDF
+		$cmd = "pdflatex --output-directory=$dir $filepath.tex";
+		exec("$cmd; makeindex $filepath.idx; $cmd; $cmd");
+
+		// Send PDF to user
+		//Kohana_debug::vars($this->response->headers());exit();
+		$this->response->send_file($filepath.'.pdf', $filename.'.pdf', array('mime_type'=>'application/pdf'));
+
 	}
 
 	/**
 	 * http://diveintomark.org/archives/2004/05/28/howto-atom-id
 	 */
-	public function action_feed($tag = FALSE)
+	/*public function action_feed($tag = FALSE)
 	{
 		$tag_clause = ($tag) ? "tags.name = ".Database::instance()->quote(urldecode($tag)) : '1';
 		$this->template = View::factory('blog/feed');
@@ -243,7 +290,7 @@ class Controller_Index extends Controller_Base {
 		);
 		$this->template->tag = $tag;
 		$this->request->headers['Content-Type'] = 'application/atom+xml';
-	}
+	}*/
 
 }
 

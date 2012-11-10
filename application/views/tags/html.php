@@ -34,8 +34,12 @@
 		</li>
 		<?php endforeach ?>
 	</ol>
+	<p class="pdf-link">
+		<a href="<?php echo Route::url('tags', array('format'=>'pdf', 'tag_ids'=>$current_tags)) ?>">
+			Download an album of these photos (PDF).
+		</a>
+	</p>
 </div>
-
 
 <?php if (strlen($current_tags) > 0): ?>
 <?php echo View::factory('thumbs')

@@ -171,7 +171,7 @@ class Model_Images extends ORM {
 			}
 		}
 	}
-
+	
 	public function rotate($degrees)
 	{
 		$full = realpath(DATAPATH.'images/full/'.$this->id.'.jpg');

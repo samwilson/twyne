@@ -1,16 +1,21 @@
 \documentclass{book}
 \usepackage[a4paper]{geometry}
 \usepackage{grffile}
+
+
+\usepackage{chngcntr}
+\counterwithout{figure}{chapter}
+
 \usepackage{makeidx}
 \makeindex
+
 \usepackage{figsize}
 \usepackage[margin=10pt,font=small,labelfont=bf,labelsep=period]{caption}
 \renewcommand{\figurename}{}
 \SetFigLayout[3]{2}{1}
 \renewcommand{\listfigurename}{Contents}
 \title{Photo Album}
-\author{Alexander Samuel William Wilson}
-\date{<?php echo $year ?>}
+\date{<?php echo $title ?>}
 \begin{document}
 \maketitle
 \frontmatter
@@ -19,24 +24,25 @@
 \chapter{Photographs}
 <?php
 $img_count = 0;
-foreach ($images as $image)
+foreach ($photos as $photo)
 {
-	$filename = DATAPATH.'images/view/'.$image->id.'.jpg';
+	$filename = DATAPATH.'images/view/'.$photo->id.'.jpg';
 	if (file_exists($filename))
 	{
-		$weekday = date('\l', strtotime($image->date_and_time));
-        $date = date($weekday.', F j\\\\\\t\ex\\t\s\u\p\e\\r\s\\c\\r\i\p\\t{S}, g:iA', strtotime($image->date_and_time));
+		$weekday = date('\l', strtotime($photo->date_and_time));
+		$date = date($weekday.', F j\\\\\\t\ex\\t\s\u\p\e\\r\s\\c\\r\i\p\\t{S} g:iA', strtotime($photo->date_and_time));
 		echo '
 		\begin{figure}
 			\begin{center}
+				\setcounter{figure}{'.$photo->id.'}
 				\includegraphics{'.$filename.'}
-				\caption{'.$date.'. '.str_replace("\n", ' ', Text::wiki2latex($image->caption)).'}
+				\caption{'.$date.'. '.str_replace("\n", ' ', $photo->caption).'
 		';
-		foreach($image->tags->order_by('title')->find_all() as $tag)
+		foreach($photo->tags->order_by('name')->find_all() as $tag)
 		{
-			echo '\index{'.$tag->title.'} ';
+			echo '\index{'.$tag->name.'} '.$tag->name;
 		}
-		echo '
+		echo '}
 			\end{center}
 		\end{figure}
 		';

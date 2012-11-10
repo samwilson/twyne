@@ -10,6 +10,11 @@
 	<p>
 		&middot; <?php echo $image->date_and_time ?>
 		&middot;
+		<a href="<?php echo Route::url('view',array('action'=>'view', 'id'=>$image->id, 'format'=>'pdf')) ?>"
+		   title="Get a one-page PDF of this photo and its metadata">
+			PDF
+		</a>
+		&middot;
 	</p>
 
 	<?php if (count($tags = $image->tags->order_by('name')->find_all()) > 0): ?>

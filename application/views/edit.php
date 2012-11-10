@@ -33,7 +33,7 @@
 	</p>
 	<p>
 		<?php echo Form::label('date_and_time', 'Date and time:') ?>
-		<?php echo Form::input('date_and_time', $image->date_and_time, array('size'=>12)) ?>
+		<?php echo Form::input('date_and_time', $image->date_and_time, array('size'=>18)) ?>
 	</p>
 	<p>
 		<?php echo Form::label('auth_level_id', 'Auth Level:') ?>

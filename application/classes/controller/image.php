@@ -10,48 +10,20 @@ class Controller_Image extends Controller_Base {
 		$this->template->title = 'Photos';
 	}
 
-	public function action_index()
+	public function action_latex()
 	{
-//		$year = $this->request->param('id');
-//		$sql = "SELECT DATE_FORMAT(date_and_time, '%Y') AS year
-//			FROM images
-//			GROUP BY YEAR(date_and_time)
-//			ORDER BY year ASC";
-//		$this->view->years = Database::instance()->query(Database::SELECT, $sql, TRUE);
-//		$this->view->year = (!$year) ? date('Y') : $year;
-//		$this->view->images = ORM::factory('images')
-//				->where(DB::expr('YEAR(date_and_time)'), '=', $this->view->year)
-//				->and_where_open()
-//				->where('auth_level_id', '<=', $this->user->auth_level)
-//				->or_where('auth_level_id', '=', 1)
-//				->and_where_close()
-//				->order_by('date_and_time', 'ASC')
+		$this->view = View::factory('latex');
+//		$id = $this->request->param('id');
+//		$images = ORM::factory('images')
+//				->where(DB::expr('YEAR(date_and_time)'), '=', $year)
 //				->find_all();
-	}
-
-	public function action_latex($year = NULL)
-	{
-		if ($this->user->auth_level < 10)
-		{
-			$this->add_flash_message('You are not allowed to generate albums.');
-			$this->request->redirect('images');
-		}
-		if (!is_numeric($year) || $year < 1111 || $year > 9999)
-		{
-			$this->add_flash_message('Please specify a year for which to export an album.');
-			$this->request->redirect('blog');
-		}
-		$images = ORM::factory('images')
-				->where(DB::expr('YEAR(date_and_time)'), '=', $year)
-				->find_all();
-		$latex = View::factory('images/latex')
-				->bind('images', $images)
-				->bind('year', $year)
-				->render();
-		$filename = DATAPATH.'/images/albums/'.$year.'.tex';
-		file_put_contents($filename, $latex);
-		$this->add_flash_message('The <span class="latex">L<sup>a</sup>&Tau;<sub>&epsilon;</sub>&Chi;</span> file for the '.$year.' Album has been written to disk.', 'success');
-		$this->request->redirect('blog/'.$year);
+//		$latex = View::factory('images/latex')
+//				->bind('images', $images)
+//				->bind('year', $year)
+//				->render();
+//		$filename = DATAPATH.'/images/albums/'.$year.'.tex';
+//		file_put_contents($filename, $latex);
+//		$this->add_flash_message('The <span class="latex">L<sup>a</sup>&Tau;<sub>&epsilon;</sub>&Chi;</span> file for the '.$year.' Album has been written to disk.', 'success');
 	}
 
 	public function action_render()
@@ -156,16 +128,41 @@ class Controller_Image extends Controller_Base {
 			$this->template->content = null;
 			return;
 		}
+		$this->view->max_file_size = (ini_get('upload_max_filesize')) ? ini_get('upload_max_filesize') : '10M';
 		$this->view->pending_files = ORM::factory('Images')->get_pending();
 		if (isset($_FILES['uploaded_file']))
 		{
 			$file = $_FILES['uploaded_file'];
-			if (Upload::not_empty($file) AND Upload::valid($file)) {
-				$path = Upload::save($file);
+			if (Upload::not_empty($file) AND Upload::valid($file) AND Upload::size($file, $this->view->max_file_size)) {
+				Upload::save($file);
 				$this->add_flash_message($file['name'].' uploaded', 'success');
 				$this->request->redirect('upload');
 			} else {
-				$this->add_template_message('Upload error', 'error');
+				switch ($file['error'])
+				{
+					case UPLOAD_ERR_INI_SIZE:
+					case UPLOAD_ERR_FORM_SIZE:
+						$msg = 'The uploaded file exceeds the permitted size of '.$this->view->max_file_size.'.';
+						break;
+					case UPLOAD_ERR_PARTIAL:
+						$msg = 'The uploaded file was only partially uploaded.';
+						break;
+					case UPLOAD_ERR_NO_FILE:
+						$msg = 'No file was uploaded.';
+						break;
+					case UPLOAD_ERR_NO_TMP_DIR:
+						$msg = 'The temporary upload directory could not be found.';
+						break;
+					case UPLOAD_ERR_CANT_WRITE:
+						$msg = 'Failed to write file to disk.';
+						break;
+					case UPLOAD_ERR_EXTENSION:
+						$msg = 'A PHP extension prevented the upload of this file.';
+						break;
+					default:
+						$msg = 'An indeterminate error occured, that was not do to with any of the standard errors.';
+				}
+				$this->add_template_message('Upload error: '.$msg, 'error');
 			}
 		}
 		elseif ($this->request->param('filename'))
@@ -320,13 +317,18 @@ class Controller_Image extends Controller_Base {
 		{
 			$this->request->redirect('images');
 		}
+		if ($this->request->param('format')=='pdf')
+		{
+			$this->view = View::factory('latex_single');
+			$this->auto_render = FALSE;
+		}
 		$this->view->image = ORM::factory('images')
-				->where('id', '=', $id)
-				->and_where_open()
-				->where('auth_level_id', '<=', $this->user->auth_level_id)
-				->or_where('auth_level_id', '=', 1)
-				->and_where_close()
-				->find();
+			->where('id', '=', $id)
+			->and_where_open()
+			->where('auth_level_id', '<=', $this->user->auth_level_id)
+			->or_where('auth_level_id', '=', 1)
+			->and_where_close()
+			->find();
 		if (!$this->view->image->loaded())
 		{
 			$this->response->status(404);
@@ -334,6 +336,14 @@ class Controller_Image extends Controller_Base {
 			$this->template->content = NULL;
 		}
 		$this->template->title = "Image #".$this->view->image->id;
+		
+		if ($this->request->param('format')=='pdf')
+		{
+			$tex = $this->view->render();
+			DATAPATH.'images'.
+			file_put_contents($filename, $tex);
+			
+		}
 	}
 
 }

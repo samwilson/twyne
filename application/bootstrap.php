@@ -112,7 +112,7 @@ Route::set('logout', 'logout')->defaults(
 		array('controller'=>'people', 'action'=>'logout')
 );
 Route::set('home', '')->defaults(
-		array('controller'=>'index', 'action'=>'index')
+		array('controller'=>'index', 'action'=>'dates', 'format'=>'html')
 );
 Route::set('default', '(<controller>(/<action>(/<id>(/<format>))))')->defaults(
 		array(

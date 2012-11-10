@@ -1,6 +1,6 @@
 
 <div class="thumbslist">
-
+	
 	<?php foreach ($photos as $photo): ?>
 
 	<div class="photo">

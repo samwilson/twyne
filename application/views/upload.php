@@ -3,8 +3,9 @@
 <form action="<?php echo Route::url('upload') ?>" method="post" enctype="multipart/form-data">
 	<p><input type="file" name="uploaded_file" size="80" /></p>
 	<p>
+		Maximum size: <?php echo $max_file_size ?>.
 		<input type="submit" name="upload" value="Upload" />
-		<input type="hidden" value="<?php ini_get('upload_max_filesize') ?>" name="MAX_FILE_SIZE">
+		<input type="hidden" value="<?php echo $max_file_size ?>" name="MAX_FILE_SIZE">
 	</p>
 </form>
 

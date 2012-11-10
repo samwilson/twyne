@@ -36,11 +36,17 @@ foreach ($photos as $photo)
 			\begin{center}
 				\setcounter{figure}{'.$photo->id.'}
 				\includegraphics{'.$filename.'}
-				\caption{'.$date.'. '.str_replace("\n", ' ', $photo->caption).'
-		';
-		foreach($photo->tags->order_by('name')->find_all() as $tag)
+				\caption{'.$date.'. '.str_replace("\n", ' ', $photo->caption);
+		if (substr($photo->caption, -1)!=='.') echo '.';
+		if (count($tags = $photo->tags->order_by('name')->find_all()) > 0)
 		{
-			echo '\index{'.$tag->name.'} '.$tag->name;
+			echo ' \emph{Tags:} ';
+			$tag_links = array();
+			foreach($tags as $tag)
+			{
+				$tag_links[] = '\index{'.$tag->name.'} '.$tag->name;
+			}
+			echo join(', ', $tag_links).'.';
 		}
 		echo '}
 			\end{center}

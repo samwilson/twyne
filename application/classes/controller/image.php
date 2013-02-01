@@ -208,7 +208,7 @@ class Controller_Image extends Controller_Base {
 		}
 		if (!Kohana::$is_cli)
 		{
-			$this->request->redirect('images/edit/'.$image->id.'#form');
+			$this->request->redirect($image->id.'/edit#form');
 		}
 		else
 		{
@@ -241,11 +241,14 @@ class Controller_Image extends Controller_Base {
 		$this->view->image = $image;
 		if (Arr::get($_GET, 'confirm', FALSE) == 'yes')
 		{
-			$month_name = $image->month_name();
-			$year = $image->year();
+			$params = array(
+				'year' => $image->year(),
+				'month' => $image->month_number(),
+			);
+			$url = Route::url('dates', $params);
 			$image->delete();
-			$this->add_template_message("Image #$id has been deleted", 'success');
-			$this->request->redirect("blog/$year/$month_name");
+			$this->add_flash_message("Image #$id has been deleted", 'success');
+			$this->request->redirect($url);
 		}
 	}
 
@@ -292,7 +295,7 @@ class Controller_Image extends Controller_Base {
 				}
 				if (isset($_POST['save_and_process']))
 				{
-					// TODO
+					$url = Route::url('process', NULL, TRUE);
 				}
 				if (isset($_POST['save_and_next']))
 				{
@@ -301,8 +304,12 @@ class Controller_Image extends Controller_Base {
 						->order_by('id', 'ASC')
 						->limit(1)
 						->find();
-					$url = Route::url('image', array('action'=>'edit','id'=>$im->id), TRUE);
-					$this->request->redirect($url.'#form');
+					if ($im->loaded()) {
+						$url = Route::url('image', array('action'=>'edit','id'=>$im->id), TRUE);
+						$this->request->redirect($url.'#form');
+					} else {
+						$url = '';
+					}
 				}
 				$this->request->redirect($url);
 			}

@@ -77,15 +77,13 @@ Route::set('view', '<id>(.<format>)', array(
 	'action'=>'view',
 	'format' => 'html',
 ));
-Route::set('render', '<id>(_<size>).(<format>)', array(
+Route::set('render', '<id>(_<size>).jpg', array(
 	'id' => '[0-9]+',
 	'size' => '(thumb|view|full)',
-	'format'=>'(png|jpg)',
 ))->defaults(array(
 	'controller'=>'image',
 	'action'=>'render',
-	'size' => 'max',
-	'format' => 'view',
+	'size' => 'view',
 ));
 Route::set('image', '<id>/<action>',array(
 	'action' => '(edit|delete|save)'
@@ -98,6 +96,11 @@ Route::set('upload', 'upload(/<filename>)', array(
 ))->defaults(array(
 	'controller'=>'image',
 	'action'=>'upload'
+));
+Route::set('process', 'process')
+    ->defaults(array(
+        'controller'=>'image',
+        'action'=>'process',
 ));
 Route::set('people', 'people')->defaults(
 		array('controller'=>'people', 'action'=>'index')

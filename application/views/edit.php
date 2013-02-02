@@ -20,9 +20,12 @@
 		<img src='<?php echo Route::url('render', array('id'=>$image->id)) ?>' title="View this photo" />
 	</a><br />
 	Rotate
-	<?php echo html::anchor("images/rotate/$image->id/90", "90&deg;") ?>,
-	<?php echo html::anchor("images/rotate/$image->id/180", "180&deg;") ?>, or
-	<?php echo html::anchor("images/rotate/$image->id/270", "270&deg;") ?> clockwise.
+	<?php
+	$route = Route::get('rotate');
+	echo HTML::anchor($route->uri(array('id'=>$image->id, 'degrees'=>90)), "90&deg;").', ';
+	echo HTML::anchor($route->uri(array('id'=>$image->id, 'degrees'=>180)), "180&deg;").', or ';
+	echo HTML::anchor($route->uri(array('id'=>$image->id, 'degrees'=>270)), "270&deg;").'clockwise ';
+	?>
 	&nbsp;
 	<?php echo html::anchor("images/delete/$image->id", "Delete") ?>.
 </div>

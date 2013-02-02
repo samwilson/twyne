@@ -219,12 +219,13 @@ class Controller_Image extends Controller_Base {
 	public function action_rotate()
 	{
 		$id = $this->request->param('id');
-		$degrees = $this->request->param('format');
+		$degrees = $this->request->param('degrees');
 		$image = ORM::factory('images', $id);
 		if ($image->loaded() && $this->user->is_main_user() && $degrees > 0)
 		{
 			$image->rotate($degrees);
-			$this->request->redirect("images/edit/$id#form");
+			$url = Route::url('image', array('action'=>'edit', 'id'=>$id), TRUE);
+			$this->request->redirect("$url#form");
 		}
 	}
 

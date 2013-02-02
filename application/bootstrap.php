@@ -91,6 +91,12 @@ Route::set('image', '<id>/<action>',array(
 	'controller'=>'image',
 	'action'=>'edit'
 ));
+Route::set('rotate', '<id>/rotate/<degrees>',array(
+	'degrees' => '[0-9]+'
+))->defaults(array(
+	'controller'=>'image',
+	'action'=>'rotate'
+));
 Route::set('upload', 'upload(/<filename>)', array(
 	'filename'=>'.*'
 ))->defaults(array(

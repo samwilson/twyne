@@ -7,9 +7,9 @@
  */
 $config_filename = 'config.php';
 if (!file_exists($config_filename)) {
-    $msg = "Unable to load configuration from $config_filename";
-    trigger_error($msg, E_USER_ERROR);
-    exit();
+    header("HTTP/1.1 500 Internal Server Error");
+    echo "Unable to load configuration from $config_filename";
+    exit(1);
 }
 require_once('config.php');
 if (!defined('TWYNE_AUTOLOGIN'))

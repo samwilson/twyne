@@ -35,6 +35,10 @@ class Controller_Index extends Controller_Base {
 			$last_entry = Database::instance()
 				->query(Database::SELECT, $sql, TRUE)
 				->current();
+			if (!$last_entry) {
+				$this->add_flash_message('No photos have yet been uploaded.', 'success');
+				$this->request->redirect('upload');
+			}
 			$params = array('year'=>$last_entry->year, 'month'=>$last_entry->month);
 			$this->request->redirect(Route::get('dates')->uri($params));
 		}

@@ -27,14 +27,6 @@ $database_config = array
 	'profiling'=>TRUE,
 );
 
-$email_config = array(
-	'inbox'=>'INBOX',
-	'server'=>'mail.example.com',
-	'port'=>993,
-	'username'=>'user@example.com',
-	'password'=>'password123',
-);
-
 /**
  * The ID of the main user in the `people` table.
  */

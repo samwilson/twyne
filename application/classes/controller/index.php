@@ -24,7 +24,7 @@ class Controller_Index extends Controller_Base {
 		$month = $this->request->param('month');
 
 		// Redirect to current month if no date given.
-		if (!$year && !$month)
+		if (is_null($year) && is_null($month))
 		{
 			$sql = "SELECT
 				YEAR(MAX(date_and_time)) AS year,

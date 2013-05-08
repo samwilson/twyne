@@ -98,7 +98,9 @@ table.docutils.footnote td { border:0 }
 #header .user { float:right; font-size:90%; margin-right:1em }
 #header h1 { font-size:1em; float:left }
 
-#footer { clear:both }
+#user-login { font-size:smaller; position:absolute; right:0.5em; top:0 }
+
+#footer { clear:both; border-top:1px solid black; font-size:smaller; line-height:1.6em; text-align:center; margin:2em 0 0 0 }
 #footer p { clear:both; line-height:2em; text-align:right; font-size:smaller;
     padding:4em 1em; color:white; letter-spacing:0.07em }
 #footer .kohana { margin:1em 0 2em 0 }

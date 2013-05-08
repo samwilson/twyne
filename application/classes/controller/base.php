@@ -51,19 +51,14 @@ abstract class Controller_Base extends Controller_Template {
 		 * Top Links
 		 */
 		$this->template->toplinks = array(
-			Route::url('home')=>'Home',
+			//Route::url('home')=>'Home',
 			Route::url('dates')=>'Dates',
 			Route::url('tags')=>'Tags',
 			Route::url('upload')=>'Upload',
 		);
-		if ($this->user->name)
+		if ($this->user->auth_level->id==10)
 		{
-			$this->template->toplinks[Route::url('people')] = 'Your Profile';
-			$this->template->toplinks[Route::url('logout')] = 'Log Out';
-		}
-		else
-		{
-			$this->template->toplinks[Route::url('login')] = 'Log In';
+			//$this->template->toplinks[Route::url('settings')] = 'Settings';
 		}
 		$this->template->selected_toplink = '';
 

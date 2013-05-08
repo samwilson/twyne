@@ -117,6 +117,9 @@ Route::set('person', 'person(/<id>)')->defaults(
 Route::set('login', 'login')->defaults(
 		array('controller'=>'people', 'action'=>'login')
 );
+Route::set('settings', 'settings(/<name>)')->defaults(
+		array('controller'=>'settings', 'action'=>'index')
+);
 Route::set('logout', 'logout')->defaults(
 		array('controller'=>'people', 'action'=>'logout')
 );

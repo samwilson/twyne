@@ -54,13 +54,15 @@ class Model_Images extends ORM {
 	{
 		$images_in_dir = DATAPATH.'images'.DIRECTORY_SEPARATOR.'IN';
 		$out = array();
-		foreach (scandir($images_in_dir) as $file)
-		{
-			if (!is_file($images_in_dir.'/'.$file))
+		if (is_dir($images_in_dir)) {
+			foreach (scandir($images_in_dir) as $file)
 			{
-				continue;
+				if (!is_file($images_in_dir.'/'.$file))
+				{
+					continue;
+				}
+				$out[] = $file;
 			}
-			$out[] = $file;
 		}
 		return $out;
 	}

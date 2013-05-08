@@ -25,6 +25,7 @@ Kohana::$environment = constant('Kohana::'.strtoupper(KOHANA_ENV));
 Kohana::init(array(
 	'base_url'=>KOHANA_BASE_URL,
 	'index_file'=>FALSE,
+	'profile' => Kohana::$environment!=Kohana::PRODUCTION,
 ));
 
 /**

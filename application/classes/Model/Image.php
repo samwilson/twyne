@@ -2,13 +2,13 @@
 
 defined('SYSPATH') or die('No direct script access.');
 
-class Model_Images extends ORM {
+class Model_Image extends ORM {
 
 	protected $_table_name = 'images';
 
 	protected $_has_many = array(
 		'tags'=>array(
-			'model'=>'tags',
+			'model'=>'Tag',
 			'through'=>'image_tags',
 			'far_key'=>'tag_id',
 			'foreign_key'=>'image_id'
@@ -16,9 +16,9 @@ class Model_Images extends ORM {
 	);
 
 	protected $_belongs_to = array(
-		'author'=>array('model'=>'People'),
-		'licence'=>array('model'=>'Licences'),
-		'auth_level'=>array('model'=>'AuthLevels'),
+		'author'=>array('model'=>'Person'),
+		'licence'=>array(),
+		'auth_level'=>array('model'=>'AuthLevel'),
 	);
 
 	public function year()
@@ -173,7 +173,7 @@ class Model_Images extends ORM {
 			}
 		}
 	}
-	
+
 	public function rotate($degrees)
 	{
 		$full = realpath(DATAPATH.'images/full/'.$this->id.'.jpg');

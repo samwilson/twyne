@@ -12,9 +12,15 @@
 	<?php endif ?>
 	<br />
 
-	<?php echo HTML::anchor('images/edit/'.$chronology_prev->id.'#form', '&larr; '.$chronology_prev->date_and_time) ?>
+	<?php if ($chronology_prev->loaded()): ?>
+	<?php $url = Route::url('image', array('action'=>'edit', 'id'=>$chronology_prev->id), TRUE) ?>
+	<a href="<?php echo $url ?>#form" title="View previous photo">&larr; #<?php echo $chronology_prev->date_and_time ?></a>
+	<?php endif ?>
 	| Chronological |
-	<?php echo HTML::anchor('images/edit/'.$chronology_next->id.'#form', $chronology_next->date_and_time.' &rarr;') ?><br />
+	<?php if ($chronology_next->loaded()): ?>
+	<?php $url = Route::url('image', array('action'=>'edit', 'id'=>$chronology_next->id), TRUE) ?>
+	<a href="<?php echo $url ?>#form" title="View previous photo">#<?php echo $chronology_next->date_and_time ?> &rarr;</a>
+	<?php endif ?>
 
 	<a href="<?php echo Route::url('view', array('id'=>$image->id)) ?>">
 		<img src='<?php echo Route::url('render', array('id'=>$image->id)) ?>' title="View this photo" />
@@ -51,7 +57,7 @@
 		<?php echo Form::textarea('caption', $image->caption, array('id'=>'caption')) ?>
 	</p>
 	<script type="text/javascript">
-	var tags = ["<?php echo ORM::factory('Tags')->get_list(TRUE) ?>"]
+	var tags = ["<?php echo ORM::factory('Tag')->get_list(TRUE) ?>"]
 	</script>
 	<p>
 		<label for="tags">Tags:</label>

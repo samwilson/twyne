@@ -2,7 +2,7 @@
 
 defined('SYSPATH') or die('No direct script access.');
 
-class Model_AuthLevels extends ORM {
+class Model_AuthLevel extends ORM {
 
 	protected $_table_name = 'auth_levels';
 

@@ -24,10 +24,10 @@
 <div class="current-filters">
 	<strong>Currently-Selected Tags:</strong>
 	<ol>
-		<?php foreach (Model_Tags::parse($current_tags) as $tag_id=>$sign): ?>
+		<?php foreach (Model_Tag::parse($current_tags) as $tag_id=>$sign): ?>
 		<li class="<?php echo ($sign=='-') ? 'exclude' : 'include' ?>">
 			<em><?php echo ($sign=='-') ? 'Excluding' : 'Including' ?></em>
-			<?php echo ORM::factory('Tags', $tag_id)->name ?>
+			<?php echo ORM::factory('Tag', $tag_id)->name ?>
 			<a href="<?php echo $tag->url($current_tags, $tag_id) ?>" class="remove-filter" title="Remove this tag filter">
 				[X]
 			</a>

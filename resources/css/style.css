@@ -198,52 +198,38 @@ color: blue }
 /******************************************************************************/
 /* Individual views                                                           */
 
-.upload form { text-align:center }
+.index-controller.tags-action .photos {  }
+.index-controller.dates-action .thumbslist { margin-left:200px }
+.index-controller.dates-action .menu { float:left; border:1px solid black; border-width:0 1px 1px 1px; margin:0 0 1em 20px; width:180px }
+.index-controller.dates-action .menu ol { margin:0 }
+.index-controller.dates-action .menu li { padding:0 }
+.index-controller.dates-action .menu li a { display:block; border-top:1px solid black; padding:0.3em 1em }
+.index-controller.dates-action .menu li li.selected a { font-weight:bolder; letter-spacing:0.1em; color:black }
+.index-controller.dates-action .menu li li.selected a:hover { text-decoration:none }
+.index-controller.dates-action .menu li li a { padding:0.2em 1em 0.1em 3em; font-size:smaller; border-top:0 }
 
-.index.tags .photos {  }
+.image-controller.edit-action .view { margin:auto; text-align:right }
+.image-controller.edit-action .image { float:left; margin:0 1em 1em 1em; width:500px; text-align:center }
+.image-controller.edit-action form { margin-left:500px; width:800px; text-align:left }
+.image-controller.edit-action form p { margin:0.3em }
+.image-controller.edit-action textarea { display:block; width:90% }
+.image-controller.view-action .content { text-align:center; max-width:510px; margin:3em auto 2px auto }
+.image-controller.view-action .caption { text-align:left; margin:1.3em; font-size:larger }
+.image-controller.view-action .metadata { margin-bottom:3em; font-variant:small-caps }
+.image-controller.view-action .metadata .licence { font-size:smaller }
+.image-controller.index-action .columnar li { width:4em; text-align:center }
+.image-controller.index-action .thumbs a { float:left; margin:0.3em }
+.image-controller.index-action .thumbs img { border:1px solid #9F9A4E }
+.image-controller.index-action .thumbs a:hover img { border:1px solid white }
+.image-controller.upload-action form { text-align:center }
 
-.index.dates .thumbslist { margin-left:200px }
-.index.dates .menu { float:left; border:1px solid black; border-width:0 1px 1px 1px; margin:0 0 1em 20px; width:180px }
-.index.dates .menu ol { margin:0 }
-.index.dates .menu li { padding:0 }
-.index.dates .menu li a { display:block; border-top:1px solid black; padding:0.3em 1em }
-.index.dates .menu li li.selected a { font-weight:bolder; letter-spacing:0.1em; color:black }
-.index.dates .menu li li.selected a:hover { text-decoration:none }
-.index.dates .menu li li a { padding:0.2em 1em 0.1em 3em; font-size:smaller; border-top:0 }
-
-.blog .item { margin:1em auto; border:1px solid black; border-width:1px 0 }
-.blog .item.image { width:506px; border:1px solid #999 }
-.blog .item h2 { font-size:1.3em; font-variant:small-caps }
-.blog .item h3 { border-bottom:1px solid black; margin:1.3em 0 0.3em 0; color:#652c02 }
-.blog .item hr { width:45%; margin:1em auto }
-.blog .img { margin-bottom:3px }
-.blog img { display:block; margin:3px auto }
-.blog .caption { background-color:white; border-top:1px solid #999; padding:3px 3px 4px 3px }
-.blog .metadata { color:black; text-align:right; margin:3px; font-size:smaller }
-.blog .tags { text-align:right; margin-right:3px; font-size:smaller; margin-bottom:0.3em;
-    clear:right; font-variant:small-caps }
-
-.image.edit .view { margin:auto; text-align:right }
-.image.edit .image { float:left; margin:0 1em 1em 1em; width:500px; text-align:center }
-.image.edit form { margin-left:500px; width:800px; text-align:left }
-.image.edit form p { margin:0.3em }
-.image.edit textarea { display:block; width:90% }
-.image.view .content { text-align:center; max-width:510px; margin:3em auto 2px auto }
-.image.view .caption { text-align:left; margin:1.3em; font-size:larger }
-.image.view .metadata { margin-bottom:3em; font-variant:small-caps }
-.image.view .metadata .licence { font-size:smaller }
-.image.index .columnar li { width:4em; text-align:center }
-.image.index .thumbs a { float:left; margin:0.3em }
-.image.index .thumbs img { border:1px solid #9F9A4E }
-.image.index .thumbs a:hover img { border:1px solid white }
-
-.people.index .new { text-align:center }
-.people.person form { margin:auto; width:90ex; text-align:center }
-.people.person form label { display:block; text-align:left }
-.people.person form input,
-.people.person form textarea { width:100% }
-.people.person form .submit { text-align:right }
-.people.person form .submit input { width:auto }
-.people.login .content { text-align:center }
-.people.login #openid_identifier { background-position:0% 50%; padding-left:18px;
+.people-controller.index-action .new { text-align:center }
+.people-controller.person-action form { margin:auto; width:90ex; text-align:center }
+.people-controller.person-action form label { display:block; text-align:left }
+.people-controller.person-action form input,
+.people-controller.person-action form textarea { width:100% }
+.people-controller.person-action form .submit { text-align:right }
+.people-controller.person-action form .submit input { width:auto }
+.people-controller.login-action .content { text-align:center }
+.people-controller.login-action #openid_identifier { background-position:0% 50%; padding-left:18px;
     background-repeat:no-repeat }

@@ -38,12 +38,12 @@ abstract class Controller_Base extends Controller_Template {
 		$this->user = $this->session->get('user');
 		if (TWYNE_AUTOLOGIN)
 		{
-			$this->user = ORM::factory('People', 1);
+			$this->user = ORM::factory('Person', 1);
 		}
 		if (empty($this->user))
 		{
-			$this->user = ORM::factory('People');
-			$this->user->auth_level = ORM::factory('AuthLevels', 1);
+			$this->user = ORM::factory('Person');
+			$this->user->auth_level = ORM::factory('AuthLevel', 1);
 		}
 		$this->template->bind_global('user', $this->user);
 

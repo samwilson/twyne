@@ -34,7 +34,7 @@ class Controller_Image extends Controller_Base {
 		{
 			$size = 'view';
 		}
-		$image = ORM::factory('Images')
+		$image = ORM::factory('Image')
 				->where('id', '=', $id)
 				->and_where_open()
 				->where('auth_level_id', '<=', $this->user->auth_level_id)
@@ -63,9 +63,9 @@ class Controller_Image extends Controller_Base {
 		if ($this->user->auth_level_id < 10)
 		{
 			$this->add_flash_message('You are not allowed to edit images.');
-			$this->request->redirect('images');
+			$this->redirect(Url::site());
 		}
-		$this->view->image = ORM::factory('images', $id);
+		$this->view->image = ORM::factory('Image', $id);
 		if (!$this->view->image->loaded())
 		{
 			$this->add_flash_message('The requested image could not be found.', 'error');
@@ -77,7 +77,7 @@ class Controller_Image extends Controller_Base {
 
 		// Auth Levels
 		$this->view->auth_levels = array();
-		$auth_levels = ORM::factory('AuthLevels')->order_by('id', 'ASC')->find_all();
+		$auth_levels = ORM::factory('AuthLevel')->order_by('id', 'ASC')->find_all();
 		foreach ($auth_levels as $auth_level)
 		{
 			$this->view->auth_levels[$auth_level->id] = $auth_level->id.': '.$auth_level->name;
@@ -85,7 +85,7 @@ class Controller_Image extends Controller_Base {
 		
 		// Licences
 		$this->view->licences = array();
-		$licences = ORM::factory('Licences')->find_all();
+		$licences = ORM::factory('Licence')->find_all();
 		foreach ($licences as $licence)
 		{
 			$this->view->licences[$licence->id] = $licence->name;
@@ -93,7 +93,7 @@ class Controller_Image extends Controller_Base {
 
 		// Authors
 		$this->view->people = array();
-		$people = ORM::factory('People')
+		$people = ORM::factory('Person')
 				->order_by('auth_level_id', 'DESC')->order_by('name', 'ASC')
 				->find_all();
 		foreach ($people as $person)
@@ -101,19 +101,19 @@ class Controller_Image extends Controller_Base {
 			$this->view->people[$person->id] = $person->name;
 		}
 
-		$this->view->chronology_prev = ORM::factory('images')
+		$this->view->chronology_prev = ORM::factory('Image')
 						->where('date_and_time', '<', $this->view->image->date_and_time)
 						->and_where('id', '!=', $this->view->image->id)
 						->order_by('date_and_time', 'DESC')->limit(1)->find();
-		$this->view->chronology_next = ORM::factory('images')
+		$this->view->chronology_next = ORM::factory('Image')
 						->where('date_and_time', '>', $this->view->image->date_and_time)
 						->and_where('id', '!=', $this->view->image->id)
-						->order_by('date_and_time', 'DESC')->limit(1)->find();
+						->order_by('date_and_time', 'ASC')->limit(1)->find();
 
-		$this->view->accession_prev = ORM::factory('images')
+		$this->view->accession_prev = ORM::factory('Image')
 						->where('id', '<', $this->view->image->id)
 						->order_by('id', 'DESC')->limit(1)->find();
-		$this->view->accession_next = ORM::factory('images')
+		$this->view->accession_next = ORM::factory('Image')
 						->where('id', '>', $this->view->image->id)
 						->order_by('id', 'ASC')->limit(1)->find();
 	}
@@ -129,14 +129,14 @@ class Controller_Image extends Controller_Base {
 			return;
 		}
 		$this->view->max_file_size = (ini_get('upload_max_filesize')) ? ini_get('upload_max_filesize') : '10M';
-		$this->view->pending_files = ORM::factory('Images')->get_pending();
+		$this->view->pending_files = ORM::factory('Image')->get_pending();
 		if (isset($_FILES['uploaded_file']))
 		{
 			$file = $_FILES['uploaded_file'];
 			if (Upload::not_empty($file) AND Upload::valid($file) AND Upload::size($file, $this->view->max_file_size)) {
 				Upload::save($file);
 				$this->add_flash_message($file['name'].' uploaded', 'success');
-				$this->request->redirect('upload');
+				$this->redirect('upload');
 			} else {
 				switch ($file['error'])
 				{
@@ -170,10 +170,10 @@ class Controller_Image extends Controller_Base {
 			$filename = Upload::$default_directory.DIRECTORY_SEPARATOR.$this->request->param('filename');
 			if (file_exists($filename))
 			{
-				$image = ORM::factory('Images');
+				$image = ORM::factory('Image');
 				$image->author = $this->user;
 				$image->import($filename);
-				$this->request->redirect($image->id.'/edit#form');
+				$this->redirect($image->id.'/edit#form');
 			}
 		}
 	}
@@ -186,7 +186,7 @@ class Controller_Image extends Controller_Base {
 		if ($this->user->auth_level_id < 10 && !Kohana::$is_cli)
 		{
 			$this->add_flash_message('You are not allowed to process images.');
-			$this->request->redirect('images');
+			$this->redirect(URL::site('/'));
 		}
 		$images_in_dir = DATAPATH.'images/IN';
 		foreach (scandir($images_in_dir) as $file)
@@ -196,23 +196,23 @@ class Controller_Image extends Controller_Base {
 				continue;
 			}
 			$fullname = $images_in_dir.'/'.$file;
-			$image = ORM::factory('Images');
+			$image = ORM::factory('Image');
 			$image->author = $this->user;
 			$image->import($fullname);
 			break;
 		}
-		if (!isset($image) && !Kohana::$is_cli)
+		if (!isset($image) && php_sapi_name() != 'cli')//  Kohana::$is_cli)
 		{
 			$this->add_template_message('Nothing processed.');
 			return;
 		}
-		if (!Kohana::$is_cli)
+		if (php_sapi_name() != 'cli')
 		{
-			$this->request->redirect($image->id.'/edit#form');
+			$this->redirect($image->id.'/edit#form');
 		}
 		else
 		{
-			exit();
+			exit(0);
 		}
 	}
 
@@ -220,12 +220,12 @@ class Controller_Image extends Controller_Base {
 	{
 		$id = $this->request->param('id');
 		$degrees = $this->request->param('degrees');
-		$image = ORM::factory('images', $id);
+		$image = ORM::factory('Image', $id);
 		if ($image->loaded() && $this->user->is_main_user() && $degrees > 0)
 		{
 			$image->rotate($degrees);
 			$url = Route::url('image', array('action'=>'edit', 'id'=>$id), TRUE);
-			$this->request->redirect("$url#form");
+			$this->redirect("$url#form");
 		}
 	}
 
@@ -238,7 +238,7 @@ class Controller_Image extends Controller_Base {
 			$this->request->response = '';
 			return;
 		}
-		$image = ORM::factory('Images', $id);
+		$image = ORM::factory('Image', $id);
 		$this->view->image = $image;
 		if (Arr::get($_GET, 'confirm', FALSE) == 'yes')
 		{
@@ -246,10 +246,10 @@ class Controller_Image extends Controller_Base {
 				'year' => $image->year(),
 				'month' => $image->month_number(),
 			);
-			$url = Route::url('dates', $params);
+			$url = Route::url('dates', $params, TRUE);
 			$image->delete();
 			$this->add_flash_message("Image #$id has been deleted", 'success');
-			$this->request->redirect($url);
+			$this->redirect($url);
 		}
 	}
 
@@ -258,7 +258,7 @@ class Controller_Image extends Controller_Base {
 
 		if (isset($_POST['save_image']) && $this->user->auth_level_id >= 10)
 		{
-			$image = ORM::factory('images', $_POST['id']);
+			$image = ORM::factory('Image', $_POST['id']);
 
 			// Save tags
 			$tags = array_unique(array_map('trim', explode(',', $_POST['tags'])));
@@ -267,7 +267,7 @@ class Controller_Image extends Controller_Base {
 			{
 				if (!empty($tag_name))
 				{
-					$tag = ORM::factory('tags')->where('name', '=', $tag_name)->find();
+					$tag = ORM::factory('Tag')->where('name', '=', $tag_name)->find();
 					if (!$tag->loaded())
 					{
 						$tag->name = $tag_name;
@@ -300,19 +300,19 @@ class Controller_Image extends Controller_Base {
 				}
 				if (isset($_POST['save_and_next']))
 				{
-					$im = ORM::factory('images')
+					$im = ORM::factory('Image')
 						->where('id', '>', $image->id)
 						->order_by('id', 'ASC')
 						->limit(1)
 						->find();
 					if ($im->loaded()) {
 						$url = Route::url('image', array('action'=>'edit','id'=>$im->id), TRUE);
-						$this->request->redirect($url.'#form');
+						$this->redirect($url.'#form');
 					} else {
 						$url = '';
 					}
 				}
-				$this->request->redirect($url);
+				$this->redirect($url);
 			}
 		}
 	}
@@ -323,14 +323,14 @@ class Controller_Image extends Controller_Base {
 		// If no image ID specified, redirect.
 		if ($id == NULL)
 		{
-			$this->request->redirect('images');
+			$this->redirect(Route::url('default'));
 		}
 		if ($this->request->param('format')=='pdf')
 		{
 			$this->view = View::factory('latex_single');
 			$this->auto_render = FALSE;
 		}
-		$this->view->image = ORM::factory('images')
+		$this->view->image = ORM::factory('Image')
 			->where('id', '=', $id)
 			->and_where_open()
 			->where('auth_level_id', '<=', $this->user->auth_level_id)

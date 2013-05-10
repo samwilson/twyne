@@ -16,13 +16,13 @@ $database_config = array
 		 * Ports and sockets may be appended to the hostname.
 		 */
 		'hostname'=>'localhost',
-		'database'=>'twyne_dev',
-		'username'=>'twyne_dev',
-		'password'=>'twyne_dev123',
+		'database'=>'twyne',
+		'username'=>'',
+		'password'=>'',
 		'persistent'=>FALSE,
 	),
 	'table_prefix'=>'',
-	'charset'=>'utf8',
+	'charset'=> 'utf8',
 	'caching'=>FALSE,
 	'profiling'=>TRUE,
 );
@@ -32,7 +32,15 @@ $database_config = array
  */
 define('TWYNE_USER_ID', 1);
 
-define('TWYNE_AUTOLOGIN', false); // For development or closed installations ONLY.
+/**
+ * For development or closed installations ONLY.
+ */
+define('TWYNE_AUTOLOGIN', FALSE);
+
+/**
+ * Set to a random string of your choosing.
+ */
+define('TWYNE_COOKIESALT', '');
 
 define('KOHANA_LANG', 'en-au');
 

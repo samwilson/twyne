@@ -10,10 +10,10 @@ class Controller_People extends Controller_Base {
 		{
 			$this->controller_view->content = NULL;
 			$this->add_flash_message('Access Denied');
-			$this->request->redirect('/');
+			$this->redirect(URL::site('/'));
 		}
 		$this->template->title = 'People';
-		$this->view->people = ORM::factory('people')
+		$this->view->people = ORM::factory('Person')
 				->order_by('name')
 				->find_all();
 	}
@@ -24,10 +24,10 @@ class Controller_People extends Controller_Base {
 		{
 			$this->controller_view->content = NULL;
 			$this->add_flash_message('Access Denied');
-			$this->request->redirect('/');
+			$this->redirect(URL::site('/'));
 		}
 		$id = $this->request->param('id');
-		$person = ORM::factory('people', $id);
+		$person = ORM::factory('Person', $id);
 		if (!is_null($id) AND !$person->loaded())
 		{
 			$msg = "No record found with an ID of '$id'. "
@@ -81,7 +81,7 @@ class Controller_People extends Controller_Base {
 						$this->user->name = Arr::get($attrs, 'namePerson', Arr::get($attrs, 'namePerson/friendly', $openid->identity));
 						$this->add_flash_message('Welcome!', 'success');
 						// If this is the only user, make them a superuser
-						if (ORM::factory('People')->count_all() == 0)
+						if (ORM::factory('Person')->count_all() == 0)
 						{
 							$this->user->auth_level_id = 10;
 							$msg = 'As the first ever user, your account has '

@@ -37,10 +37,10 @@ class Controller_Index extends Controller_Base {
 				->current();
 			if (!$last_entry) {
 				$this->add_flash_message('No photos have yet been uploaded.', 'success');
-				$this->request->redirect('upload');
+				$this->redirect('upload');
 			}
 			$params = array('year'=>$last_entry->year, 'month'=>$last_entry->month);
-			$this->request->redirect(Route::get('dates')->uri($params));
+			$this->redirect(Route::get('dates')->uri($params));
 		}
 		
 		// Redirect to zero-padded dates if required.
@@ -58,7 +58,7 @@ class Controller_Index extends Controller_Base {
 		if ($redirect)
 		{
 			$params = array('year'=>$year, 'month'=>$month);
-			$this->request->redirect(Route::get('dates')->uri($params));
+			$this->redirect(Route::get('dates')->uri($params));
 		}
 		
 		// Account for 'zero' date-parts as meaning 'unknown'.
@@ -87,7 +87,7 @@ class Controller_Index extends Controller_Base {
 			ORDER BY month DESC";
 		$this->view->months = Database::instance()->query(Database::SELECT, $sql, TRUE);
 
-		$imgs = ORM::factory('images')
+		$imgs = ORM::factory('Image')
 				->or_where_open()
 				->where('auth_level_id', '<=', $this->user->auth_level)
 				->or_where('auth_level_id', '=', 1)
@@ -137,7 +137,7 @@ class Controller_Index extends Controller_Base {
 
 		// Get the tag IDs
 		$this->view->current_tags = $this->request->param('tag_ids', '');
-		$tags = Model_Tags::parse($this->view->current_tags);
+		$tags = Model_Tag::parse($this->view->current_tags);
 		$included_tags = array();
 		$excluded_tags = array();
 		$canonical_tag_string = '';
@@ -154,22 +154,22 @@ class Controller_Index extends Controller_Base {
 		if ($this->view->current_tags != $canonical_tag_string)
 		{
 			$url = Route::url('tags', array('tag_ids'=>$canonical_tag_string), TRUE);
-			$this->request->redirect($canonical_tag_string);
+			$this->redirect($canonical_tag_string);
 		}
 
 		// Get all photos.
-		$photos = ORM::factory('images')
+		$photos = ORM::factory('Image')
 			->or_where_open()
 			->where('auth_level_id', '<=', $this->user->auth_level)
 			->or_where('auth_level_id', '=', 1)
 			->or_where_close()
-			->group_by('images.id');
+			->group_by('image.id');
 		if (count($included_tags) > 0)
 		{
 			foreach ($included_tags as $included_tag) {
 				$alias = uniqid('it_');
 				$photos->join(array('image_tags', $alias))
-					->on($alias.'.image_id', '=', 'images.id')
+					->on($alias.'.image_id', '=', 'image.id')
 					->on($alias.'.tag_id', '=', DB::expr($included_tag));
 			}
 		}
@@ -184,11 +184,11 @@ class Controller_Index extends Controller_Base {
 		$this->view->photos = $photos->order_by('date_and_time')->find_all();
 		
 		// Get all tags.
-		$all_tags = ORM::factory('Tags')
-			->select(array('tags.id', 'id'))
-			->select(array('tags.name', 'name'))
+		$all_tags = ORM::factory('Tag')
+			->select(array('tag.id', 'id'))
+			->select(array('tag.name', 'name'))
 			->select(array(DB::expr('COUNT(DISTINCT it2.image_id)'), 'count'))
-			->join('image_tags')->on('tags.id', '=', 'image_tags.tag_id')
+			->join('image_tags')->on('tag.id', '=', 'image_tags.tag_id')
 			->join(array('images','i1'))->on('image_tags.image_id', '=', 'i1.id')
 			->join(array('image_tags','it2'))->on('i1.id', '=', 'it2.image_id')
 			->join(array('images','i2'))->on('image_tags.image_id', '=', 'i2.id')
@@ -200,8 +200,8 @@ class Controller_Index extends Controller_Base {
 			->where('i2.auth_level_id', '<=', $this->user->auth_level)
 			->or_where('i2.auth_level_id', '=', 1)
 			->and_where_close()
-			->order_by('tags.name')
-			->group_by('tags.id'); // ->group_by('it2.image_id');
+			->order_by('tag.name')
+			->group_by('tag.id');
 		if (count($included_tags) > 0)
 		{
 			/*foreach ($included_tags as $included_tag) {

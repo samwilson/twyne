@@ -2,15 +2,14 @@
 
 defined('SYSPATH') or die('No direct script access.');
 
-class Model_Tags extends ORM {
+class Model_Tag extends ORM {
 
 	protected $_table_name = 'tags';
 	
 	protected static $_currently_selected;
 
 	protected $_has_many = array(
-		'images'=>array('model'=>'images', 'through'=>'tags_to_images', 'far_key'=>'image', 'foreign_key'=>'tag'),
-		'journal_entries'=>array('model'=>'journal_entries', 'through'=>'tags_to_journal_entries', 'far_key'=>'journal_entry', 'foreign_key'=>'tag'),
+		'images'=>array('through'=>'tags_to_images', 'far_key'=>'image', 'foreign_key'=>'tag'),
 	);
 
 	public function get_list($quoted)

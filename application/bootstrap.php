@@ -2,12 +2,13 @@
 
 defined('SYSPATH') or die('No direct script access.');
 
-require SYSPATH.'classes/kohana/core'.EXT;
-require SYSPATH.'classes/kohana'.EXT;
+require SYSPATH.'classes/Kohana/Core'.EXT;
+require SYSPATH.'classes/Kohana'.EXT;
 spl_autoload_register(array('Kohana', 'auto_load'));
 ini_set('unserialize_callback_func', 'spl_autoload_call');
 I18n::lang(KOHANA_LANG);
 Kohana::$environment = constant('Kohana::'.strtoupper(KOHANA_ENV));
+Cookie::$salt = TWYNE_COOKIESALT;
 
 /**
  * Initialize Kohana, setting the default options.
@@ -58,7 +59,7 @@ Route::set('dates', 'dates(/<year>(/<month>)(.<format>))', array(
 	'month'=> '[0-9]{1,2}',
 	'format'=>'(html|pdf)',
 ))->defaults(array(
-	'controller'=>'index',
+	'controller'=>'Index',
 	'action'=>'dates',
 	'format'=>'html',
 ));
@@ -66,7 +67,7 @@ Route::set('tags', 'tags(/<tag_ids>(.<format>))', array(
 	'tag_ids'=>'[-+0-9]*',
 	'format'=>'(html|pdf)',
 ))->defaults(array(
-	'controller'=>'index',
+	'controller'=>'Index',
 	'action'=>'tags',
 	'format'=>'html',
 ));
@@ -74,7 +75,7 @@ Route::set('view', '<id>(.<format>)', array(
 	'id' => '[0-9]+',
 	'format'=>'(pdf|html)',
 ))->defaults(array(
-	'controller'=>'image',
+	'controller'=>'Image',
 	'action'=>'view',
 	'format' => 'html',
 ));
@@ -82,54 +83,54 @@ Route::set('render', '<id>(_<size>).jpg', array(
 	'id' => '[0-9]+',
 	'size' => '(thumb|view|full)',
 ))->defaults(array(
-	'controller'=>'image',
+	'controller'=>'Image',
 	'action'=>'render',
 	'size' => 'view',
 ));
 Route::set('image', '<id>/<action>',array(
 	'action' => '(edit|delete|save)'
 ))->defaults(array(
-	'controller'=>'image',
+	'controller'=>'Image',
 	'action'=>'edit'
 ));
 Route::set('rotate', '<id>/rotate/<degrees>',array(
 	'degrees' => '[0-9]+'
 ))->defaults(array(
-	'controller'=>'image',
+	'controller'=>'Image',
 	'action'=>'rotate'
 ));
 Route::set('upload', 'upload(/<filename>)', array(
 	'filename'=>'.*'
 ))->defaults(array(
-	'controller'=>'image',
+	'controller'=>'Image',
 	'action'=>'upload'
 ));
 Route::set('process', 'process')
     ->defaults(array(
-        'controller'=>'image',
+        'controller'=>'Image',
         'action'=>'process',
 ));
 Route::set('people', 'people')->defaults(
-		array('controller'=>'people', 'action'=>'index')
+		array('controller'=>'People', 'action'=>'index')
 );
 Route::set('person', 'person(/<id>)')->defaults(
-		array('controller'=>'people', 'action'=>'edit', 'id'=>NULL)
+		array('controller'=>'People', 'action'=>'edit', 'id'=>NULL)
 );
 Route::set('login', 'login')->defaults(
-		array('controller'=>'people', 'action'=>'login')
+		array('controller'=>'People', 'action'=>'login')
 );
 Route::set('settings', 'settings(/<name>)')->defaults(
-		array('controller'=>'settings', 'action'=>'index')
+		array('controller'=>'Settings', 'action'=>'index')
 );
 Route::set('logout', 'logout')->defaults(
-		array('controller'=>'people', 'action'=>'logout')
+		array('controller'=>'People', 'action'=>'logout')
 );
 Route::set('home', '')->defaults(
-		array('controller'=>'index', 'action'=>'dates', 'format'=>'html')
+		array('controller'=>'Index', 'action'=>'dates', 'format'=>'html')
 );
 Route::set('default', '(<controller>(/<action>(/<id>(/<format>))))')->defaults(
 		array(
-			'controller'=>'index',
+			'controller'=>'Index',
 			'action'=>'index',
 			'id'=>NULL,
 			'format'=>NULL,

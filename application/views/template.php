@@ -32,7 +32,7 @@
 		</style>
 
 	</head>
-	<body class="<?php echo $controller.' '.$action ?>">
+	<body class="<?php echo strtolower($controller.'-controller '.$action.'-action') ?>">
 
 		<div id="wrapper">
 

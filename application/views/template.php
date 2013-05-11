@@ -38,6 +38,7 @@
 
 			<p id="user-login">
 				<?php if ($user->name): ?>
+				Logged in as <?php echo $user->name ?>.
 				<a href="<?php echo Route::url('logout') ?>">Log Out</a>
 				<?php else: ?>
 				<a href="<?php echo Route::url('login') ?>">Log In</a>

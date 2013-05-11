@@ -57,7 +57,7 @@ class Controller_People extends Controller_Base {
 				{
 					$openid = new LightOpenID;
 					$openid->identity = $_POST['openid_identifier'];
-					$this->request->redirect($openid->authUrl());
+					$this->redirect($openid->authUrl());
 				}
 			}
 			elseif ($_GET['openid_mode'] == 'cancel')
@@ -91,7 +91,7 @@ class Controller_People extends Controller_Base {
 						$this->user->save();
 					}
 					$this->session->set('user', $this->user);
-					$this->request->redirect('/');
+					$this->redirect('/');
 				}
 			}
 		}

@@ -107,6 +107,7 @@ class Model_Image extends ORM {
 		$dest_dir = dirname($dest_filename);
 		File::check_directory($dest_dir);
 		rename($fullname, $dest_filename);
+		chmod($dest_filename, 0600);
 
 		$this->make_smaller_versions();
 	}
@@ -158,6 +159,7 @@ class Model_Image extends ORM {
 				throw new Kohana_Exception("Could not save thumbnail version of $this->id.");
 			}
 		}
+		chmod($thumb, 0600);
 
 		// Make view-size
 		$viewdir = DATAPATH.'images/view';
@@ -172,6 +174,7 @@ class Model_Image extends ORM {
 				throw new Kohana_Exception("Could not save 'view' version of $this->id.");
 			}
 		}
+		chmod($view, 0600);
 	}
 
 	public function rotate($degrees)

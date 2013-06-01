@@ -134,7 +134,7 @@ class Controller_Image extends Controller_Base {
 		{
 			$file = $_FILES['uploaded_file'];
 			if (Upload::not_empty($file) AND Upload::valid($file) AND Upload::size($file, $this->view->max_file_size)) {
-				Upload::save($file);
+				Upload::save($file, NULL, NULL, 0600);
 				$this->add_flash_message($file['name'].' uploaded', 'success');
 				$this->redirect('upload');
 			} else {

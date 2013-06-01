@@ -13,7 +13,7 @@
 		
 		<p class="metadata">
 			&middot;
-			<?php echo date('D jS', strtotime($photo->date_and_time)) ?>
+			<?php echo date('D j M Y', strtotime($photo->date_and_time)) ?>
 			<?php if($user->auth_level->id > 1) echo ' &middot; <dfn title="Auth Level">'.$photo->auth_level->name.'</dfn>' ?>
 			<?php if ($user->auth_level_id >= 10): ?>
 			&middot; <a href="<?php echo Route::url('image',array('action'=>'edit', 'id'=>$photo->id)) ?>#form">Edit</a>

@@ -119,10 +119,7 @@ class Controller_Index extends Controller_Base {
 		{
 			$this->title = 'Date Unknown';
 		}
-		
-		$url = Route::url('dates', array('format'=>'pdf','year'=>$this->view->current_year,'month'=>$this->view->current_month), TRUE);
-		$this->add_template_message(HTML::anchor($url, "Download a PDF album of these photos."), 'success');
-		
+
 		// Output PDF, via LaTeX
 		if ($this->request->param('format')=='pdf')
 		{
@@ -234,7 +231,7 @@ class Controller_Index extends Controller_Base {
 			$this->output_pdf($canonical_tag_string);
 		}
 	}
-	
+
 	protected function output_pdf($filename)
 	{
 		// Get LaTeX

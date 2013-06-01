@@ -40,6 +40,7 @@ em { font-style:italic }
 @media print {
     .noprint { display:none }
 }
+.centre { margin:auto; text-align:center }
 .clear { clear:both; width:100% }
 .mono { font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console",
     "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono",
@@ -198,15 +199,16 @@ color: blue }
 /******************************************************************************/
 /* Individual views                                                           */
 
-.index-controller.tags-action .photos {  }
 .index-controller.dates-action .thumbslist { margin-left:200px }
-.index-controller.dates-action .menu { float:left; border:1px solid black; border-width:0 1px 1px 1px; margin:0 0 1em 20px; width:180px }
+.index-controller.dates-action .pdf-link { margin:0 1em 0.5em 250px; font-size:smaller }
+.index-controller.dates-action .menu { float:left; border:1px solid #777; border-width:0 1px 1px 1px; margin:0 0 1em 20px; width:180px }
 .index-controller.dates-action .menu ol { margin:0 }
 .index-controller.dates-action .menu li { padding:0 }
-.index-controller.dates-action .menu li a { display:block; border-top:1px solid black; padding:0.3em 1em }
+.index-controller.dates-action .menu li a { display:block; border-top:1px solid #777; padding:0.3em 1em }
 .index-controller.dates-action .menu li li.selected a { font-weight:bolder; letter-spacing:0.1em; color:black }
 .index-controller.dates-action .menu li li.selected a:hover { text-decoration:none }
-.index-controller.dates-action .menu li li a { padding:0.2em 1em 0.1em 3em; font-size:smaller; border-top:0 }
+.index-controller.dates-action .menu li li a { padding:0 1em 0 3em; font-size:smaller; border-top:0 }
+.index-controller.tags-action .pdf-link { font-size:smaller }
 
 .image-controller.edit-action .view { margin:auto; text-align:right }
 .image-controller.edit-action .image { float:left; margin:0 1em 1em 1em; width:500px; text-align:center }

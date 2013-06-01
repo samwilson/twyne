@@ -1,6 +1,6 @@
 
 <div class="thumbslist">
-	
+
 	<?php foreach ($photos as $photo): ?>
 
 	<div class="photo">
@@ -32,7 +32,6 @@
 	</div>
 
 	<?php endforeach ?>
-
 
 	<?php if (count($photos)<1): ?>
 	<p class="notice message">Nothing to display for <?php echo $title ?>.</p>

@@ -1,6 +1,8 @@
 
 <div class="menu">
+
 	<ol>
+
 		<?php foreach ($years as $year): ?>
 
 			<?php
@@ -48,13 +50,16 @@
 			<?php endif ?>
 
 		<?php endforeach ?>
+
 	</ol>
 </div>
 
-
+<p class="pdf-link"><?php
+$url = Route::url('dates', array('format'=>'pdf','year'=>$current_year,'month'=>$current_month), TRUE);
+echo HTML::anchor($url, "Download a PDF album of these photos.");
+?></p>
 
 <?php echo View::factory('thumbs')
 	->bind('photos', $photos)
 	->bind('title', $title)
 	->render() ?>
-

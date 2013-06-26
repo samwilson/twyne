@@ -45,9 +45,10 @@ Upload::$default_directory = DATAPATH.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEP
  * Enable modules. Modules are referenced by a relative or absolute path.
  */
 Kohana::modules(array(
-	'database'=>MODPATH.'database', // Database access
-	'image'=>MODPATH.'image', // Image manipulation
-	'orm'=>MODPATH.'orm', // Object Relationship Mapping
+	'database'=>MODPATH.'database',
+	'minion'=>MODPATH.'minion',
+	'image'=>MODPATH.'image',
+	'orm'=>MODPATH.'orm',
 ));
 
 /**

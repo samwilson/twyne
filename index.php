@@ -97,11 +97,19 @@ if (!defined('KOHANA_START_MEMORY')) {
 // Bootstrap the application
 require APPPATH . 'bootstrap' . EXT;
 
-/**
- * Execute the main request. A source of the URI can be passed, eg: $_SERVER['PATH_INFO'].
- * If no source is specified, the URI will be automatically detected.
- */
-echo Request::factory()
-        ->execute()
-        ->send_headers()
-        ->body();
+if (PHP_SAPI == 'cli') // Try and load minion
+{
+	set_exception_handler(array('Kohana_Minion_Exception', 'handler'));
+	Minion_Task::factory(Minion_CLI::options())->execute();
+}
+else
+{
+	/**
+	 * Execute the main request. A source of the URI can be passed, eg: $_SERVER['PATH_INFO'].
+	 * If no source is specified, the URI will be automatically detected.
+	 */
+	echo Request::factory()
+		->execute()
+		->send_headers(TRUE)
+		->body();
+}

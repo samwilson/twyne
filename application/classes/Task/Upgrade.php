@@ -108,6 +108,22 @@ class Task_Upgrade extends Minion_Task {
 			$db->query(NULL, $sql);
 		}
 
+		/**
+		 * Add mime_type column to the images table
+		 */
+		$cols = $db->list_columns($images_tbl);
+		if ( !in_array('mime_type', $cols))
+		{
+			Minion_CLI::write("Adding mime_type column to $images_tbl table");
+			$sql = 'ALTER TABLE '.$images_tbl.' ADD COLUMN mime_type VARCHAR(65) NULL DEFAULT NULL';
+			$db->query(NULL, $sql);
+		}
+		$fulls = scandir(DATAPATH.'images'.DIRECTORY_SEPARATOR.'full');
+		foreach ($fulls as $f)
+		{
+			
+		}
+
 	}
 
 }

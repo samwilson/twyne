@@ -128,7 +128,9 @@ class Controller_Image extends Controller_Base {
 			$this->template->content = null;
 			return;
 		}
-		$this->view->max_file_size = (ini_get('upload_max_filesize')) ? ini_get('upload_max_filesize') : '10M';
+		$post_max_size = Num::bytes(ini_get('post_max_size'));
+		$upload_max_filesize = Num::bytes(ini_get('upload_max_filesize'));
+		$this->view->max_file_size = min(array($post_max_size, $upload_max_filesize));
 		$this->view->pending_files = ORM::factory('Image')->get_pending();
 		if (isset($_FILES['uploaded_file']))
 		{

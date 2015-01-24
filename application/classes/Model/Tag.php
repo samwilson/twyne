@@ -6,6 +6,8 @@ class Model_Tag extends ORM {
 
 	protected $_table_name = 'tags';
 	
+	protected $_table_columns = array('id'=>array(), 'name'=>array());
+
 	protected static $_currently_selected;
 
 	protected $_has_many = array(

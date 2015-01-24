@@ -1,0 +1,30 @@
+{
+    "name": "samwilson/twyne",
+    "description": "Personal web-based archive system for photographs.",
+    "homepage": "https://github.com/samwilson/twyne",
+    "license": "BSD-2-Clause",
+    "keywords": ["kohana", "mysql", "photographs", "photos", "albums", "catalogues", "latex"],
+    "authors": [
+        {
+            "name": "Sam Wilson",
+            "email": "sam@samwilson.id.au",
+            "homepage": "http://samwilson.id.au",
+            "role": "developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/samwilson/twyne/issues",
+        "source": "https://github.com/samwilson/twyne"
+    },
+    "require": {
+        "php": ">=5.3",
+        "kohana/database": "v3.3.*",
+        "kohana/image": "v3.3.*",
+        "kohana/minion": "v3.3.*",
+        "kohana/orm": "v3.3.*"
+    },
+    "require-dev": {
+    },
+    "suggest": {
+    }
+}

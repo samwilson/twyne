@@ -179,7 +179,7 @@ class Controller_Index extends Controller_Base {
 			$photos->where(DB::expr('NOT EXISTS'), '', $exclude);
 		}
 		$this->view->photos = $photos->order_by('date_and_time')->find_all();
-		
+
 		// Get all tags.
 		$all_tags = ORM::factory('Tag')
 			->select(array('tag.id', 'id'))

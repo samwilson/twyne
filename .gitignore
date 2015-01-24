@@ -1,5 +1,8 @@
-nbproject
-.htaccess
-config.php
-application/cache/*
-application/logs/*
+/nbproject
+/.htaccess
+/config.php
+/application/cache/*
+/application/logs/*
+/modules
+/vendor
+/data

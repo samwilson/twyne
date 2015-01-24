@@ -38,7 +38,7 @@ $modules = 'modules';
  *
  * @see  http://kohanaframework.org/guide/about.install#system
  */
-$system = 'system';
+$system = 'vendor/kohana/core';
 
 /**
  * The default extension of resource files. If you change this, all resources
@@ -75,7 +75,8 @@ if (!is_dir($system) AND is_dir(DOCROOT . $system))
 define('APPPATH', realpath($application) . DIRECTORY_SEPARATOR);
 define('MODPATH', realpath($modules) . DIRECTORY_SEPARATOR);
 define('SYSPATH', realpath($system) . DIRECTORY_SEPARATOR);
-define('DATAPATH', realpath(KOHANA_DATA_DIRECTORY) . DIRECTORY_SEPARATOR);
+/** The full filesystem path to the data directory, with trailing slash. */
+define('DATAPATH', KOHANA_DATA_DIRECTORY . DIRECTORY_SEPARATOR);
 
 // Clean up the configuration vars
 unset($application, $modules, $system);

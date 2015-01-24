@@ -2,6 +2,7 @@
 
 defined('SYSPATH') or die('No direct script access.');
 
+require DOCROOT.'vendor/autoload.php';
 require SYSPATH.'classes/Kohana/Core'.EXT;
 require SYSPATH.'classes/Kohana'.EXT;
 spl_autoload_register(array('Kohana', 'auto_load'));
@@ -39,7 +40,18 @@ Kohana::$log->attach(new Kohana_Log_File(APPPATH.'logs'));
  */
 Kohana::$config->attach(new Kohana_Config_File);
 
-Upload::$default_directory = DATAPATH.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'IN';
+/**
+ * Set upload directory, creating if required.
+ */
+Upload::$default_directory = DATAPATH.'images'.DIRECTORY_SEPARATOR.'IN';
+//if ( ! is_dir(Upload::$default_directory))
+//{
+//	// Create the upload directory
+//	mkdir(Upload::$default_directory, 02777, TRUE);
+//
+//	// Set permissions (must be manually set to fix umask issues)
+//	chmod(Upload::$default_directory, 02777);
+//}
 
 /**
  * Enable modules. Modules are referenced by a relative or absolute path.

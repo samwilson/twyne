@@ -7,7 +7,7 @@ class File extends Kohana_File
 	{
 		if (!is_dir($dir))
 		{
-			if (!@mkdir($dir, 0700, true))
+			if (!@mkdir($dir, 02777, true))
 			{
 				throw new Exception('Unable to create new directory:<br />'.
 					'<code>'.$dir.'</code></p>'

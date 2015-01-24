@@ -3,9 +3,15 @@
 class Task_Upgrade extends Minion_Task {
 
 	protected function _execute(array $params) {
+		File::check_directory(DATAPATH.'images/IN');
+
 		$db = Database::instance();
 		$prefix = $db->table_prefix();
-		$tables = $db->list_tables();
+		$tables = array();
+		foreach ($db->query(Database::SELECT, 'SHOW TABLES')->as_array() as $t)
+		{
+			$tables[] = $t['Tables_in_twyne'];
+		}
 
 		$auth_levels_tbl = $prefix . 'auth_levels';
 		if (!in_array($auth_levels_tbl, $tables)) {
@@ -111,8 +117,12 @@ class Task_Upgrade extends Minion_Task {
 		/**
 		 * Add mime_type column to the images table
 		 */
-		$cols = $db->list_columns($images_tbl);
-		if ( !in_array('mime_type', $cols))
+		$cols = $db->query(Database::SELECT, "DESCRIBE ".$db->quote_table($images_tbl))->as_array();
+		$columns = array();
+		foreach ($cols as $c) {
+			$columns[] = $c['Field'];
+		}
+		if ( !in_array('mime_type', $columns))
 		{
 			Minion_CLI::write("Adding mime_type column to $images_tbl table");
 			$sql = 'ALTER TABLE '.$images_tbl.' ADD COLUMN mime_type VARCHAR(65) NULL DEFAULT NULL';
@@ -121,7 +131,13 @@ class Task_Upgrade extends Minion_Task {
 		$fulls = scandir(DATAPATH.'images'.DIRECTORY_SEPARATOR.'full');
 		foreach ($fulls as $f)
 		{
-			
+			Minion_CLI::write("file: $f");
+			if ($f[0]=='.')
+			{
+				continue;
+			}
+			$mime = File::mime(DATAPATH.'images/full/'.$f);
+			var_dump($mime);
 		}
 
 	}

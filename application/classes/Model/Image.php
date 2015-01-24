@@ -6,6 +6,16 @@ class Model_Image extends ORM {
 
 	protected $_table_name = 'images';
 
+	protected $_table_columns = array(
+		'id' => array(),
+		'date_and_time' => array(),
+		'caption' => array(),
+		'auth_level_id' => array(),
+		'author_id' => array(),
+		'licence_id' => array(),
+		'mime_type' => array(),
+	);
+
 	protected $_has_many = array(
 		'tags'=>array(
 			'model'=>'Tag',
@@ -100,14 +110,15 @@ class Model_Image extends ORM {
 			$caption = (isset($date_matches[5])) ? trim($date_matches[5]) : $caption;
 		}
 		$this->caption = str_replace('_', ' ', $caption);
+		$this->mime_type = File::mime($fullname);
 		$this->save();
 
-		$dest_filename = DATAPATH."/images/full/$this->id.jpg";
+		$dest_filename = DATAPATH."/images/full/$this->id.".File::ext_by_mime($this->mime_type);
 		// Create destination directory if neccessary.
 		$dest_dir = dirname($dest_filename);
 		File::check_directory($dest_dir);
 		rename($fullname, $dest_filename);
-		chmod($dest_filename, 0600);
+		chmod($dest_filename, 0660);
 
 		$this->make_smaller_versions();
 	}
@@ -138,9 +149,9 @@ class Model_Image extends ORM {
 
 	public function make_smaller_versions($force = FALSE)
 	{
-
-		$full = realpath(DATAPATH.'images/full/'.$this->id.'.jpg');
-		if (!$full)
+		$ext = File::ext_by_mime($this->mime_type);
+		$full = DATAPATH.'images/full/'.$this->id.'.'.$ext;
+		if (!realpath($full))
 		{
 			$msg = "Full version of $this->id not found (at $full).";
 			throw new Kohana_Exception($msg);

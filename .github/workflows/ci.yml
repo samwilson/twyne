@@ -5,14 +5,25 @@ on: [push, pull_request]
 jobs:
   build:
 
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_DATABASE: twyne_test
+          MYSQL_ROOT_PASSWORD: testpwd
+        ports:
+          - '3306:3306'
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
     strategy:
       matrix:
-        # @TODO Include 'windows-latest' when the EOL issues with tests have been fixed.
-        os: [ ubuntu-latest, macos-latest ]
+        os: [ ubuntu-latest ]
         # All supported PHP versions https://www.php.net/supported-versions.php
         php: [ '7.2', '7.3', '7.4' ]
 
-    runs-on: ${{matrix.os}}
+    runs-on: ${{ matrix.os }}
+
+    name: PHP ${{ matrix.php }} on ${{ matrix.os }}
 
     steps:
     - name: Checkout
@@ -26,7 +37,13 @@ jobs:
 
     - name: Install
       run: |
+        sudo mysql --host 127.0.0.1 -uroot -ptestpwd -e 'CREATE DATABASE IF NOT EXISTS twyne_test;'
         composer install
+        cp config.php tests/config.php
+        sed --in-place "s/DBHOST/127.0.0.1/" tests/config.php
+        sed --in-place "s/DBNAME/twyne_test/" tests/config.php
+        sed --in-place "s/DBUSER/root/" tests/config.php
+        sed --in-place "s/DBPASS/testpwd/" tests/config.php
 
     - name: Test
       run: |

@@ -34,7 +34,7 @@ class Database
             return;
         }
         $config = new Config();
-        $dsn = sprintf('mysql:host=%s;dbname=%s', $config->databaseHost(), $config->databaseName());
+        $dsn = sprintf('mysql:host=%s;dbname=%s;charset=utf8', $config->databaseHost(), $config->databaseName());
         $attr = array(PDO::ATTR_TIMEOUT => 10);
         self::$pdo = new PDO($dsn, $config->databaseUser(), $config->databasePassword(), $attr);
         self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

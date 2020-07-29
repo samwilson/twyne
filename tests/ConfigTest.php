@@ -12,6 +12,6 @@ class ConfigTest extends TestCase
     {
         $config = new Config(__DIR__ . '/../config.example.php');
         $this->assertEquals(dirname(__DIR__), $config->appDir());
-        $this->assertEquals('twyne', $config->databaseName());
+        $this->assertEquals('DBNAME', $config->databaseName());
     }
 }

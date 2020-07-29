@@ -1,6 +1,6 @@
 /config.php
+/tests/config.php
 /vendor/
 /data/
 /.phpunit*
 /.idea/
-

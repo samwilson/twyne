@@ -1,7 +1,9 @@
 <?php
 
 $mode = 'production';
-$databaseHost = 'localhost';
-$databaseUser = 'twyne';
-$databasePassword = 'passw0rd';
-$databaseName = 'twyne';
+$databaseHost = 'DBHOST';
+$databaseUser = 'DBUSER';
+$databasePassword = 'DBPASS';
+$databaseName = 'DBNAME';
+
+$tmpDir = __DIR__ . '/data/tmp';

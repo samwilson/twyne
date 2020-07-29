@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+{% block main %}
+
+    <ol class="nav">
+        {% for year in dates.years %}
+            <li>
+                <a href="{{ baseurl }}/dates/{{ year.year }}">{{ year.year }}</a>
+                ({{ year.count }})
+                {% if dates.months and dates.selected.year == year.year %}
+                    <ol>
+                        {% for month in dates.months %}
+                            <li>
+                                <a href="{{ baseurl }}/dates/{{ year.year }}-{{ month.num }}">{{ month.name }}</a>
+                                ({{ month.count }})
+                            </li>
+                        {% endfor %}
+                    </ol>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ol>
+
+    {% if posts %}
+    <ol class="posts">
+        {% for post in posts %}
+            <li>
+                <h2><a href="{{ baseurl }}/{{ post.id }}">{{ post.title }}</a></h2>
+                <p>{{ date_create(post.datetime).format('Y-m-d H:i') }}</p>
+                {{ post.body|md2html|raw }}
+            </li>
+        {% endfor %}
+    </ol>
+    {% endif %}
+
+{% endblock %}

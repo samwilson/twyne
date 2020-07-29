@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% block main %}
+
+    <form action="{{ baseurl }}/save" method="post">
+        <p>
+            <!-- User -->
+            <label for="user">{{ msg('user') }}</label>
+            <input type="text" name="user" id="user" size="4" readonly value="{{ post.userId }}" />
+            <!-- Author -->
+            <label for="author">{{ msg('author') }}</label>
+            <input type="text" name="author" id="author" size="15" value="{% if post.authorid %}{{ post.author.name }}{% endif %}" />
+            <!-- Date and time -->
+            <label for="datetime">{{ msg('datetime') }}</label>
+            <input type="text" name="datetime" id="datetime" value="{{ post.datetime }}" />
+        </p>
+        <p>
+            <label for="body">{{ msg('body') }}</label>
+            <textarea name="body" id="body" rows="15" cols="120">{{ post.body }}</textarea>
+        </p>
+        <p>
+            <input type="submit" name="save" value="{{ msg('save') }}" />
+            {% if post.id %}
+                <a href="{{ baseurl }}/{{ post.id }}">{{ msg('cancel') }}</a>
+                <input type="hidden" name="id" value="{{ post.id }}" />
+            {% endif %}
+        </p>
+
+    </form>
+
+{% endblock %}

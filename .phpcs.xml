@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<ruleset>
+    <rule ref="PSR12" />
+    <rule ref="./vendor/mediawiki/mediawiki-codesniffer/MediaWiki/Sniffs/Classes/UnusedUseStatementSniff.php" />
+    <file>.</file>
+    <exclude-pattern>vendor/</exclude-pattern>
+</ruleset>

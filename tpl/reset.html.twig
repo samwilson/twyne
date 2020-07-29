@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+{% block main %}
+
+    <h2></h2>
+    <form action="{{ baseurl }}/reset" method="post">
+        <p>
+            <label for="username">{{ msg('username') }}</label>
+            <input type="text" name="username" id="username" value="{{ username }}" autofocus />
+        </p>
+        <p>&hellip; {{ msg('or-divider') }} &hellip;</p>
+        <p>
+            <label for="email">{{ msg('email') }}</label>
+            <input type="email" name="email" id="email" value="{{ email }}" />
+        </p>
+        <p>
+            <input type="submit" name="reset" value="{{ msg('reset') }}" />
+        </p>
+    </form>
+
+{% endblock %}

@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+use Samwilson\Twyne\Command\FeedUpdateCommand;
+use Symfony\Component\Console\Application;
+use Samwilson\Twyne\Command\UpgradeCommand;
+
+setlocale( LC_ALL, 'en_US.UTF-8' );
+
+$consoleApp = new Application();
+
+$consoleApp->add(new UpgradeCommand());
+$consoleApp->add(new FeedUpdateCommand());
+
+$consoleApp->run();

@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+{% block main %}
+
+    <form action="{{ baseurl }}/logout" method="post">
+        <p>
+            <label for="logout">{{ msg('click-to-logout') }}</label>
+            <input type="submit" id="logout" value="{{ msg('logout') }}" />
+        </p>
+    </form>
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{
+  "home": "Home",
+
+  "login": "Log in",
+  "logout": "Log out",
+  "click-to-logout": "Click here to log out:",
+  "register": "Register",
+  "login-reset": "Forgot password?",
+  "reset": "Reset password",
+  "username-or-email": "Username or email address:",
+  "password": "Password:",
+  "username": "Username:",
+  "email": "Email:",
+  "password-twice": "Password (twice):",
+  "or-divider": "or",
+  "login-failed": "Log in failed.",
+  "login-successful": "Log in successful.",
+  "logged-in-as": "Logged in as $1",
+  "check-your-email": "Please check your email.",
+  "passwords-no-match": "Your password and its verification do not match. Please enter both again.",
+  "register-email-subject": "User registration",
+  "registration-successful": "Thank you for registering. Please check your email.",
+  "reset-email-subject": "Password reset",
+  "reset-try-again": "This password reminder is not valid. Please request a new one.",
+
+  "river-of-news": "River of news",
+  "local-news": "Local news",
+
+  "new-post": "New post",
+  "edit": "Edit",
+  "share": "Share",
+  "post-title": "$1: $2",
+  "post-edit": "Edit post",
+  "user": "User:",
+  "author": "Author:",
+  "datetime": "Date and time (UTC):",
+  "save": "Save",
+  "saved": "Post saved",
+  "not-authorized": "You are not authorized to perform this action.",
+  "cancel": "Cancel",
+
+  "dates": "Dates",
+
+  "source-code": "Source code",
+  "issue-tracker": "Issue tracker",
+  "gpl": "GPL 3.0+"
+}

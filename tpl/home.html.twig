@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+{% block main %}
+
+    <main class="home">
+
+        <section class="river-of-news">
+            <h2>{{ msg('river-of-news') }}</h2>
+            <ol>
+                {% for fi in feed_items %}
+                    <li class="feed-item">
+                        <strong>{{ fi.c_name }}:</strong>
+                        <a href="{{ fi.fi_original_url }}" target="_blank">{{ fi.fi_title }}</a>: {{ fi.fi_body }}
+                    </li>
+                {% endfor %}
+            </ol>
+        </section>
+
+        <section class="local-news">
+            <h2>{{ msg('local-news') }}</h2>
+            <form action="{{baseurl}}/save" method="post">
+                <p>
+                    <label for="body">New post:</label>
+                    <textarea name="body" id="body" rows="8" cols="24" {% if not user %}disabled title="{{ msg('not-logged-in') }}"{% endif %}></textarea>
+                </p>
+                <p class="submit">
+                    <input type="submit" value="Post" {% if not user %}disabled{% endif %} />
+                </p>
+            </form>
+            <ol class="posts">
+                {% for post in posts %}
+                <li class="post">
+                    <a class="author" href="{{ baseurl }}/contacts/{{ post.author.id }}">{{ post.author.name }}</a>
+                    <a href="{{ baseurl }}/{{ post.id }}">{{ post.datetime }}</a>:
+                    {{ post.body|md2html|raw }}
+                    <div class="actions">
+                        <a href="{{ baseurl }}/{{ post.id }}/edit">{{ msg('edit') }}</a>
+                        &middot;
+                        <a href="{{ baseurl }}/{{ post.id }}/share">{{ msg('share') }}</a>
+                    </div>
+                </li>
+                {% endfor %}
+            </ol>
+        </section>
+
+    </main>
+
+{% endblock %}

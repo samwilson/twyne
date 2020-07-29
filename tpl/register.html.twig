@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+{% block main %}
+
+    <form action="{{ baseurl }}/register" method="post">
+        <p>
+            <label for="username">{{ msg('username') }}</label>
+            <input type="text" name="username" id="username" value="{{ username }}" required autofocus />
+        </p>
+        <p>
+            <label for="email">{{ msg('email') }}</label>
+            <input type="email" name="email" id="email" value="{{ email }}" required />
+        </p>
+        <p>
+            <label for="password">{{ msg('password-twice') }}</label>
+            <input type="password" name="password" id="password" required />
+            <input type="password" name="password_validation" required />
+        </p>
+        <p>
+            <input type="submit" name="register" value="{{ msg('register') }}" />
+        </p>
+    </form>
+
+{% endblock %}

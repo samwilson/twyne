@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>
+		{% if title is defined and title %}{{ title }} :: {% endif %}
+		{{ site_title }}
+	</title>
+	<link rel="stylesheet" href="{{ baseurl }}/{{ stylesheet }}.css" />
+</head>
+<body class="{{ user.id is defined ? 'logged-in' : 'logged-out' }} {{ controller }}">
+
+<div class="wrapper">
+
+	<header class="page-header">
+		<h1>{{ site_title }}</h1>
+		<ul class="horizontal left">
+			<li><a href="{{baseurl}}">{{ msg('home') }}</a></li>
+			<li><a href="{{baseurl}}/dates">{{ msg('dates') }}</a></li>
+			{% if user and user.id %}
+				<li><a href="{{baseurl}}/new">{{ msg('new-post') }}</a></li>
+				<li>{{ msg('logged-in-as', user.contact.name) }}</li>
+				<li><a href="{{baseurl}}/logout">{{ msg('logout') }}</a></li>
+			{% else %}
+				<li><a href="{{baseurl}}/login">{{ msg('login') }}</a></li>
+			{% endif %}
+		</ul>
+	</header>
+
+	<nav class="main-nav">{% block nav %}{% endblock %}</nav>
+
+	<main>
+		{% if alerts %}
+			<div class="alerts">
+				{% for alert in alerts %}
+					<p class="alert {{ alert.type }}">{{ msg(alert.message, alert.params) | raw }}</p>
+				{% endfor %}
+			</div>
+		{% endif %}
+		{% block main %}{% endblock %}
+	</main>
+
+	<footer>
+		<ul class="horizontal right">
+			<li><a href="https://github.com/samwilson/twyne">{{ app_title }}</a> {{ app_version }}</li>
+			<li><a href="https://github.com/samwilson/twyne/issues">{{ msg('issue-tracker') }}</a></li>
+			<li><a href="https://github.com/samwilson/twyne">{{ msg('source-code') }}</a></li>
+			<li><a href="https://www.gnu.org/licenses/gpl-3.0-standalone.html">{{ msg('gpl') }}</a></li>
+		</ul>
+	</footer>
+
+	{% if debug %}
+		{% if db_queries is defined and db_queries %}
+			<strong>Database queries:</strong>
+			{% for q in db_queries %}
+				<pre>{{ q }}</pre>
+			{% endfor %}
+		{% endif %}
+		{% if session_vars is defined and session_vars %}
+			<strong>Session:</strong>
+			<ul>
+				{% for sk, sv in session_vars %}
+					<li><strong>{{ sk }}</strong> = {{ dump(sv) }}</li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+
+	{% endif %}
+
+</div>
+
+{% block scripts %}
+	<script type="text/javascript" src="{{baseurl}}/scripts.js" ></script>
+{% endblock %}
+
+</body>
+</html>

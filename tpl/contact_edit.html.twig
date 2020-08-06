@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+{% block main %}
+
+    <h1>{% if contact.id %}{{ msg('editing-contact') }}{% else %}{{ msg('creating-contact') }}{% endif %}</h1>
+    {% if user and contact.id == user.contact.id %}
+        <p><span class="star">&bigstar;</span> {{ msg('contact-is-self') }}</p>
+    {% endif %}
+    <form action="{{ baseurl }}/contacts/save" method="post">
+        <p>
+            <label for="name">{{ msg('contact-name') }}</label>
+            <input type="text" name="name" id="name" size="80" value="{{ contact.name|e('html_attr') }}" required autofocus />
+        </p>
+        <p>
+            <label for="description">{{ msg('contact-description') }}</label>
+            <textarea name="description" id="name" cols="80" rows="12">{{ contact.description }}</textarea>
+        </p>
+        <p>
+            <input type="submit" name="save" value="{{ msg('save') }}" />
+            {% if contact.id %}
+                <a href="{{ baseurl }}/C{{ contact.id }}">{{ msg('cancel') }}</a>
+                <input type="hidden" name="id" value="{{ contact.id }}" />
+            {% else %}
+                <a href="{{ baseurl }}/contacts">{{ msg('cancel') }}</a>
+            {% endif %}
+        </p>
+
+    </form>
+
+{% endblock %}

@@ -26,20 +26,9 @@
                     <input type="submit" value="Post" {% if not user %}disabled{% endif %} />
                 </p>
             </form>
-            <ol class="posts">
-                {% for post in posts %}
-                <li class="post">
-                    <a class="author" href="{{ baseurl }}/contacts/{{ post.author.id }}">{{ post.author.name }}</a>
-                    <a href="{{ baseurl }}/{{ post.id }}">{{ post.datetime }}</a>:
-                    {{ post.body|md2html|raw }}
-                    <div class="actions">
-                        <a href="{{ baseurl }}/{{ post.id }}/edit">{{ msg('edit') }}</a>
-                        &middot;
-                        <a href="{{ baseurl }}/{{ post.id }}/share">{{ msg('share') }}</a>
-                    </div>
-                </li>
-                {% endfor %}
-            </ol>
+
+            {% include 'contacts_list.html.twig' with { posts: contact.posts } %}
+
         </section>
 
     </main>

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+{% block main %}
+    <h1>{{ contact.name }}</h1>
+    {% if user and contact.id == user.contact.id %}
+        <p><span class="star">&bigstar;</span> {{ msg('contact-is-self') }}</p>
+    {% endif %}
+    <p>{{ contact.description|md2html|raw }}</p>
+    <p><a href="{{ baseurl }}/C{{ contact.id }}/edit">{{ msg('edit-contact') }}</a></p>
+
+    <h2>{{ msg('posts') }}</h2>
+    {% include 'contacts_list.html.twig' with { posts: contact.posts } %}
+
+{% endblock %}

@@ -20,6 +20,7 @@
 			<li><a href="{{baseurl}}/dates">{{ msg('dates') }}</a></li>
 			{% if user and user.id %}
 				<li><a href="{{baseurl}}/new">{{ msg('new-post') }}</a></li>
+				<li><a href="{{baseurl}}/contacts">{{ msg('contacts') }}</a></li>
 				<li>{{ msg('logged-in-as', user.contact.name) }}</li>
 				<li><a href="{{baseurl}}/logout">{{ msg('logout') }}</a></li>
 			{% else %}

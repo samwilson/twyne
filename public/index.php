@@ -28,6 +28,13 @@ $routes = [
     '/reset/{token}' => ['User', 'resetPartTwo'],
     '/login' => ['User', 'login'],
     '/logout' => ['User', 'logout'],
+
+    // Contacts.
+    '/contacts' => ['Contact', 'index'],
+    '/contacts/new' => ['Contact', 'edit'],
+    '/contacts/save' => ['Contact', 'save'],
+    '/C{id:\d+}' => ['Contact', 'view'],
+    '/C{id:\d+}/edit' => ['Contact', 'edit'],
 ];
 
 $routeCollector = new RouteCollector(new Std(), new GroupCountBasedDataGenerator());

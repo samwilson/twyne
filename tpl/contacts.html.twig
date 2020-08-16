@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+{% block main %}
+    <h1>{{ msg('Contacts') }}</h1>
+    <p>{{ msg('contacts-summary', contacts|length|number_format) }}</p>
+    <p><a href="{{ baseurl }}/contacts/new">{{ msg('new-contact') }}</a></p>
+    <ol>
+        {% for contact in contacts %}
+            <li {% if contact.id == user.contact.id %}class="self"{% endif %}>
+                {% if contact.id == user.contact.id %}
+                    <span class="star" title="{{ msg('contact-is-self') }}">&bigstar;</span>
+                {% endif %}
+                <strong>{{ contact.name }}</strong>
+                {{ contact.description }}
+                [
+                <a href="{{ baseurl }}/C{{ contact.id }}">{{ msg('view-contact') }}</a>
+                |
+                <a href="{{ baseurl }}/C{{ contact.id }}/edit">{{ msg('edit-contact') }}</a>
+                ]
+            </li>
+        {% endfor %}
+    </ol>
+{% endblock %}

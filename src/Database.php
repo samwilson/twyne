@@ -131,6 +131,7 @@ class Database
             . ' `c_user` INT(5) UNSIGNED NOT NULL,'
             . ' FOREIGN KEY `fk_contact_user` (`c_user`) REFERENCES `users` (`u_id`),'
             . " `c_name` VARCHAR(200) CHARACTER SET utf8mb4 NOT NULL,"
+            . ' `c_description` VARCHAR(300) CHARACTER SET utf8mb4 NULL DEFAULT NULL,'
             . " UNIQUE KEY (`c_user`, `c_name`)"
             . " ) DEFAULT CHARSET=utf8mb4");
         $this->query('ALTER TABLE `users`'

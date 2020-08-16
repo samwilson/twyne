@@ -1,9 +1,11 @@
 {% extends 'base.html.twig' %}
 {% block main %}
 
-    <article>
+    <article itenscope itemtype="http://schema.org/Post">
         <h1 itemprop="name">{{ msg( 'post-title', [ post.id, post.title ] ) }}</h1>
-        <p><time itemprop="datePublished">{{ date_create(post.datetime).format('Y-m-d H:i') }}</time></p>
+        <p>
+            <strong itemprop="author">{{ post.author.name }}</strong>
+            <time itemprop="datePublished">{{ date_create(post.datetime).format('Y-m-d H:i') }}</time></p>
         {{post.body|md2html|raw}}
         {% if user %}
         <p class="noprint"><a href="{{ baseurl }}/{{ post.id }}/edit">{{ msg('post-edit') }}</a></p>

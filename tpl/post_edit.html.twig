@@ -8,7 +8,11 @@
             <input type="text" name="user" id="user" size="4" readonly value="{{ post.userId }}" />
             <!-- Author -->
             <label for="author">{{ msg('author') }}</label>
-            <input type="text" name="author" id="author" size="15" value="{% if post.authorid %}{{ post.author.name }}{% endif %}" />
+            <select name="author" id="author">
+                {% for c in user.contacts %}
+                    <option value="{{ c.id }}" {% if c.id == post.author.id %}selected{% endif %}>{{ c.name }}</option>
+                {% endfor %}
+            </select>
             <!-- Date and time -->
             <label for="datetime">{{ msg('datetime') }}</label>
             <input type="text" name="datetime" id="datetime" value="{{ post.datetime }}" />

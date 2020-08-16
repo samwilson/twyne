@@ -25,6 +25,7 @@
 
   "river-of-news": "River of news",
   "local-news": "Local news",
+  "posts": "Posts",
 
   "new-post": "New post",
   "edit": "Edit",
@@ -38,6 +39,18 @@
   "saved": "Post saved",
   "not-authorized": "You are not authorized to perform this action.",
   "cancel": "Cancel",
+
+  "contacts": "Contacts",
+  "contacts-summary": "You have $1 contacts.",
+  "new-contact": "New contact",
+  "contact-saved": "Contact saved",
+  "view-contact": "view",
+  "edit-contact": "edit",
+  "contact-name": "Name:",
+  "contact-description": "Description (private):",
+  "contact-is-self": "This is you",
+  "editing-contact": "Edit a Contact",
+  "creating-contact": "Creat a new Contact",
 
   "dates": "Dates",
 

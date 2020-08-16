@@ -146,6 +146,20 @@ class User extends ModelBase
         return Contact::loadById($this->data->u_contact);
     }
 
+    /**
+     * @return Contact[]
+     */
+    public function getContacts(): array
+    {
+        $sql = 'SELECT * FROM contacts WHERE c_user = :user_id ORDER BY c_name ASC';
+        $contactsData = Database::getInstance()->query($sql, ['user_id' => $this->getId()]);
+        $contacts = [];
+        foreach ($contactsData as $contactsDatum) {
+            $contacts[] = new Contact($contactsDatum);
+        }
+        return $contacts;
+    }
+
     public function getName()
     {
         return isset($this->data->c_name) ? $this->data->c_name : false;

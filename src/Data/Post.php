@@ -31,7 +31,7 @@ class Post extends ModelBase
     {
         return new self((object)[
             'p_user' => $user->getId(),
-            'p_author' => $user->getId(),
+            'p_author' => $user->getContact()->getId(),
         ]);
     }
 

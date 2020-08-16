@@ -47,11 +47,12 @@ class PostController extends ControllerBase
             $this->addAlert('warning', 'not-authorized');
             $this->redirect('/' . ($id ? "$id/edit" : 'new'));
         }
+        $post->setAuthor($this->user->getContact());
         if ($this->getParamPost('author')) {
-            $author = Contact::getByUserAndName($this->user, $this->getParamPost('author'));
-            $post->setAuthor($author);
-        } else {
-            $post->setAuthor($this->user->getContact());
+            $author = Contact::loadById($this->getParamPost('author'));
+            if ($author->exists()) {
+                $post->setAuthor($author);
+            }
         }
         $post->setDatetime($this->getParamPost('datetime'));
         $post->setBody($this->getParamPost('body'));

@@ -9,9 +9,11 @@
             <!-- Author -->
             <label for="author">{{ msg('author') }}</label>
             <select name="author" id="author">
-                {% for c in user.contacts %}
-                    <option value="{{ c.id }}" {% if c.id == post.author.id %}selected{% endif %}>{{ c.name }}</option>
-                {% endfor %}
+                {% if user %}
+                    {% for c in user.contacts %}
+                        <option value="{{ c.id }}" {% if c.id == post.author.id %}selected{% endif %}>{{ c.name }}</option>
+                    {% endfor %}
+                {% endif %}
             </select>
             <!-- Date and time -->
             <label for="datetime">{{ msg('datetime') }}</label>

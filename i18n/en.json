@@ -34,6 +34,7 @@
   "post-edit": "Edit post",
   "user": "User:",
   "author": "Author:",
+  "body": "Body:",
   "datetime": "Date and time (UTC):",
   "save": "Save",
   "saved": "Post saved",

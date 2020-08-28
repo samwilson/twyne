@@ -21,9 +21,12 @@ abstract class TestCase extends PhpUnitTestCase
     public function removeTables(): void
     {
         $this->db->query('SET foreign_key_checks=off');
+        $this->db->query('DROP TABLE IF EXISTS `settings`');
         $this->db->query('DROP TABLE IF EXISTS `users`');
-        $this->db->query('DROP TABLE IF EXISTS `contacts`')->execute();
-        $this->db->query('DROP TABLE IF EXISTS `posts`')->execute();
+        $this->db->query('DROP TABLE IF EXISTS `contacts`');
+        $this->db->query('DROP TABLE IF EXISTS `posts`');
+        $this->db->query('DROP TABLE IF EXISTS `feeds`');
+        $this->db->query('DROP TABLE IF EXISTS `feed_items`');
         $this->db->query('SET foreign_key_checks=on');
     }
 }

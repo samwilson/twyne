@@ -3,6 +3,7 @@
 namespace Samwilson\Twyne;
 
 use Exception;
+use Samwilson\Twyne\Data\Setting;
 
 class Config
 {
@@ -127,7 +128,10 @@ class Config
 
     public function siteTitle()
     {
-        return $this->get('siteTitle', 'A ' . App::name() . ' website');
+        return $this->get(
+            'siteTitle',
+            Setting::loadByName('site_title')->getValue('A ' . App::name() . ' website')
+        );
     }
 
     public function siteEmail()

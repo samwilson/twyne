@@ -6,6 +6,7 @@ use Exception;
 use PDO;
 use PDOException;
 use PDOStatement;
+use Samwilson\Twyne\Data\Setting;
 
 class Database
 {
@@ -116,13 +117,30 @@ class Database
 
     public function install()
     {
+        $dbVersion = Setting::loadByName('db_version');
+        $nextVersion = $dbVersion->getValue(0) + 1;
+        $upgradeMethod = "upgrade" . $nextVersion;
+        while (method_exists($this, $upgradeMethod)) {
+            // Run this upgrade version.
+            $this->$upgradeMethod();
+            // Save new current version.
+            $dbVersion->setValue($nextVersion);
+            $dbVersion->save();
+            // Increment to next version.
+            $upgradeMethod = "upgrade" . $nextVersion;
+            $nextVersion++;
+        }
+    }
+
+    private function upgrade1()
+    {
         // All column names should be unique.
         $this->query("CREATE TABLE IF NOT EXISTS `users` ("
             . " `u_id` INT(5) UNSIGNED AUTO_INCREMENT PRIMARY KEY,"
-            . " `u_username` VARCHAR(200) CHARACTER SET utf8mb4 NOT NULL UNIQUE,"
-            . " `u_email` VARCHAR(200) CHARACTER SET utf8mb4 NOT NULL UNIQUE,"
-            . " `u_password` VARCHAR(200) CHARACTER SET utf8mb4 NOT NULL,"
-            . " `u_reminder_token` VARCHAR(200) CHARACTER SET utf8mb4 NULL DEFAULT NULL,"
+            . " `u_username` VARCHAR(191) CHARACTER SET utf8mb4 NOT NULL UNIQUE,"
+            . " `u_email` VARCHAR(191) CHARACTER SET utf8mb4 NOT NULL UNIQUE,"
+            . " `u_password` VARCHAR(191) CHARACTER SET utf8mb4 NOT NULL,"
+            . " `u_reminder_token` VARCHAR(191) CHARACTER SET utf8mb4 NULL DEFAULT NULL,"
             . " `u_reminder_time` DATETIME NULL DEFAULT NULL,"
             . " `u_contact` INT(5) UNSIGNED NULL DEFAULT NULL"
             . " ) DEFAULT CHARSET=utf8mb4");
@@ -163,5 +181,20 @@ class Database
             . ' `fi_datetime` DATETIME NOT NULL,'
             . ' `fi_body` TEXT CHARACTER SET utf8mb4 NOT NULL'
             . ') DEFAULT CHARSET=utf8mb4;');
+        $this->query("CREATE TABLE IF NOT EXISTS `settings` ("
+            . " `s_id` INT(5) UNSIGNED AUTO_INCREMENT PRIMARY KEY,"
+            . ' `s_name` VARCHAR(100) CHARACTER SET utf8mb4 NOT NULL UNIQUE,'
+            . " `s_value` VARCHAR(200) CHARACTER SET utf8mb4 NOT NULL"
+            . " ) DEFAULT CHARSET=utf8mb4");
+    }
+
+    private function upgrade2()
+    {
+        $this->query("ALTER TABLE `users`"
+            . " CHANGE `u_username` `u_username` VARCHAR(191) CHARACTER SET utf8mb4 NOT NULL UNIQUE,"
+            . " CHANGE `u_email` `u_email` VARCHAR(191) CHARACTER SET utf8mb4 NOT NULL UNIQUE,"
+            . " CHANGE `u_password` `u_password` VARCHAR(191) CHARACTER SET utf8mb4 NOT NULL,"
+            . " CHANGE `u_reminder_token` `u_reminder_token` VARCHAR(191) CHARACTER SET utf8mb4 NULL DEFAULT NULL"
+            . ";");
     }
 }

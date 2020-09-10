@@ -148,8 +148,8 @@ class Database
             . " `c_id` INT(5) UNSIGNED AUTO_INCREMENT PRIMARY KEY,"
             . ' `c_user` INT(5) UNSIGNED NOT NULL,'
             . ' FOREIGN KEY `fk_contact_user` (`c_user`) REFERENCES `users` (`u_id`),'
-            . " `c_name` VARCHAR(200) CHARACTER SET utf8mb4 NOT NULL,"
-            . ' `c_description` VARCHAR(300) CHARACTER SET utf8mb4 NULL DEFAULT NULL,'
+            . " `c_name` VARCHAR(191) CHARACTER SET utf8mb4 NOT NULL,"
+            . ' `c_description` VARCHAR(191) CHARACTER SET utf8mb4 NULL DEFAULT NULL,'
             . " UNIQUE KEY (`c_user`, `c_name`)"
             . " ) DEFAULT CHARSET=utf8mb4");
         $this->query('ALTER TABLE `users`'
@@ -162,7 +162,7 @@ class Database
             . ' FOREIGN KEY `fk_post_author` (`p_author`) REFERENCES `contacts` (`c_id`),'
             . ' `p_datetime` DATETIME NOT NULL,'
             . ' `p_original_url` TEXT CHARACTER SET utf8mb4 NULL DEFAULT NULL,'
-            . ' `p_description` VARCHAR(300) CHARACTER SET utf8mb4 NULL DEFAULT NULL,'
+            . ' `p_description` TEXT CHARACTER SET utf8mb4 NULL DEFAULT NULL,'
             . ' `p_body` TEXT CHARACTER SET utf8mb4 NOT NULL'
             . ' ) DEFAULT CHARSET=utf8mb4;');
         $this->query('CREATE TABLE IF NOT EXISTS `feeds` ('
@@ -170,21 +170,21 @@ class Database
             . ' `f_contact` INT(5) UNSIGNED NOT NULL,'
             . ' FOREIGN KEY `fk_feed_contact` (`f_contact`) REFERENCES `contacts` (`c_id`),'
             . ' `f_type` VARCHAR(30) NOT NULL DEFAULT "rss",'
-            . ' `f_value` VARCHAR(300) NOT NULL'
+            . ' `f_value` TEXT NOT NULL'
             . ') DEFAULT CHARSET=utf8mb4;');
         $this->query('CREATE TABLE IF NOT EXISTS `feed_items` ('
             . ' `fi_id` INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,'
             . ' `fi_feed` INT(5) UNSIGNED NOT NULL,'
             . ' FOREIGN KEY `fk_feed_item_feed` (`fi_feed`) REFERENCES `feeds` (`f_id`),'
             . ' `fi_original_url` TEXT CHARACTER SET utf8mb4 NULL DEFAULT NULL,'
-            . ' `fi_title` VARCHAR(300) CHARACTER SET utf8mb4 NULL DEFAULT NULL,'
+            . ' `fi_title` TEXT CHARACTER SET utf8mb4 NULL DEFAULT NULL,'
             . ' `fi_datetime` DATETIME NOT NULL,'
             . ' `fi_body` TEXT CHARACTER SET utf8mb4 NOT NULL'
             . ') DEFAULT CHARSET=utf8mb4;');
         $this->query("CREATE TABLE IF NOT EXISTS `settings` ("
             . " `s_id` INT(5) UNSIGNED AUTO_INCREMENT PRIMARY KEY,"
             . ' `s_name` VARCHAR(100) CHARACTER SET utf8mb4 NOT NULL UNIQUE,'
-            . " `s_value` VARCHAR(200) CHARACTER SET utf8mb4 NOT NULL"
+            . " `s_value` TEXT CHARACTER SET utf8mb4 NOT NULL"
             . " ) DEFAULT CHARSET=utf8mb4");
     }
 
@@ -196,5 +196,25 @@ class Database
             . " CHANGE `u_password` `u_password` VARCHAR(191) CHARACTER SET utf8mb4 NOT NULL,"
             . " CHANGE `u_reminder_token` `u_reminder_token` VARCHAR(191) CHARACTER SET utf8mb4 NULL DEFAULT NULL"
             . ";");
+    }
+
+    private function upgrade3()
+    {
+        $this->query('ALTER TABLE `contacts`'
+            . ' CHANGE `c_name` `c_name` VARCHAR(191) CHARACTER SET utf8mb4 NOT NULL,'
+            . ' CHANGE `c_description` `c_description` VARCHAR(191) CHARACTER SET utf8mb4 NULL DEFAULT NULL'
+            . ';');
+        $this->query('ALTER TABLE `posts`'
+            . ' CHANGE `p_description` `p_description` TEXT CHARACTER SET utf8mb4 NULL DEFAULT NULL'
+            . ';');
+        $this->query('ALTER TABLE `feeds`'
+            . ' CHANGE `f_value` `f_value` TEXT NOT NULL'
+            . ';');
+        $this->query('ALTER TABLE `feed_items`'
+            . ' CHANGE `fi_title` `fi_title` TEXT CHARACTER SET utf8mb4 NULL DEFAULT NULL'
+            . ';');
+        $this->query('ALTER TABLE `settings`'
+            . ' CHANGE `s_value` `s_value` TEXT CHARACTER SET utf8mb4 NOT NULL'
+            . ';');
     }
 }

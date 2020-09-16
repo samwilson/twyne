@@ -62,7 +62,7 @@
 			<strong>Session:</strong>
 			<ul>
 				{% for sk, sv in session_vars %}
-					<li><strong>{{ sk }}</strong> = {{ dump(sv) }}</li>
+					<li><strong>{{ sk }}</strong> = {{ sv }}</li>
 				{% endfor %}
 			</ul>
 		{% endif %}

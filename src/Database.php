@@ -191,8 +191,8 @@ class Database
     private function upgrade2()
     {
         $this->query("ALTER TABLE `users`"
-            . " CHANGE `u_username` `u_username` VARCHAR(191) CHARACTER SET utf8mb4 NOT NULL UNIQUE,"
-            . " CHANGE `u_email` `u_email` VARCHAR(191) CHARACTER SET utf8mb4 NOT NULL UNIQUE,"
+            . " CHANGE `u_username` `u_username` VARCHAR(191) CHARACTER SET utf8mb4 NOT NULL,"
+            . " CHANGE `u_email` `u_email` VARCHAR(191) CHARACTER SET utf8mb4 NOT NULL,"
             . " CHANGE `u_password` `u_password` VARCHAR(191) CHARACTER SET utf8mb4 NOT NULL,"
             . " CHANGE `u_reminder_token` `u_reminder_token` VARCHAR(191) CHARACTER SET utf8mb4 NULL DEFAULT NULL"
             . ";");
@@ -215,6 +215,14 @@ class Database
             . ';');
         $this->query('ALTER TABLE `settings`'
             . ' CHANGE `s_value` `s_value` TEXT CHARACTER SET utf8mb4 NOT NULL'
+            . ';');
+        return true;
+    }
+
+    private function upgrade4()
+    {
+        $this->query('ALTER TABLE `posts`'
+            . ' ADD COLUMN `p_title` TEXT CHARACTER SET utf8mb4 NULL DEFAULT NULL AFTER p_author'
             . ';');
     }
 }

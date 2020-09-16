@@ -55,6 +55,7 @@ class PostController extends ControllerBase
             }
         }
         $post->setDatetime($this->getParamPost('datetime'));
+        $post->setTitle($this->getParamPost('title'));
         $post->setBody($this->getParamPost('body'));
         $post->save();
         $this->addAlert(Template::INFO, 'saved');

@@ -127,7 +127,12 @@ class Post extends ModelBase
 
     public function getTitle(): string
     {
-        return 'Post ' . $this->getId();
+        return $this->data->p_title ?? '';
+    }
+
+    public function setTitle(string $title)
+    {
+        $this->data->p_title = trim($title);
     }
 
     public function getUserId(): ?int

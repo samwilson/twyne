@@ -17,7 +17,11 @@
             </select>
             <!-- Date and time -->
             <label for="datetime">{{ msg('datetime') }}</label>
-            <input type="text" name="datetime" id="datetime" value="{{ post.datetime }}" />
+            <input type="text" name="datetime" id="datetime" value="{{ post.datetime|e('html_attr') }}" />
+        </p>
+        <p>
+            <label for="title">{{ msg('title') }}</label>
+            <input type="text" name="title" id="title" value="{{ post.title|e('html_attr') }}" size="80" />
         </p>
         <p>
             <label for="body">{{ msg('body') }}</label>

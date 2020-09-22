@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <h1>Home</h1>
+
+    <ol class="post-list">
+        {% for post in posts %}
+            <li class="post">
+                <header>
+                    <h2>
+                        <a href="{{ path('post_view', {id: post.id}) }}">
+                            {% if post.title %}{{ post.title }}{% else %}Post {{ post.id }}{% endif %}
+                        </a>
+                    </h2>
+                    <time datetime="{{ post.date.format('Y-m-d\\TH:i:s\\Z') }}">{{ post.date.format('Y F j (l), g:iA') }}</time>
+                </header>
+                <article>{{ post.body }}</article>
+            </li>
+        {% endfor %}
+    </ol>
+
+{% endblock %}

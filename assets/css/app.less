@@ -1,0 +1,49 @@
+@import "../../node_modules/normalize.css/normalize.css";
+
+@font-color: #283434;
+@font-family: serif;
+@border-primary: 2px solid #789987;
+@border-secondary: 1px solid #def3e6;
+
+body { color:@font-color; font-family:@font-family }
+
+a { color:#4e4efa; text-decoration:none }
+a:hover { text-decoration:underline; color:#2c2cff }
+
+article { max-width:66em; margin:auto }
+
+body { display:flex; flex-direction:column }
+body > header { flex:2; text-align:center; border-bottom:@border-primary; padding:0.5rem; background-color:#f1f8f2 }
+body > header a { color:@font-color }
+body > main { flex:10; padding:1rem }
+body > header h1 { color:@font-color; margin:0; font-variant:small-caps; letter-spacing:0.1em }
+body > header nav ul { display:flex; list-style-type:none; margin:0; padding:0 }
+body > header nav ul li { flex:1 }
+body > footer {
+    flex:1; text-align:right; font-size:smaller; border-top:@border-primary; padding:1rem;
+    ul {
+      list-style-type:none; margin:0; padding:0; display:flex;
+      li { flex:1 }
+    }
+}
+
+
+/*
+ * Forms
+ */
+form { background-color:#efefef; padding:1rem }
+form p label { display:block }
+form p { display:flex; align-items:center; margin-bottom:0.4rem }
+form p .field.size-1 { flex:1 }
+form p .field.size-2 { flex:2 }
+form p .field.size-4 { flex:4 }
+form p .field.size-6 { flex:6 }
+form textarea,
+form input[type="text"],
+form input[type="password"],
+form input[type="email"],
+form select { width:100%; border:@border-secondary }
+form input[type='submit'] { border:3px outset darkgrey; background-color:gray; border-radius:3px; color:white }
+
+@import "post";
+@import "security";

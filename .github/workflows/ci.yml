@@ -1,0 +1,62 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    services:
+      db:
+        image: ${{ matrix.db }}
+        env:
+          MYSQL_DATABASE: twyne_test
+          MYSQL_ROOT_PASSWORD: testpwd
+        ports:
+          - '3306:3306'
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    strategy:
+      matrix:
+        os: [ 'ubuntu-latest' ]
+        # All supported PHP versions https://www.php.net/supported-versions.php
+        php: [ '7.2', '7.3', '7.4' ]
+        db: [ 'mariadb:10.4', 'mysql:5.7', 'mysql:8.0' ]
+
+    runs-on: ${{ matrix.os }}
+
+    name: PHP ${{ matrix.php }} on ${{ matrix.os }} with ${{ matrix.db }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{matrix.php}}
+        extensions: fileinfo, json, pdo, mbstring
+
+    - name: Install
+      env:
+        APP_ENV: test
+        # The database server version has to be specified in the format:
+        # ^(?:5\.5\.5-)?(mariadb-)?<major_version>.<minor_version>.<patch_version>
+        # This differs from what's in the matrix, so we do it manually below.
+      run: |
+        export SERVER_VERSION="8.0"
+        if [ "${{ matrix.db }}" = "mariadb:10.4" ]; then
+            SERVER_VERSION="mariadb-10.4.0"
+        elif [ "${{ matrix.db }}" = "mysql:5.7" ]; then
+            SERVER_VERSION="5.7"
+        fi
+        export DATABASE_URL="mysql://root:testpwd@127.0.0.1:3306/twyne_test?serverVersion=$SERVER_VERSION"
+        echo DATABASE_URL is: $DATABASE_URL
+        if [ "$SERVER_VERSION" = "8.0" ]; then
+            sudo mysql --host 127.0.0.1 -uroot -ptestpwd -e "ALTER USER root IDENTIFIED WITH mysql_native_password BY 'testpwd';"
+        fi
+        composer install
+        ./bin/console doctrine:migrations:migrate
+
+    - name: Test
+      run: |
+        composer test

@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Site settings{% endblock %}
+
+{% block body %}
+
+    <h1>Site Settings</h1>
+
+    <form action="" method="post">
+
+        <p> <span class="field size-1">
+                <label for="site_name">Site name:</label>
+                <input id="site_name" type="text" value="{{ settings.siteName }}" name="settings[site_name]" />
+            </span>
+        </p>
+
+        <p>
+            <input type="submit" value="Save all" />
+        </p>
+
+    </form>
+
+{% endblock %}

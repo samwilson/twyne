@@ -1,0 +1,23 @@
+h1 { text-align:center }
+
+.post-list {
+  width: 66em;
+  margin: auto;
+  list-style-type: none;
+  .post {
+    border: @border-secondary;
+    border-width: 1px 1px 0 1px;
+    header { display:flex; background-color:#f4f6fb; padding:0 1em 0.2em 1em; align-items:baseline }
+    header h2 { flex:2; margin:0; padding:0; font-size:medium }
+    header h2 a { color:@font-color }
+    header time { flex:1; font-size:smaller; text-align:right }
+    article { padding: 1em; }
+    footer {
+      text-align:center;
+      a { color:gray }
+    }
+  }
+  .post:last-child {
+    border-bottom: @border-secondary;
+  }
+}

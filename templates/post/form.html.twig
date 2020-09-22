@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <h1 class="container text-xl text-left mx-auto mt-8">Edit a post</h1>
+
+    <form action="{{ path('post_save') }}" method="post" class="bg-gray-100 rounded container mx-auto">
+        <p>
+            <span class="field size-4">
+                <label for="title">Title:</label>
+                <input type="text" name="title" id="title" value="{{ post.title|e('html_attr') }}" size="80" autofocus />
+            </span>
+            <span class="field size-2">
+                <label for="date">Date (UTC):</label>
+                <input type="text" name="date" id="date" value="{{ post.date.format('Y-m-d H:i')|e('html_attr') }}" size="20" />
+            </span>
+        </p>
+        <p>
+            <span class="field size-1">
+                <label for="body" class="block">Body:</label>
+                <textarea name="body" id="body" rows="15" cols="120"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    >{{ post.body }}</textarea>
+                </span>
+        </p>
+        <p>
+            <span><input type="submit" name="save" value="Save" class="" /></span>
+            {% if post.id %}
+                <span><a href="{{ path('post_view', {id:post.id}) }}">Cancel</a></span>
+                <input type="hidden" name="id" value="{{ post.id }}" />
+            {% endif %}
+        </p>
+
+    </form>
+
+{% endblock %}

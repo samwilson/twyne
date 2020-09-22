@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{% block title %}Welcome{% endblock %} :: {{ settings.siteName }}</title>
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
+    </head>
+    <body>
+        <header>
+            <h1><a href="{{ path('home') }}">{{ settings.siteName }}</a></h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ path('home') }}">Home</a></li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li><a href="{{ path('post_create') }}">New post</a></li>
+                        <li><a href="{{ path('settings') }}">Settings</a></li>
+                    {% endif %}
+                    {% if app.user %}
+                        <li>
+                            Logged in as:
+                            <a href="{{ path('user', {id: app.user.id}) }}">{{ app.user.username }}</a>
+                        </li>
+                        <li><a href="{{ path('logout') }}">Log out</a></li>
+                    {% else %}
+                        <li><a href="{{ path('login') }}">Login</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </header>
+        <main>
+            {% block body %}{% endblock %}
+        </main>
+        <footer>
+            <ul>
+                <li>Powered by <a href="https://github.com/samwilson/twyne">Twyne</a> <dfn title="Current application version">{{ git_tag() }}</dfn></li>
+                <li><a href="https://github.com/samwilson/twyne/issues">Issues</a></li>
+                <li><a href="https://github.com/samwilson/twyne">Source code</a></li>
+                <li><a href="https://www.gnu.org/licenses/gpl-3.0-standalone.html">GPL 3.0+</a></li>
+            </ul>
+        </footer>
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+    </body>
+</html>

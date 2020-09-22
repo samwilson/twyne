@@ -20,7 +20,7 @@ jobs:
         os: [ 'ubuntu-latest' ]
         # All supported PHP versions https://www.php.net/supported-versions.php
         php: [ '7.2', '7.3', '7.4' ]
-        db: [ 'mariadb:10.4', 'mysql:5.7', 'mysql:8.0' ]
+        db: [ 'mariadb:10.3', 'mariadb:10.4', 'mariadb:10.5', 'mysql:5.7', 'mysql:8.0' ]
 
     runs-on: ${{ matrix.os }}
 
@@ -44,8 +44,12 @@ jobs:
         # This differs from what's in the matrix, so we do it manually below.
       run: |
         export SERVER_VERSION="8.0"
-        if [ "${{ matrix.db }}" = "mariadb:10.4" ]; then
-            SERVER_VERSION="mariadb-10.4.0"
+        if [ "${{ matrix.db }}" = "mariadb:10.3" ]; then
+            SERVER_VERSION="mariadb-10.3.23"
+        elif [ "${{ matrix.db }}" = "mariadb:10.4" ]; then
+            SERVER_VERSION="mariadb-10.4.14"
+        elif [ "${{ matrix.db }}" = "mariadb:10.5" ]; then
+            SERVER_VERSION="mariadb-10.5.5"
         elif [ "${{ matrix.db }}" = "mysql:5.7" ]; then
             SERVER_VERSION="5.7"
         fi

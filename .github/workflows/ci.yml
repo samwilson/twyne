@@ -64,3 +64,10 @@ jobs:
     - name: Test
       run: |
         composer test
+
+    - name: Build and check assets
+      run: |
+        npm install
+        npm run build
+        git status
+        git status | grep "nothing to commit, working tree clean"

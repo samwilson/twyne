@@ -40,6 +40,7 @@
     },
     "require-dev": {
         "ergebnis/composer-normalize": "^2.5",
+        "mediawiki/minus-x": "^1.1",
         "squizlabs/php_codesniffer": "^3.3",
         "symfony/maker-bundle": "^1.21",
         "symfony/stopwatch": "^5.1",
@@ -82,7 +83,10 @@
         "test": [
             "composer validate",
             "composer normalize --dry-run",
-            "phpcs"
+            "./bin/console lint:twig ./templates",
+            "./bin/console lint:yaml ./config",
+            "phpcs",
+            "minus-x check ."
         ]
     }
 }

@@ -7,7 +7,6 @@
     "devDependencies": {
         "less": "^3.12.2",
         "postcss-loader": "^4.0.2",
-        "webpack": "^4.44.2",
         "@symfony/webpack-encore": "^0.30.0",
         "core-js": "^3.0.0",
         "less-loader": "^7.0.1",

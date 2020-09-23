@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c475a7b8600e91971c832a353756b60e",
+    "content-hash": "56444dfff799d1321c2c04823441e281",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -5849,16 +5849,16 @@
     "packages-dev": [
         {
             "name": "ergebnis/composer-normalize",
-            "version": "2.8.1",
+            "version": "2.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/composer-normalize.git",
-                "reference": "e545b95c4c9b6b4d4aebb12fa2e4e96bdc7d8e39"
+                "reference": "0a25a226c5503659179c8ea440d1c76599e434fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/composer-normalize/zipball/e545b95c4c9b6b4d4aebb12fa2e4e96bdc7d8e39",
-                "reference": "e545b95c4c9b6b4d4aebb12fa2e4e96bdc7d8e39",
+                "url": "https://api.github.com/repos/ergebnis/composer-normalize/zipball/0a25a226c5503659179c8ea440d1c76599e434fd",
+                "reference": "0a25a226c5503659179c8ea440d1c76599e434fd",
                 "shasum": ""
             },
             "require": {
@@ -5870,18 +5870,18 @@
                 "php": "^7.2 || ^8.0"
             },
             "require-dev": {
-                "composer/composer": "^1.10.8 || ^2.0.0",
+                "composer/composer": "^1.10.13 || ^2.0.0",
                 "composer/package-versions-deprecated": "^1.11.99",
                 "ergebnis/phpstan-rules": "~0.15.2",
                 "ergebnis/test-util": "^1.1.0",
                 "jangregor/phpstan-prophecy": "~0.8.0",
                 "phpstan/extension-installer": "^1.0.5",
-                "phpstan/phpstan": "~0.12.40",
+                "phpstan/phpstan": "~0.12.43",
                 "phpstan/phpstan-deprecation-rules": "~0.12.5",
                 "phpstan/phpstan-phpunit": "~0.12.16",
-                "phpstan/phpstan-strict-rules": "~0.12.4",
+                "phpstan/phpstan-strict-rules": "~0.12.5",
                 "phpunit/phpunit": "^8.5.8",
-                "symfony/filesystem": "^5.1.3"
+                "symfony/filesystem": "^5.1.5"
             },
             "type": "composer-plugin",
             "extra": {
@@ -5916,7 +5916,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-08-30T16:32:02+00:00"
+            "time": "2020-09-22T09:55:49+00:00"
         },
         {
             "name": "ergebnis/json-normalizer",
@@ -6171,6 +6171,52 @@
                 }
             ],
             "time": "2020-07-06T04:49:32+00:00"
+        },
+        {
+            "name": "mediawiki/minus-x",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wikimedia/mediawiki-tools-minus-x.git",
+                "reference": "8f39ade171004eb897d80e53266ba2ba542b24d0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-tools-minus-x/zipball/8f39ade171004eb897d80e53266ba2ba542b24d0",
+                "reference": "8f39ade171004eb897d80e53266ba2ba542b24d0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.9",
+                "symfony/console": "^5"
+            },
+            "require-dev": {
+                "jakub-onderka/php-console-highlighter": "0.4.0",
+                "jakub-onderka/php-parallel-lint": "1.0.0",
+                "mediawiki/mediawiki-codesniffer": "29.0.0"
+            },
+            "bin": [
+                "bin/minus-x"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MediaWiki\\MinusX\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Kunal Mehta",
+                    "email": "legoktm@member.fsf.org"
+                }
+            ],
+            "description": "Removes executable bit from files that shouldn't be executable",
+            "homepage": "https://www.mediawiki.org/wiki/MinusX",
+            "time": "2020-03-17T05:48:22+00:00"
         },
         {
             "name": "nikic/php-parser",

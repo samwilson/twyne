@@ -7,6 +7,7 @@
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ path('rss') }}"/>
     </head>
     <body>
         <header>

@@ -71,7 +71,7 @@ class Post
 
     public function getDate(): ?DateTimeInterface
     {
-        return $this->date;
+        return new DateTime($this->date->format('Y-m-d H:i:s'), new DateTimeZone('Z'));
     }
 
     public function setDate(DateTimeInterface $date): self

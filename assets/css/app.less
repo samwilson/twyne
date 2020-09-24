@@ -1,6 +1,7 @@
 @import "../../node_modules/normalize.css/normalize.css";
 
 @font-color: #283434;
+@font-color-light: #768282;
 @font-family: serif;
 @border-primary: 2px solid #789987;
 @border-secondary: 1px solid #def3e6;
@@ -11,6 +12,10 @@ a { color:#4e4efa; text-decoration:none }
 a:hover { text-decoration:underline; color:#2c2cff }
 
 article { max-width:66em; margin:auto }
+
+blockquote { border-left: 4px solid @font-color-light; padding-left: 1em; margin:0 }
+
+hr { height:2px; width:50%; color:@font-color-light; background:@font-color-light; font-size:0; border:0 }
 
 body { display:flex; flex-direction:column }
 body > header { flex:2; text-align:center; border-bottom:@border-primary; padding:0.5rem; background-color:#f1f8f2 }

@@ -3,6 +3,8 @@ Twyne
 
 A web-based journal for writing and photography.
 
+![CI](https://github.com/samwilson/twyne/workflows/CI/badge.svg)
+
 ## Requirements
 
 * PHP (7.2 or above)

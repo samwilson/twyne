@@ -9,7 +9,7 @@
     <article>
         <h1>{{ post.title }}</h1>
         <p class="meta">{{ post.date.format('Y F j (l), g:iA') }}</p>
-        <div>{{ post.body }}</div>
+        <div>{{ post.body|markdownToHtml }}</div>
         {% if is_granted('ROLE_ADMIN') %}
             <p><a href="{{ path('post_edit', {id:post.id}) }}">Edit</a></p>
         {% endif %}

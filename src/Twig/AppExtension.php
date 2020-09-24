@@ -2,8 +2,10 @@
 
 namespace App\Twig;
 
+use App\Markdown;
 use Symfony\Component\Process\Process;
 use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 class AppExtension extends AbstractExtension
@@ -15,7 +17,7 @@ class AppExtension extends AbstractExtension
             // If your filter generates SAFE HTML, you should add a third
             // parameter: ['is_safe' => ['html']]
             // Reference: https://twig.symfony.com/doc/2.x/advanced.html#automatic-escaping
-            // new TwigFilter('filter_name', [$this, 'doSomething']),
+            new TwigFilter('markdownToHtml', [$this, 'markdownToHtml'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -39,5 +41,11 @@ class AppExtension extends AbstractExtension
             $process->run();
         }
         return trim($process->getOutput());
+    }
+
+    public function markdownToHtml(string $in): string
+    {
+        $md = new Markdown();
+        return $md->toHtml($in);
     }
 }

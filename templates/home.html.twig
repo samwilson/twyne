@@ -15,7 +15,7 @@
                     </h2>
                     <time datetime="{{ post.date.format('Y-m-d\\TH:i:s\\Z') }}">{{ post.date.format('Y F j (l), g:iA') }}</time>
                 </header>
-                <article>{{ post.body }}</article>
+                <article>{{ post.body|markdownToHtml }}</article>
             </li>
         {% endfor %}
     </ol>

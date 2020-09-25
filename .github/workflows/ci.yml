@@ -60,14 +60,15 @@ jobs:
         fi
         composer install
         ./bin/console doctrine:migrations:migrate
+        npm install
 
     - name: Test
       run: |
         composer test
+        npm run test
 
     - name: Build and check assets
       run: |
-        npm install
         npm run build
         git status
         git status | grep "nothing to commit, working tree clean"

@@ -32,6 +32,7 @@ class SettingController extends AbstractController
                 $em->persist($setting);
             }
             $em->flush();
+            $this->addFlash('success', 'Settings saved.');
             return $this->redirectToRoute('settings');
         }
         return $this->render('setting/index.html.twig', [

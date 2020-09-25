@@ -67,6 +67,7 @@ class PostController extends AbstractController
         $entityManager->persist($post);
         $entityManager->flush();
 
+        $this->addFlash('success', 'Post saved.');
         return $this->redirectToRoute('post_view', ['id' => $post->getId()]);
     }
 

@@ -5,18 +5,21 @@
         "normalize.css": "^8.0.1"
     },
     "devDependencies": {
-        "less": "^3.12.2",
-        "postcss-loader": "^4.0.2",
         "@symfony/webpack-encore": "^0.30.0",
         "core-js": "^3.0.0",
+        "less": "^3.12.2",
         "less-loader": "^7.0.1",
+        "postcss-loader": "^4.0.2",
         "regenerator-runtime": "^0.13.2",
+        "stylelint": "^13.7.1",
+        "stylelint-config-standard": "^20.0.0",
         "webpack-notifier": "^1.6.0"
     },
     "scripts": {
         "dev-server": "encore dev-server",
         "dev": "encore dev",
         "watch": "encore dev --watch",
-        "build": "encore production --progress"
+        "build": "encore production --progress",
+        "test": "stylelint assets"
     }
 }

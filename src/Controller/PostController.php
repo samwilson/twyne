@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Contact;
 use App\Entity\Post;
+use App\Repository\ContactRepository;
 use App\Repository\PostRepository;
 use App\Rss;
 use DateTime;
@@ -43,12 +45,11 @@ class PostController extends AbstractController
      * @Route("/P{id}/edit", name="post_edit", requirements={"id"="\d+"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function form(PostRepository $postRepository, $id = null)
+    public function form(PostRepository $postRepository, ContactRepository $contactRepository, $id = null)
     {
-        $post = $id ? $postRepository->find($id) : new Post();
-
         return $this->render('post/form.html.twig', [
-            'post' => $post,
+            'post' => $id ? $postRepository->find($id) : new Post(),
+            'contacts' => $contactRepository->findBy([], ['name' => 'ASC']),
         ]);
     }
 
@@ -56,15 +57,31 @@ class PostController extends AbstractController
      * @Route("/post/save", name="post_save")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function createPost(Request $request, EntityManagerInterface $entityManager, PostRepository $postRepository)
-    {
+    public function save(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        PostRepository $postRepository,
+        ContactRepository $contactRepository
+    ) {
         $id = $request->get('id');
+        /** @var Post $post */
         $post = $id ? $postRepository->find($id) : new Post();
         $post->setTitle($request->get('title'));
         $post->setBody($request->get('body'));
         $date = new DateTime($request->get('date'), new DateTimeZone('Z'));
         $post->setDate($date);
+
+        $authorName = $request->get('author');
+        $author = $contactRepository->findOneBy(['name' => $authorName]);
+        if (!$author) {
+            $author = new Contact();
+            $author->setName($authorName);
+            $entityManager->persist($author);
+        }
+        $post->setAuthor($author);
+
         $entityManager->persist($post);
+
         $entityManager->flush();
 
         $this->addFlash('success', 'Post saved.');

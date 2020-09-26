@@ -35,6 +35,12 @@ class Post
      */
     private $date;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Contact::class, inversedBy="posts")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $author;
+
     public function __construct()
     {
         $this->setDate(new DateTime('now', new DateTimeZone('Z')));
@@ -77,6 +83,18 @@ class Post
     public function setDate(DateTimeInterface $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?Contact
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(Contact $author): self
+    {
+        $this->author = $author;
 
         return $this;
     }

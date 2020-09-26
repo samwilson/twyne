@@ -2,17 +2,30 @@
 
 {% block body %}
 
-    <h1 class="container text-xl text-left mx-auto mt-8">Edit a post</h1>
+    <h1>Edit a post</h1>
 
     <form action="{{ path('post_save') }}" method="post" class="bg-gray-100 rounded container mx-auto">
         <p>
-            <span class="field size-4">
+            <span class="field size-1">
                 <label for="title">Title:</label>
                 <input type="text" name="title" id="title" value="{{ post.title|e('html_attr') }}" size="80" autofocus />
             </span>
-            <span class="field size-2">
+        </p>
+        <p>
+            <span class="field size-1">
                 <label for="date">Date (UTC):</label>
-                <input type="text" name="date" id="date" value="{{ post.date.format('Y-m-d H:i')|e('html_attr') }}" size="20" />
+                <input type="text" name="date" id="date" value="{{ post.date.format('Y-m-d H:i')|e('html_attr') }}" />
+            </span>
+            <span class="field size-1">
+                <label for="author">Author:</label>
+                <input type="text" name="author" list="contacts" id="author"
+                       value="{% if post.author %}{{ post.author.name|e('html_attr') }}{% endif %}"
+                />
+                <datalist id="contacts">
+                    {% for contact in contacts %}
+                        <option>{{ contact.name }}</option>
+                    {% endfor %}
+                </datalist>
             </span>
         </p>
         <p>

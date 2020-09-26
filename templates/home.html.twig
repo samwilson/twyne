@@ -13,6 +13,7 @@
                             {% if post.title %}{{ post.title }}{% else %}Post {{ post.id }}{% endif %}
                         </a>
                     </h2>
+                    By {{ post.author.name }}.
                     <time datetime="{{ post.date.format('Y-m-d\\TH:i:s\\Z') }}">{{ post.date.format('Y F j (l), g:iA') }}</time>
                 </header>
                 <article>{{ post.body|markdownToHtml }}</article>

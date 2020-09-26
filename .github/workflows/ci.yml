@@ -58,6 +58,7 @@ jobs:
         if [ "$SERVER_VERSION" = "8.0" ]; then
             sudo mysql --host 127.0.0.1 -uroot -ptestpwd -e "ALTER USER root IDENTIFIED WITH mysql_native_password BY 'testpwd';"
         fi
+        echo DATABASE_URL=$DATABASE_URL > .env.test.local
         composer install
         ./bin/console doctrine:migrations:migrate
         npm install

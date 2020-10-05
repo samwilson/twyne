@@ -6,6 +6,8 @@ use App\Repository\PostRepository;
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -40,6 +42,11 @@ class Post
      * @ORM\JoinColumn(nullable=false)
      */
     private $author;
+
+    /**
+     * @ORM\OneToOne(targetEntity=File::class, cascade={"persist", "remove"})
+     */
+    private $file;
 
     public function __construct()
     {
@@ -95,6 +102,18 @@ class Post
     public function setAuthor(Contact $author): self
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    public function getFile(): ?File
+    {
+        return $this->file;
+    }
+
+    public function setFile(?File $file): self
+    {
+        $this->file = $file;
 
         return $this;
     }

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Entity\File;
 use App\Entity\Post;
 use DateTime;
 use DOMDocument;
@@ -34,6 +35,7 @@ class Rss
 
         $root = $this->dom->createElement('rss');
         $root->setAttribute('version', '2.0');
+        $root->setAttribute('xmlns:media', 'http://search.yahoo.com/mrss/');
         $root = $this->dom->appendChild($root);
 
         $channel = $this->dom->createElement('channel');
@@ -75,6 +77,21 @@ class Rss
 
         $date = $post->getDate()->format(DateTime::RSS);
         $item->appendChild($this->dom->createElement('pubDate', $date));
+
+        $file = $post->getFile();
+        if ($file) {
+            $mediaContent = $this->dom->createElement('media:content');
+            $url = $this->urlGenerator->generate(
+                'file',
+                ['id' => $post->getId(), 'size' => File::SIZE_DISPLAY, 'ext' => 'jpg'],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $mediaContent->setAttribute('isDefault', 'true');
+            $mediaContent->setAttribute('url', $url);
+            $mediaContent->setAttribute('medium', 'image');
+            $mediaContent->setAttribute('type', 'image/jpeg');
+            $item->appendChild($mediaContent);
+        }
 
         return $item;
     }

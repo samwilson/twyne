@@ -16,7 +16,16 @@
                     By {{ post.author.name }}.
                     <time datetime="{{ post.date.format('Y-m-d\\TH:i:s\\Z') }}">{{ post.date.format('Y F j (l), g:iA') }}</time>
                 </header>
-                <article>{{ post.body|markdownToHtml }}</article>
+                <article>
+                    {% if post.file %}
+                        <p class="file">
+                            <img src="{{ path('file', {id: post.id, size: 'D', ext: 'jpg'}) }}"
+                                 alt="The file that is attached to this post."
+                            />
+                        </p>
+                    {% endif %}
+                    {{ post.body|markdownToHtml }}
+                </article>
             </li>
         {% endfor %}
     </ol>

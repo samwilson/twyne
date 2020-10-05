@@ -13,9 +13,28 @@
             <time datetime="{{ post.date.format('Y-m-d\\TH:i:s\\Z') }}">{{ post.date.format('Y F j (l), g:iA') }}</time>
         </p>
         <div>{{ post.body|markdownToHtml }}</div>
+
+        {% if post.file %}
+            <p>
+                <img src="{{ path('file', {id:post.id, size:'D', ext:'jpg'}) }}" alt="Image of the file attached to this post." />
+            </p>
+            <ul>
+                <li>
+                    URL:
+                    <a href="{{ url('file', {id:post.id, size:'F', ext:post.file.extension}) }}">
+                        {{ url('file', {id:post.id, size:'F', ext:post.file.extension}) }}
+                    </a>
+                </li>
+                <li>Size: {{ post.file.size|format_memory }}</li>
+                <li>SHA1 checksum: {{ post.file.checksum }}</li>
+                <li>Type: {{ post.file.mimeType }}</li>
+            </ul>
+        {% endif %}
+
         {% if is_granted('ROLE_ADMIN') %}
             <p><a href="{{ path('post_edit', {id:post.id}) }}">Edit</a></p>
         {% endif %}
+
     </article>
 
 {% endblock %}

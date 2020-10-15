@@ -4,7 +4,7 @@
 
     <h1>Edit a post</h1>
 
-    <form action="{{ path('post_save') }}" method="post" class="bg-gray-100 rounded container mx-auto">
+    <form action="{{ path('post_save') }}" method="post" enctype="multipart/form-data">
         <p>
             <span class="field size-1">
                 <label for="title">Title:</label>
@@ -14,11 +14,11 @@
         <p>
             <span class="field size-1">
                 <label for="date">Date (UTC):</label>
-                <input type="text" name="date" id="date" value="{{ post.date.format('Y-m-d H:i')|e('html_attr') }}" />
+                <input type="text" name="date" id="date" value="{{ post.date.format('Y-m-d H:i')|e('html_attr') }}" required />
             </span>
             <span class="field size-1">
                 <label for="author">Author:</label>
-                <input type="text" name="author" list="contacts" id="author"
+                <input type="text" name="author" list="contacts" id="author" required
                        value="{% if post.author %}{{ post.author.name|e('html_attr') }}{% endif %}"
                 />
                 <datalist id="contacts">
@@ -30,8 +30,21 @@
         </p>
         <p>
             <span class="field size-1">
-                <label for="body" class="block">Body:</label>
+                <label for="body">Body:</label>
                 <textarea name="body" id="body" rows="15" cols="120">{{ post.body }}</textarea>
+            </span>
+        </p>
+        <p>
+            {% if post.file %}
+            <span class="field size-1">
+                <label>Existing file:</label>
+                <img src="{{ path('file', {id: post.id, size: 'T', ext: 'jpg'}) }}" />
+            </span>
+            {% endif %}
+            <span class="field size-4">
+                <label for="new-file">{% if post.file %}Overwrite this file:{% else %}Upload file:{% endif %}</label>
+                <input type="file" name="new_file" id="new-file" />
+                (Max {{ max_filesize|format_memory }})
             </span>
         </p>
         <p>

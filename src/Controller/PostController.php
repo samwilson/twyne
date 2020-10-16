@@ -60,6 +60,29 @@ class PostController extends AbstractController
     }
 
     /**
+     * @Route("/P{id}/delete", name="post_delete", requirements={"id"="\d+"})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function deletePost(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        PostRepository $postRepository,
+        string $id
+    ) {
+        $post = $postRepository->find($id);
+        $submittedToken = $request->request->get('token');
+        if ($request->isMethod('post') && $this->isCsrfTokenValid('delete-post', $submittedToken)) {
+            $entityManager->remove($post);
+            $entityManager->flush();
+            $this->addFlash('success', 'Post deleted.');
+            return $this->redirectToRoute('home');
+        }
+        return $this->render('post/delete.html.twig', [
+            'post' => $post,
+        ]);
+    }
+
+    /**
      * @Route("/post/save", name="post_save")
      * @IsGranted("ROLE_ADMIN")
      */

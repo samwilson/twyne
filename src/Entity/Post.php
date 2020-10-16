@@ -45,6 +45,7 @@ class Post
 
     /**
      * @ORM\OneToOne(targetEntity=File::class, cascade={"persist", "remove"})
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $file;
 
@@ -114,7 +115,9 @@ class Post
     public function setFile(?File $file): self
     {
         $this->file = $file;
-
+        if ($file && $file->getPost() !== $this) {
+            $file->setPost($this);
+        }
         return $this;
     }
 }

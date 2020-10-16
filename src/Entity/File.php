@@ -30,7 +30,7 @@ class File
 
     /**
      * @ORM\OneToOne(targetEntity=Post::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $post;
 
@@ -66,7 +66,9 @@ class File
     public function setPost(?Post $post): self
     {
         $this->post = $post;
-
+        if ($post && $post->getFile() !== $this) {
+            $post->setFile($this);
+        }
         return $this;
     }
 

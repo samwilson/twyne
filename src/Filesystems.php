@@ -43,6 +43,24 @@ class Filesystems
     }
 
     /**
+     * Delete a file from both filesystems.
+     * @param File $file
+     * @return bool
+     */
+    public function remove(File $file): bool
+    {
+        // Delete actual file.
+        $storagePath = $this->getDataStoragePath($file);
+        $dataDeleted = true;
+        if ($this->data()->has($storagePath)) {
+            $dataDeleted = $this->data()->delete($storagePath);
+        }
+        // Delete temp versions.
+        $tempDeleted = $this->temp()->deleteDir('/files/' . $file->getPost()->getId());
+        return $dataDeleted && $tempDeleted;
+    }
+
+    /**
      * Get a stream of a file, resizing it if requested (in which case it'll always be a JPEG).
      * @param File $file The file to fetch.
      * @param string $size One of the File::SIZE_* constants.

@@ -46,7 +46,7 @@ class Settings
 
     public function dataDir(): string
     {
-        return rtrim($this->getData()['data_dir'], '/') . '/' ?? $this->projectDir . '/var/app_data/';
+        return rtrim($this->getData()['data_dir'] ?? $this->projectDir . '/var/app_data', '/') . '/';
     }
 
     public function tempDir(): string

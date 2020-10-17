@@ -67,11 +67,13 @@ class PostController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         PostRepository $postRepository,
+        Filesystems $filesystems,
         string $id
     ) {
         $post = $postRepository->find($id);
         $submittedToken = $request->request->get('token');
         if ($request->isMethod('post') && $this->isCsrfTokenValid('delete-post', $submittedToken)) {
+            $filesystems->remove($post->getFile());
             $entityManager->remove($post);
             $entityManager->flush();
             $this->addFlash('success', 'Post deleted.');
@@ -111,6 +113,7 @@ class PostController extends AbstractController
         $post->setAuthor($author);
 
         $entityManager->persist($post);
+        $entityManager->flush();
 
         /** @var UploadedFile $newFile */
         $newFile = $request->files->get('new_file');
@@ -120,7 +123,6 @@ class PostController extends AbstractController
             }
             $file = $post->getFile() ?? new File();
             $file->setPost($post);
-            $oldExt = $file->getExtension();
             $file->setMimeType($newFile->getMimeType());
             $file->setSize($newFile->getSize());
             $file->setChecksum(sha1_file($newFile->getPathname()));
@@ -128,16 +130,10 @@ class PostController extends AbstractController
             $post->setFile($file);
             $entityManager->persist($post);
             $entityManager->flush();
-            // Delete the old original, in case the extension has changed.
-            $filepathDataOld = '/files/' . $post->getId() . '.' . $oldExt;
-            if ($filesystems->data()->has($filepathDataOld)) {
-                $filesystems->data()->delete($filepathDataOld);
-            }
+            // Remove before adding, for replacement files with new extensions.
+            $filesystems->remove($file);
             $filesystems->write($filesystems->data(), $file, $newFile->getPathname());
-            $filesystems->temp()->deleteDir('files/' . $post->getId() . '/');
         }
-
-        $entityManager->flush();
 
         $this->addFlash('success', 'Post saved.');
         return $this->redirectToRoute('post_view', ['id' => $post->getId()]);

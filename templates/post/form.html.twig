@@ -1,17 +1,31 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}
+    {% if post.id %}
+        Edit post {{ post.id }}
+    {% else %}
+        New post
+    {% endif %}
+{% endblock %}
+
 {% block body %}
 
-    <h1>Edit a post</h1>
+    <h1>
+        {% if post.id %}
+            Editing <a href="{{ path('post_view', {id:post.id}) }}">post {{ post.id }}</a>
+        {% else %}
+            Creating a new post
+        {% endif %}
+    </h1>
 
     <form action="{{ path('post_save') }}" method="post" enctype="multipart/form-data">
-        <p>
+        <p class="fields">
             <span class="field size-1">
                 <label for="title">Title:</label>
                 <input type="text" name="title" id="title" value="{{ post.title|e('html_attr') }}" size="80" autofocus />
             </span>
         </p>
-        <p>
+        <p class="fields">
             <span class="field size-1">
                 <label for="date">Date (UTC):</label>
                 <input type="text" name="date" id="date" value="{{ post.date.format('Y-m-d H:i')|e('html_attr') }}" required />
@@ -28,13 +42,13 @@
                 </datalist>
             </span>
         </p>
-        <p>
+        <p class="fields">
             <span class="field size-1">
                 <label for="body">Body:</label>
                 <textarea name="body" id="body" rows="15" cols="120">{{ post.body }}</textarea>
             </span>
         </p>
-        <p>
+        <p class="fields">
             {% if post.file %}
             <span class="field size-1">
                 <label>Existing file:</label>
@@ -48,10 +62,10 @@
             </span>
         </p>
         <p>
-            <span><input type="submit" name="save" value="Save" class="" /></span>
+            <input type="submit" name="save" value="Save" />
             {% if post.id %}
-                <a href="{{ path('post_view', {id:post.id}) }}">Cancel</a>
-                <a href="{{ path('post_delete', {id:post.id}) }}" class="delete">Delete</a>
+                <a class="button" href="{{ path('post_view', {id:post.id}) }}">Cancel</a>
+                <a class="button" href="{{ path('post_delete', {id:post.id}) }}">Delete</a>
                 <input type="hidden" name="id" value="{{ post.id }}" />
             {% endif %}
         </p>

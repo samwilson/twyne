@@ -97,6 +97,9 @@ class Contact
 
     public function setHomepage(?string $homepage): self
     {
+        if ($homepage && substr($homepage, 0, 4) !== 'http') {
+            $homepage = "https://$homepage";
+        }
         $this->homepage = $homepage;
 
         return $this;

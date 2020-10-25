@@ -17,6 +17,7 @@
                     <li><a href="{{ path('home') }}">Home</a></li>
                     {% if is_granted('ROLE_ADMIN') %}
                         <li><a href="{{ path('post_create') }}">New post</a></li>
+                        <li><a href="{{ path('contacts') }}">Contacts</a></li>
                         <li><a href="{{ path('settings') }}">Settings</a></li>
                     {% endif %}
                     {% if app.user %}

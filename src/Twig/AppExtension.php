@@ -45,8 +45,11 @@ class AppExtension extends AbstractExtension
         return trim($process->getOutput());
     }
 
-    public function markdownToHtml(string $in): string
+    public function markdownToHtml(?string $in): string
     {
+        if (!$in) {
+            return '';
+        }
         $md = new Markdown();
         return $md->toHtml($in);
     }

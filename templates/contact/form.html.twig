@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contacts{% endblock %}
+
+{% block body %}
+
+    <h1>
+        {% if contact.id %}
+            Editing <a href="{{ path('contact_view', {id:contact.id}) }}">contact {{ contact.id }}</a>
+        {% else %}
+            Creating a new contact
+        {% endif %}
+    </h1>
+
+    <form action="{{ path('contact_save') }}" method="post">
+        <p class="fields">
+            <span class="field size-1">
+                <label for="name">Name:</label>
+                <input type="text" name="name" id="name" value="{{ contact.name|e('html_attr') }}" />
+            </span>
+            <span class="field size-1">
+                <label for="homepage">Homepage:</label>
+                <input type="text" name="homepage" id="homepage" value="{{ contact.homepage|e('html_attr') }}" />
+            </span>
+        </p>
+        <fieldset>
+            <legend>Descriptions:</legend>
+            <p class="fields">
+                <span class="field size-1">
+                    <label for="description_public">Public:</label>
+                    <textarea name="description_public" id="description_public">{{ contact.descriptionPublic }}</textarea>
+                </span>
+                <span class="field size-1">
+                    <label for="description_private">Private:</label>
+                    <textarea name="description_private" id="description_private">{{ contact.descriptionPrivate }}</textarea>
+                </span>
+            </p>
+        </fieldset>
+        <p>
+            <input type="submit" name="save" value="Save" />
+            {% if contact.id %}
+                <a class="button" href="{{ path('contact_view', {id:contact.id}) }}">Cancel</a>
+                <input type="hidden" name="id" value="{{ contact.id }}" />
+            {% endif %}
+        </p>
+
+    </form>
+
+{% endblock %}

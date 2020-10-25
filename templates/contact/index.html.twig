@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contacts{% endblock %}
+
+{% block body %}
+
+    <p><a href="{{ path('contact_create') }}">New contact</a></p>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Posts</th>
+                <th>Homepage</th>
+                <th colspan="2">Descriptions</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contact in contacts %}
+                <tr>
+                    <td>{{ contact.id }}</td>
+                    <td>{{ contact.name }}</td>
+                    <td>{{ contact.posts.count }}</td>
+                    <td><a href="{{ contact.homepage }}">{{ contact.homepage }}</a></td>
+                    <td class="description public">{{ contact.descriptionPublic|markdownToHtml }}</td>
+                    <td class="description {% if contact.descriptionPrivate %}private{% endif %}">
+                        {{ contact.descriptionPrivate|markdownToHtml }}
+                    </td>
+                    <td>
+                        <a href="{{ path('contact_view', {id:contact.id}) }}">View</a>
+                        <a href="{{ path('contact_edit', {id:contact.id}) }}">Edit</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

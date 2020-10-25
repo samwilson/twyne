@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contacts{% endblock %}
+
+{% block body %}
+
+    <h1>Contact: {{ contact.name }}</h1>
+
+    <p><a href="{{ contact.homepage }}">{{ contact.homepage }}</a></p>
+
+    {% if contact.descriptionPublic %}
+        <div>
+            <strong>Public:</strong>
+            {{ contact.descriptionPublic|markdownToHtml }}
+        </div>
+    {% endif %}
+    {% if contact.descriptionPrivate and app.user.isAdmin %}
+        <div>
+            <strong>Private:</strong>
+            {{ contact.descriptionPrivate|markdownToHtml }}
+        </div>
+    {% endif %}
+
+    <p>
+        <a href="{{ path('contact_edit', {id:contact.id}) }}">Edit</a>
+    </p>
+
+    {% if contact.posts.count > 0 %}
+        <h2>Posts</h2>
+        <ol>
+            {% for post in contact.posts %}
+                <li><a href="{{ path('post_view', {id:post.id}) }}">P{{ post.id}}:</a> {{ post.title }}</li>
+            {% endfor %}
+        </ol>
+    {% endif %}
+
+{% endblock %}

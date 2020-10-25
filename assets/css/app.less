@@ -41,6 +41,22 @@ hr {
   border: 0;
 }
 
+table {
+  margin: auto;
+  border: @border-primary;
+  border-left-width: 0;
+  border-right-width: 0;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 0.4em 0.8em;
+    vertical-align: top;
+    p { margin: 0; }
+  }
+  thead th { border-bottom: @border-secondary; }
+}
+
 body {
   color: @font-color;
   font-family: @font-family;
@@ -115,7 +131,7 @@ form {
 
   p label { display: block; }
 
-  p {
+  p.fields {
     display: flex;
     align-items: center;
     margin-bottom: 0.4rem;
@@ -134,14 +150,20 @@ form {
     border: @border-secondary;
   }
 
-  input[type='submit'] {
+  input[type='submit'],
+  a.button {
+    display: inline-block;
+    padding: 0 0.3em;
+    margin-right: 1em;
     border: 3px outset darkgrey;
     background-color: gray;
     border-radius: 3px;
     color: white;
   }
+  a.button { text-decoration: underline; }
 }
 
 @import "flash";
 @import "post";
 @import "security";
+@import "contact";

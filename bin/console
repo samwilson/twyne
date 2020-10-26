@@ -36,6 +36,8 @@ if ($_SERVER['APP_DEBUG']) {
     if (class_exists(Debug::class)) {
         Debug::enable();
     }
+} else {
+    umask(0002);
 }
 
 $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);

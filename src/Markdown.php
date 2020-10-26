@@ -34,7 +34,7 @@ class Markdown
         $out = preg_replace("|<p>[-*]{3}</p>|", "<hr />", $out);
         // Lists.
         $out = preg_replace("|<p>\d\.(.*)|", "<ol>\n#$1", $out); // begin ordered
-        $out = preg_replace("|\d\.(.*)</p>|", "#$1\n</ol>", $out); // end ordered
+        $out = preg_replace("|\n\d\.(.*)</p>|", "\n#$1\n</ol>", $out); // end ordered
         $out = preg_replace("|<p>\*(.*)|", "<ul>\n*$1", $out); // begin unordered
         $out = preg_replace("|\n\*(.*)</p>|", "\n*$1\n</ul>", $out); // end unordered
         $out = preg_replace("|\n[*#]\s*(.*)|", "\n<li>$1</li>", $out); // list items

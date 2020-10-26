@@ -30,6 +30,7 @@ class MarkdownTest extends TestCase
             ["auf\n\n* *emph* word\n* bar", "<p>auf</p>\n\n<ul>\n<li><em>emph</em> word</li>\n<li>bar</li>\n</ul>"],
             ["1. foo\n2. bar\n", "<ol>\n<li>foo</li>\n<li>bar</li>\n</ol>"],
             ["1. foo\n2. bar\n\nbaz", "<ol>\n<li>foo</li>\n<li>bar</li>\n</ol>\n\n<p>baz</p>"],
+            ['Not a list 10.20 just numbers.', '<p>Not a list 10.20 just numbers.</p>'],
             // Emphasis and code.
             ['the *foo* `bar` baz', '<p>the <em>foo</em> <code>bar</code> baz</p>'],
             // Blockquotes.

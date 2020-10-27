@@ -9,7 +9,7 @@
             <li class="post">
                 <header>
                     <h2>
-                        <a href="{{ path('post_view', {id: post.id}) }}">
+                        <a href="{% if post.url %}{{ post.url }}{% else %}{{ path('post_view', {id: post.id}) }}{% endif %}">
                             {% if post.title %}{{ post.title }}{% else %}Post {{ post.id }}{% endif %}
                         </a>
                     </h2>

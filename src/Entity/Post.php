@@ -49,6 +49,11 @@ class Post
      */
     private $file;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $url;
+
     public function __construct()
     {
         $this->setDate(new DateTime('now', new DateTimeZone('Z')));
@@ -118,6 +123,18 @@ class Post
         if ($file && $file->getPost() !== $this) {
             $file->setPost($this);
         }
+        return $this;
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(?string $url): self
+    {
+        $this->url = $url;
+
         return $this;
     }
 }

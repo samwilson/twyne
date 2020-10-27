@@ -100,6 +100,7 @@ class PostController extends AbstractController
         $post = $id ? $postRepository->find($id) : new Post();
         $post->setTitle($request->get('title'));
         $post->setBody($request->get('body'));
+        $post->setUrl($request->get('url'));
         $date = new DateTime($request->get('date'), new DateTimeZone('Z'));
         $post->setDate($date);
 

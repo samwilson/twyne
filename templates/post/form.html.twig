@@ -49,6 +49,12 @@
             </span>
         </p>
         <p class="fields">
+            <span class="field size-1">
+                <label for="url">Original URL:</label>
+                <input type="url" name="url" id="url" value="{{ post.url }}" />
+            </span>
+        </p>
+        <p class="fields">
             {% if post.file %}
             <span class="field size-1">
                 <label>Existing file:</label>

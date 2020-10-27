@@ -68,11 +68,14 @@ class Rss
         $description = $this->dom->createElement('description', $post->getBody());
         $item->appendChild($description);
 
-        $url = $this->urlGenerator->generate(
-            'post_view',
-            ['id' => $post->getId()],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
+        $url = $post->getUrl();
+        if (!$url) {
+            $url = $this->urlGenerator->generate(
+                'post_view',
+                ['id' => $post->getId()],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+        }
         $item->appendChild($this->dom->createElement('link', $url));
 
         $date = $post->getDate()->format(DateTime::RSS);

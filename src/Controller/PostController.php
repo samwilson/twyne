@@ -5,12 +5,15 @@ namespace App\Controller;
 use App\Entity\Contact;
 use App\Entity\File;
 use App\Entity\Post;
+use App\Entity\Tag;
 use App\Filesystems;
 use App\Repository\ContactRepository;
 use App\Repository\PostRepository;
+use App\Repository\TagRepository;
 use App\Rss;
 use DateTime;
 use DateTimeZone;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Console\Helper\Helper;
@@ -93,6 +96,7 @@ class PostController extends AbstractController
         EntityManagerInterface $entityManager,
         PostRepository $postRepository,
         ContactRepository $contactRepository,
+        TagRepository $tagRepository,
         Filesystems $filesystems
     ) {
         $id = $request->get('id');
@@ -103,6 +107,16 @@ class PostController extends AbstractController
         $post->setUrl($request->get('url'));
         $date = new DateTime($request->get('date'), new DateTimeZone('Z'));
         $post->setDate($date);
+        $post->setTags(new ArrayCollection());
+        foreach (array_filter(array_map('trim', explode(';', $request->get('tags')))) as $t) {
+            $tag = $tagRepository->findOneBy(['title' => $t]);
+            if (!$tag) {
+                $tag = new Tag();
+                $tag->setTitle($t);
+                $entityManager->persist($tag);
+            }
+            $post->addTag($tag);
+        }
 
         $authorName = $request->get('author');
         $author = $contactRepository->findOneBy(['name' => $authorName]);

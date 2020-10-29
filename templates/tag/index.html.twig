@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tags{% endblock %}
+
+{% block body %}
+
+    <h1>Tags</h1>
+
+    <ol class="tag-cloud">
+        {% for tag in tags %}
+            <li class="tag count-{{ tag.posts_count }} weight-{{ tag.weight}}">
+                <a href="{{ path('tag_view', {id:tag.id}) }}" title="{{ tag.posts_count }} posts">{{ tag.title }}</a>
+            </li>
+        {% endfor %}
+    </ol>
+
+{% endblock %}

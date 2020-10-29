@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ tag.title }} :: tag{% endblock %}
+
+{% block body %}
+
+    <h1>T{{ tag.id }}: {{ tag.title }}</h1>
+
+    {{ tag.description|markdownToHtml }}
+
+    {% include 'post/_post_list.html.twig' with {posts: tag.posts} %}
+
+{% endblock %}

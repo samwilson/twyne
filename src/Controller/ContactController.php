@@ -15,6 +15,7 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/contacts", name="contacts")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function allContacts(ContactRepository $contactRepository)
     {

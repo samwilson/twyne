@@ -1,0 +1,42 @@
+<ol class="post-list">
+    {% for post in posts %}
+        <li class="post">
+            <header>
+                <h2>
+                    <a href="{% if post.url %}{{ post.url }}{% else %}{{ path('post_view', {id: post.id}) }}{% endif %}">
+                        {% if post.title %}{{ post.title }}{% else %}Post {{ post.id }}{% endif %}
+                    </a>
+                </h2>
+                <span class="author">
+                    By
+                    {% if post.author.homepage %}
+                        <a href="{{ post.author.homepage }}">{{ post.author.name }}</a>.
+                    {% else %}
+                        {{ post.author.name }}.
+                    {% endif %}
+                </span>
+                <time datetime="{{ post.date.format('Y-m-d\\TH:i:s\\Z') }}">{{ post.date.format('Y F j (l), g:iA') }}</time>
+            </header>
+            <article>
+                {% if post.file %}
+                    <p class="file">
+                        <img src="{{ path('file', {id: post.id, size: 'D', ext: 'jpg'}) }}"
+                             alt="The file that is attached to this post."
+                        />
+                    </p>
+                {% endif %}
+                {{ post.body|markdownToHtml }}
+            </article>
+            <footer>
+                {% if post.tags|length > 0 %}
+                    <p class="tags">
+                        {% for tag in post.tags %}
+                            <a class="tag" href="{{ path('tag_view', {id:tag.id}) }}">{{ tag.title }}</a>
+                            {% if not loop.last %} &middot; {% endif %}
+                        {% endfor %}
+                    </p>
+                {% endif %}
+            </footer>
+        </li>
+    {% endfor %}
+</ol>

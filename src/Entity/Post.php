@@ -54,9 +54,15 @@ class Post
      */
     private $url;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="posts")
+     */
+    private $tags;
+
     public function __construct()
     {
         $this->setDate(new DateTime('now', new DateTimeZone('Z')));
+        $this->tags = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -135,6 +141,48 @@ class Post
     {
         $this->url = $url;
 
+        return $this;
+    }
+
+    /**
+     * @return Collection|Tag[]
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function getTagsString(): string
+    {
+        $out = [];
+        foreach ($this->getTags() as $tag) {
+            $out[] = $tag->getTitle();
+        }
+        return implode('; ', $out);
+    }
+
+    /**
+     * @param Collection|Tag[] $tags
+     */
+    public function setTags(Collection $tags): self
+    {
+        $this->tags = $tags;
+        return $this;
+    }
+
+    public function addTag(Tag $tag): self
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags[] = $tag;
+        }
+        return $this;
+    }
+
+    public function removeTag(Tag $tag): self
+    {
+        if ($this->tags->contains($tag)) {
+            $this->tags->removeElement($tag);
+        }
         return $this;
     }
 }

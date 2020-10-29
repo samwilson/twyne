@@ -15,6 +15,7 @@
             <nav>
                 <ul>
                     <li><a href="{{ path('home') }}">Home</a></li>
+                    <li><a href="{{ path('tags') }}">Tags</a></li>
                     {% if is_granted('ROLE_ADMIN') %}
                         <li><a href="{{ path('post_create') }}">New post</a></li>
                         <li><a href="{{ path('contacts') }}">Contacts</a></li>

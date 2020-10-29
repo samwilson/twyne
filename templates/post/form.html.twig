@@ -54,6 +54,10 @@
                 <input type="url" name="url" id="url" value="{{ post.url }}" />
             </span>
         </p>
+        <p>
+            <label for="tags">Tags (semicolon-separated):</label>
+            <input type="text" id="tags" name="tags" data-searchUrl="{{ path('tag_search') }}" value="{{ post.tagsString|e('html_attr') }}" />
+        </p>
         <p class="fields">
             {% if post.file %}
             <span class="field size-1">

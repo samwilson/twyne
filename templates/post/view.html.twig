@@ -18,6 +18,16 @@
 
         <div>{{ post.body|markdownToHtml }}</div>
 
+        {% if post.tags|length > 0 %}
+            <p class="tags">
+                Tag{% if post.tags|length > 1 %}s{% endif %}:
+                {% for tag in post.tags %}
+                    <a class="tag" href="{{ path('tag_view', {id:tag.id}) }}">{{ tag.title }}</a>
+                    {% if not loop.last %} &middot; {% endif %}
+                {% endfor %}
+            </p>
+        {% endif %}
+
         {% if post.file %}
             <p>
                 <img src="{{ path('file', {id:post.id, size:'D', ext:'jpg'}) }}" alt="Image of the file attached to this post." />

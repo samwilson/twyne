@@ -14,7 +14,7 @@
             {{ contact.descriptionPublic|markdownToHtml }}
         </div>
     {% endif %}
-    {% if contact.descriptionPrivate and app.user.isAdmin %}
+    {% if contact.descriptionPrivate and is_granted('ROLE_ADMIN') %}
         <div>
             <strong>Private:</strong>
             {{ contact.descriptionPrivate|markdownToHtml }}

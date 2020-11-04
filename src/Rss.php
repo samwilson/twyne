@@ -36,6 +36,7 @@ class Rss
         $root = $this->dom->createElement('rss');
         $root->setAttribute('version', '2.0');
         $root->setAttribute('xmlns:media', 'http://search.yahoo.com/mrss/');
+        $root->setAttribute('xmlns:atom', 'http://www.w3.org/2005/Atom');
         $root = $this->dom->appendChild($root);
 
         $channel = $this->dom->createElement('channel');
@@ -46,6 +47,13 @@ class Rss
 
         $homeUrl = $this->urlGenerator->generate('home', [], UrlGeneratorInterface::ABSOLUTE_URL);
         $channel->appendChild($this->dom->createElement('link', $homeUrl));
+
+        $selfUrl = $this->urlGenerator->generate('rss', [], UrlGeneratorInterface::ABSOLUTE_URL);
+        $atomLink = $this->dom->createElement('atom:link');
+        $atomLink->setAttribute('href', $selfUrl);
+        $atomLink->setAttribute('rel', 'self');
+        $atomLink->setAttribute('type', 'application/rss+xml');
+        $channel->appendChild($atomLink);
 
         $date = new DateTime();
         $lastBuildDate = $this->dom->createElement('lastBuildDate', $date->format(DateTime::RSS));
@@ -62,11 +70,13 @@ class Rss
     {
         $item = $this->dom->createElement('item');
 
-        $title = $this->dom->createElement('title', $post->getTitle());
+        $title = $this->dom->createElement('title', $post->getTitle() ?: 'Post ' . $post->getId());
         $item->appendChild($title);
 
-        $description = $this->dom->createElement('description', $post->getBody());
-        $item->appendChild($description);
+        if ($post->getBody()) {
+            $description = $this->dom->createElement('description', $post->getBody());
+            $item->appendChild($description);
+        }
 
         $url = $post->getUrl();
         if (!$url) {
@@ -77,6 +87,9 @@ class Rss
             );
         }
         $item->appendChild($this->dom->createElement('link', $url));
+        $guid = $this->dom->createElement('guid', $url);
+        $guid->setAttribute('isPermaLink', 'true');
+        $item->appendChild($guid);
 
         $date = $post->getDate()->format(DateTime::RSS);
         $item->appendChild($this->dom->createElement('pubDate', $date));

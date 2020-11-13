@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Upload{% endblock %}
+
+{% block body %}
+
+<h1>Upload</h1>
+
+<form action="{{ path('post_upload') }}" method="post" enctype="multipart/form-data">
+    <p>Use this form to upload one or more files and create a new post for each of them.</p>
+    <p>
+        <label for="files">Files:</label>
+        <input type="file" id="files" name="files[]" multiple accept=".jpg, .jpeg, .png, .pdf" required />
+        (Max {{ max_filesize|format_memory }})
+    </p>
+    <p>
+        <label for="author">Author:</label>
+        <input type="text" name="author" list="contacts" id="author" required />
+        <datalist id="contacts">
+            {% for contact in contacts %}
+                <option>{{ contact.name }}</option>
+            {% endfor %}
+        </datalist>
+    </p>
+    <p>
+        <label for="tags">Tags (semicolon-separated):</label>
+        <input type="text" id="tags" name="tags" data-searchUrl="{{ path('tag_search') }}" />
+    </p>
+    <p>
+        <input type="submit" value="Upload" />
+    </p>
+</form>
+
+{% endblock %}

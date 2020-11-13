@@ -70,4 +70,18 @@ class TagRepository extends ServiceEntityRepository
         }
         return $out;
     }
+
+    public function setTagsOnPost(Post $post, string $tags): void
+    {
+        $post->setTags(new ArrayCollection());
+        foreach (array_filter(array_map('trim', explode(';', $tags))) as $t) {
+            $tag = $this->findOneBy(['title' => $t]);
+            if (!$tag) {
+                $tag = new Tag();
+                $tag->setTitle($t);
+                $this->getEntityManager()->persist($tag);
+            }
+            $post->addTag($tag);
+        }
+    }
 }

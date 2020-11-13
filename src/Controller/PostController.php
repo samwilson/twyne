@@ -8,6 +8,7 @@ use App\Entity\Post;
 use App\Entity\Tag;
 use App\Filesystems;
 use App\Repository\ContactRepository;
+use App\Repository\FileRepository;
 use App\Repository\PostRepository;
 use App\Repository\TagRepository;
 use App\Rss;
@@ -15,6 +16,7 @@ use DateTime;
 use DateTimeZone;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Console\Helper\Helper;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -88,6 +90,50 @@ class PostController extends AbstractController
     }
 
     /**
+     * @Route("/upload", name="post_upload")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function uploadPosts(
+        Request $request,
+        TagRepository $tagRepository,
+        EntityManagerInterface $entityManager,
+        ContactRepository $contactRepository,
+        Filesystems $filesystems,
+        FileRepository $fileRepository
+    ) {
+        if ($request->isMethod('get')) {
+            return $this->render('post/upload.html.twig', [
+                'max_filesize' => UploadedFile::getMaxFilesize(),
+                'contacts' => $contactRepository->findBy([], ['name' => 'ASC']),
+            ]);
+        }
+        /** @var UploadedFile[] $files */
+        $files = $request->files->get('files');
+        foreach ($files as $uploadedFile) {
+            if (!$fileRepository->checkFile($uploadedFile)) {
+                $this->addFlash('notice', 'File already exists: ' . $uploadedFile->getClientOriginalName());
+                continue;
+            }
+            $post = new Post();
+            $post->setTitle($uploadedFile->getClientOriginalName());
+            $post->setAuthor($contactRepository->getOrCreate($request->get('author')));
+            $tagRepository->setTagsOnPost($post, $request->get('tags'));
+            $file = new File();
+            $file->setPost($post);
+            $file->setMimeType($uploadedFile->getMimeType());
+            $file->setSize($uploadedFile->getSize());
+            $file->setChecksum(sha1_file($uploadedFile->getPathname()));
+            $entityManager->persist($file);
+            $post->setFile($file);
+            $entityManager->persist($post);
+            $entityManager->flush();
+            $filesystems->write($filesystems->data(), $file, $uploadedFile->getPathname());
+            $this->addFlash('success', 'Uploaded: P' . $post->getId() . ' &mdash; ' . $post->getTitle());
+        }
+        return $this->redirectToRoute('post_upload');
+    }
+
+    /**
      * @Route("/post/save", name="post_save")
      * @IsGranted("ROLE_ADMIN")
      */
@@ -97,6 +143,7 @@ class PostController extends AbstractController
         PostRepository $postRepository,
         ContactRepository $contactRepository,
         TagRepository $tagRepository,
+        FileRepository $fileRepository,
         Filesystems $filesystems
     ) {
         $id = $request->get('id');
@@ -107,25 +154,9 @@ class PostController extends AbstractController
         $post->setUrl($request->get('url'));
         $date = new DateTime($request->get('date'), new DateTimeZone('Z'));
         $post->setDate($date);
-        $post->setTags(new ArrayCollection());
-        foreach (array_filter(array_map('trim', explode(';', $request->get('tags')))) as $t) {
-            $tag = $tagRepository->findOneBy(['title' => $t]);
-            if (!$tag) {
-                $tag = new Tag();
-                $tag->setTitle($t);
-                $entityManager->persist($tag);
-            }
-            $post->addTag($tag);
-        }
+        $tagRepository->setTagsOnPost($post, $request->get('tags'));
 
-        $authorName = $request->get('author');
-        $author = $contactRepository->findOneBy(['name' => $authorName]);
-        if (!$author) {
-            $author = new Contact();
-            $author->setName($authorName);
-            $entityManager->persist($author);
-        }
-        $post->setAuthor($author);
+        $post->setAuthor($contactRepository->getOrCreate($request->get('author')));
 
         $entityManager->persist($post);
         $entityManager->flush();
@@ -133,8 +164,8 @@ class PostController extends AbstractController
         /** @var UploadedFile $newFile */
         $newFile = $request->files->get('new_file');
         if ($newFile && $newFile->isReadable()) {
-            if (!in_array($newFile->guessExtension(), ['png', 'pdf', 'jpg', 'jpeg'])) {
-                throw new UnsupportedMediaTypeHttpException('File type not supported: ' . $newFile->guessExtension());
+            if (!$fileRepository->checkFile($newFile)) {
+                throw new Exception('Unable to save file.');
             }
             $file = $post->getFile() ?? new File();
             $file->setPost($post);

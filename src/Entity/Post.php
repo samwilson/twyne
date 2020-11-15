@@ -61,7 +61,7 @@ class Post
 
     public function __construct()
     {
-        $this->setDate(new DateTime('now', new DateTimeZone('Z')));
+        $this->setDate(new DateTime('@' . time(), new DateTimeZone('Z')));
         $this->tags = new ArrayCollection();
     }
 

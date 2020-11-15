@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3d710ee2530aa5a93064bb6fca090ade",
+    "content-hash": "387fcac770b1303cb05108ae6c8be3ad",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -1469,6 +1469,7 @@
                 "reflection",
                 "static"
             ],
+            "abandoned": "roave/better-reflection",
             "time": "2020-03-27T11:06:43+00:00"
         },
         {
@@ -6656,6 +6657,10 @@
                 "symfony",
                 "tests"
             ],
+            "support": {
+                "issues": "https://github.com/dmaicher/doctrine-test-bundle/issues",
+                "source": "https://github.com/dmaicher/doctrine-test-bundle/tree/v6.3.3"
+            },
             "time": "2020-09-04T05:50:21+00:00"
         },
         {
@@ -7386,7 +7391,8 @@
         "php": ">=7.2.5",
         "ext-ctype": "*",
         "ext-dom": "*",
-        "ext-iconv": "*"
+        "ext-iconv": "*",
+        "ext-json": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "1.1.0"

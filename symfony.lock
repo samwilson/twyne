@@ -135,6 +135,9 @@
     "mediawiki/minus-x": {
         "version": "1.1.0"
     },
+    "monolog/monolog": {
+        "version": "2.1.1"
+    },
     "mtdowling/jmespath.php": {
         "version": "2.6.0"
     },
@@ -145,7 +148,7 @@
         "version": "2.2.3"
     },
     "php": {
-        "version": "7.2"
+        "version": "7.2.9"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -306,6 +309,24 @@
     },
     "symfony/mime": {
         "version": "v5.1.5"
+    },
+    "symfony/monolog-bridge": {
+        "version": "v5.1.8"
+    },
+    "symfony/monolog-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "d7249f7d560f6736115eee1851d02a65826f0a56"
+        },
+        "files": [
+            "config/packages/dev/monolog.yaml",
+            "config/packages/prod/deprecations.yaml",
+            "config/packages/prod/monolog.yaml",
+            "config/packages/test/monolog.yaml"
+        ]
     },
     "symfony/orm-pack": {
         "version": "v2.0.0"

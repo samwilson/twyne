@@ -114,6 +114,12 @@ class PostTest extends KernelTestCase
                 'title' => 'no-metadata',
                 'date' => '2020-11-15 07:36:41',
             ],
+            [
+                'postParams' => ['author' => 'Bob', 'timezone' => 'Australia/Perth'],
+                'filepath' => __DIR__ . '/data/has_metadata.jpg',
+                'title' => 'has metadata',
+                'date' => '2020-11-14 04:34:56',
+            ],
         ];
     }
 

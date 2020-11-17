@@ -28,7 +28,7 @@
         <p class="fields">
             <span class="field size-1">
                 <label for="date">Date (UTC):</label>
-                <input type="text" name="date" id="date" value="{{ post.date.format('Y-m-d H:i')|e('html_attr') }}" required />
+                <input type="text" name="date" id="date" value="{{ post.date.format('Y-m-d H:i:s')|e('html_attr') }}" required />
             </span>
             <span class="field size-1">
                 <label for="author">Author:</label>

@@ -14,6 +14,15 @@
         (Max {{ max_filesize|format_memory }})
     </p>
     <p>
+        <label for="timezone">Timezone (of the dates in the files' metadata):</label>
+        <input id="timezone" type="text" list="timezones" name="timezone" value="Z" />
+        <datalist id="timezones">
+            {% for tz in timezones %}
+                <option value="{{ tz }}">{{ tz }}</option>
+            {% endfor %}
+        </datalist>
+    </p>
+    <p>
         <label for="author">Author:</label>
         <input type="text" name="author" list="contacts" id="author" required />
         <datalist id="contacts">

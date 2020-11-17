@@ -83,7 +83,14 @@ class PostRepository extends ServiceEntityRepository
             $exif = isset($data[0]) ? $data[0] : [];
             if (isset($exif['DateTimeOriginal'])) {
                 // Format is YYYY:mm:dd HH:MM:SS[.ss][+/-HH:MM|Z]) in ExifIFD:DateTimeOriginal
-                $post->setDate(new DateTime($exif['DateTimeOriginal']));
+                $tz = $request->get('timezone');
+                if ($tz) {
+                    $date = new DateTime($exif['DateTimeOriginal'] . ' ' . $tz);
+                } else {
+                    $date = new DateTime($exif['DateTimeOriginal'], new DateTimeZone('Z'));
+                }
+                $date->setTimezone(new DateTimeZone('Z'));
+                $post->setDate($date);
             }
         }
 

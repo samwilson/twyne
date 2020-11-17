@@ -9,6 +9,7 @@ use App\Repository\ContactRepository;
 use App\Repository\FileRepository;
 use App\Repository\PostRepository;
 use App\Rss;
+use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -94,6 +95,7 @@ class PostController extends AbstractController
             return $this->render('post/upload.html.twig', [
                 'max_filesize' => UploadedFile::getMaxFilesize(),
                 'contacts' => $contactRepository->findBy([], ['name' => 'ASC']),
+                'timezones' => DateTimeZone::listIdentifiers(),
             ]);
         }
         /** @var UploadedFile[] $files */

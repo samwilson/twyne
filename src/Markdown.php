@@ -21,6 +21,8 @@ class Markdown
     {
         // Platform-independent newlines.
         $out = preg_replace("/(\r\n|\r)/", "\n", trim($in));
+        // Links.
+        $out = preg_replace("|(https?://\S+)|", "<a href=\"$1\">$1</a>", $out);
         // Paragraphs.
         $out = "<p>$out</p>";
         $out = preg_replace("|\n+\s*\n+|", "</p>\n\n<p>", $out);

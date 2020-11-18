@@ -42,6 +42,9 @@ class MarkdownTest extends TestCase
             ["##Foo", "<h3>Foo</h3>"],
             ["###Foo", "<h3>Foo</h3>"],
             ["#### Foo", "<h4>Foo</h4>"],
+            // Links.
+            ['foo https://example.org bar', '<p>foo <a href="https://example.org">https://example.org</a> bar</p>'],
+            ['https://x.net/foo_bar', '<p><a href="https://x.net/foo_bar">https://x.net/foo_bar</a></p>'],
         ];
     }
 }

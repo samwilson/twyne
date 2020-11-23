@@ -111,7 +111,7 @@ class Filesystems
     {
         return $this->settings->tempDir();
     }
-    
+
     public function temp(): Filesystem
     {
         $adapter = new Local($this->settings->tempDir());

@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+    <h1>{{ title }}</h1>
+
+    <nav class="dates">
+        <ol>
+            {% for y in years %}
+                <li>
+                    <a href="{{ path('year', {year:y}) }}" {% if year == y %}class="current"{% endif %}>{{ y }}</a>
+                    {% if year == y %}
+                        <ol>
+                            {% for m_num, m_name in months %}
+                                <li>
+                                    <a href="{{ path('month', {year: year, month:m_num}) }}" {% if month == m_num %}class="current"{% endif %}>
+                                        {{ m_name }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ol>
+    </nav>
+
+    {% include 'post/_post_list.html.twig' with {posts: posts} %}
+
+{% endblock %}

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "686b6e50b01ca8c427ee6f61fb3571e0",
+    "content-hash": "7f4edb7abf1d59a31cf6c2b2e78b8197",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -3025,7 +3025,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-09-18T14:27:32+00:00"
+            "time": "2020-10-07T15:23:00+00:00"
         },
         {
             "name": "symfony/dependency-injection",
@@ -6903,10 +6903,6 @@
                 "symfony",
                 "tests"
             ],
-            "support": {
-                "issues": "https://github.com/dmaicher/doctrine-test-bundle/issues",
-                "source": "https://github.com/dmaicher/doctrine-test-bundle/tree/v6.3.3"
-            },
             "time": "2020-09-04T05:50:21+00:00"
         },
         {
@@ -7638,6 +7634,7 @@
         "ext-ctype": "*",
         "ext-dom": "*",
         "ext-iconv": "*",
+        "ext-intl": "*",
         "ext-json": "*"
     },
     "platform-dev": [],

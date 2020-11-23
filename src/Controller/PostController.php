@@ -11,6 +11,7 @@ use App\Repository\PostRepository;
 use App\Rss;
 use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
+use IntlDateFormatter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -174,6 +175,41 @@ class PostController extends AbstractController
     {
         return $this->render('post/view.html.twig', [
             'post' => $postRepository->find($id),
+        ]);
+    }
+
+    /**
+     * @Route("/dates", name="dates")
+     * @Route("/D{year}", name="year", requirements={"year"="\d{4}"})
+     * @Route("/D{year}{month}", name="month", requirements={"year"="\d{4}", "month"="\d{2}"})
+     */
+    public function dates(Request $request, PostRepository $postRepository)
+    {
+        $year = $request->get('year');
+        $month = $request->get('month');
+
+        // Redirect to current month if no date given.
+        if (is_null($year) && is_null($month)) {
+            $recent = $postRepository->recent();
+            if (isset($recent[0])) {
+                $date = $recent[0]->getDate();
+                $params = ['year' => $date->format('Y'), 'month' => $date->format('m')];
+                return $this->redirectToRoute('month', $params);
+            }
+        }
+
+        // Page title.
+        $fmt = new IntlDateFormatter(null, IntlDateFormatter::LONG, IntlDateFormatter::NONE);
+        $fmt->setPattern('MMMM YYYY');
+        $title = $fmt->format(mktime(0, 0, 0, $month, 1, $year));
+
+        return $this->render('post/dates.html.twig', [
+            'title' => $title,
+            'year' => $year,
+            'month' => $month,
+            'years' => $postRepository->getYears(),
+            'months' => $postRepository->getMonths($year),
+            'posts' => $postRepository->findByDateRange($year, $month),
         ]);
     }
 }

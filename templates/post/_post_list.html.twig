@@ -16,9 +16,11 @@
                         {{ post.author.name }}.
                     {% endif %}
                 </span>
-                <time datetime="{{ post.date.format('Y-m-d\\TH:i:s\\Z') }}" class="dt-published">
-                    {{ post.date.format('Y F j (l), g:iA') }}
-                </time>
+                <a href="{{ path('month', {year: post.date.format('Y'), month:post.date.format('m')}) }}" class="date">
+                    <time datetime="{{ post.date.format('Y-m-d\\TH:i:s\\Z') }}" class="dt-published">
+                        {{ post.date.format('Y F j (l), g:iA') }}
+                    </time>
+                </a>
             </header>
             <article class="e-content">
                 {% if post.file %}

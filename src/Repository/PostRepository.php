@@ -10,6 +10,7 @@ use DateTimeZone;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
+use IntlDateFormatter;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Process\Process;
@@ -49,11 +50,62 @@ class PostRepository extends ServiceEntityRepository
         $this->fileRepository = $fileRepository;
     }
 
-    public function recent(int $limit = 10)
+    /**
+     * @return Post[]
+     */
+    public function recent(int $limit = 10): array
     {
         return $this->createQueryBuilder('p')
             ->orderBy('p.date', 'DESC')
             ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getYears(): array
+    {
+        $sql = "SELECT YEAR(date) AS year FROM post GROUP BY YEAR(date) ORDER BY year DESC";
+        $stmt = $this->getEntityManager()->getConnection()->query($sql);
+        $stmt->execute();
+        $years = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $years[] = $row['year'];
+        }
+        return $years;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getMonths($year): array
+    {
+        $sql = "SELECT DATE_FORMAT(date, '%m') AS month FROM post
+            WHERE YEAR(date) = :year
+            GROUP BY MONTH(date)
+            ORDER BY month DESC";
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->bindParam('year', $year);
+        $stmt->execute();
+        $months = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $fmt = new IntlDateFormatter(null, IntlDateFormatter::LONG, IntlDateFormatter::NONE);
+            $fmt->setPattern('MMMM');
+            $months[$row['month']] = $fmt->format(mktime(0, 0, 0, $row['month'], 1, $year));
+        }
+        return $months;
+    }
+
+    public function findByDateRange($year, $month)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('YEAR(p.date) = :year')
+            ->setParameter('year', $year)
+            ->andWhere('MONTH(p.date) = :month')
+            ->setParameter('month', $month)
+            ->orderBy('p.date', 'DESC')
             ->getQuery()
             ->getResult();
     }

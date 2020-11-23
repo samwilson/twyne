@@ -17,17 +17,17 @@ h1 { text-align: center; }
       align-items: center;
     }
 
-    header time {
+    header a.date {
       flex: 1;
       font-size: smaller;
       text-align: right;
     }
 
-    @media screen and (max-width: 500px) {
+    @media @mobile {
       header {
         flex-direction: column;
 
-        time {
+        a.time {
           text-align: center;
           font-variant: small-caps;
         }
@@ -58,5 +58,32 @@ h1 { text-align: center; }
 
   .post:last-child {
     border-bottom: @border-secondary;
+  }
+}
+
+nav.dates {
+  float: left;
+
+  ol {
+    list-style-type: none;
+    padding: 0;
+
+    ol { margin-left: 1em; }
+  }
+
+  @media @mobile {
+    & {
+      float: none;
+      margin: auto;
+      border: @border-secondary;
+      text-align: center;
+
+      ol { margin: 0; }
+    }
+  }
+
+  a.current {
+    color: @font-color;
+    &:hover { text-decoration: none; }
   }
 }

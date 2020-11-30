@@ -8,6 +8,14 @@
     {% endif %}
 {% endblock %}
 
+{% block stylesheets %}
+    {{ encore_entry_link_tags('map') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('map') }}
+{% endblock %}
+
 {% block body %}
 
     <h1>
@@ -18,7 +26,7 @@
         {% endif %}
     </h1>
 
-    <form action="{{ path('post_save') }}" method="post" enctype="multipart/form-data">
+    <form action="{{ path('post_save') }}" method="post" enctype="multipart/form-data" class="post-edit">
         <p class="fields">
             <span class="field size-1">
                 <label for="title">Title:</label>
@@ -43,9 +51,19 @@
             </span>
         </p>
         <p class="fields">
-            <span class="field size-1">
+            <span class="field size-3">
                 <label for="body">Body:</label>
                 <textarea name="body" id="body" rows="15" cols="120">{{ post.body }}</textarea>
+            </span>
+            <span class="field size-1">
+                <label>Location:</label>
+                <input type="hidden" name="latitude" id="latitude" value="{% if post.location %}{{ post.location.latitude }}{% endif %}" />
+                <input type="hidden" name="longitude" id="longitude" value="{% if post.location %}{{ post.location.longitude }}{% endif %}" />
+                <span id="map" class="form-input"
+                      {% if post.location %}data-latitude="{{ post.location.latitude }}"{% endif %}
+                      {% if post.location %}data-longitude="{{ post.location.longitude }}"{% endif %}
+                >
+                </span>
             </span>
         </p>
         <p class="fields">

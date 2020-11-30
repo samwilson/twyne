@@ -41,10 +41,17 @@
                         {% endfor %}
                     </p>
                 {% endif %}
-                {% if is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('post_view', {id:post.id}) }}">P{{ post.id }}</a> &middot;
-                    <a href="{{ path('post_edit', {id:post.id}) }}">Edit</a>
-                {% endif %}
+                <p>
+                    {% if post.location %}
+                        <a href="{{ geo_hack(post.location) }}" title="This post has a geographic location of: {{ post.location }}">📍</a>
+                        &middot;
+                    {% endif %}
+                    <a href="{{ path('post_view', {id:post.id}) }}">P{{ post.id }}</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        &middot;
+                        <a href="{{ path('post_edit', {id:post.id}) }}">Edit</a>
+                    {% endif %}
+                </p>
             </footer>
         </li>
     {% endfor %}

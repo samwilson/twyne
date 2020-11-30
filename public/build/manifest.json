@@ -1,7 +1,16 @@
 {
-  "build/0.10bbd395.css": "/build/0.10bbd395.css",
-  "build/0.823a39ce.js": "/build/0.823a39ce.js",
-  "build/app.css": "/build/app.be2b36bb.css",
-  "build/app.js": "/build/app.76c8e643.js",
-  "build/runtime.js": "/build/runtime.d94b3b43.js"
+  "build/0.8ccd45ee.css": "/build/0.8ccd45ee.css",
+  "build/0.5ec6e634.js": "/build/0.5ec6e634.js",
+  "build/1.10bbd395.css": "/build/1.10bbd395.css",
+  "build/1.d9793a66.js": "/build/1.d9793a66.js",
+  "build/app.css": "/build/app.a3f8269e.css",
+  "build/app.js": "/build/app.2d2d6330.js",
+  "build/map.css": "/build/map.f3a81ea1.css",
+  "build/map.js": "/build/map.a0c51778.js",
+  "build/runtime.js": "/build/runtime.d94b3b43.js",
+  "build/images/layers-2x.png": "/build/images/layers-2x.8f2c4d11.png",
+  "build/images/layers.png": "/build/images/layers.416d9136.png",
+  "build/images/marker-icon-2x.png": "/build/images/marker-icon-2x.680f69f3.png",
+  "build/images/marker-icon.png": "/build/images/marker-icon.2b3e1faf.png",
+  "build/images/marker-shadow.png": "/build/images/marker-shadow.a0c6cc14.png"
 }

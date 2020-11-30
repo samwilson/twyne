@@ -7,8 +7,7 @@ use App\Entity\File;
 use App\Entity\Post;
 use App\Kernel;
 use App\Repository\PostRepository;
-use DateTime;
-use DateTimeZone;
+use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -74,7 +73,7 @@ class PostTest extends KernelTestCase
      *
      * @dataProvider provideSaveFromRequest()
      */
-    public function testSaveFromRequest($postParams, $filepath, $title, $date)
+    public function testSaveFromRequest($postParams, $filepath, $title, $date, $location = null)
     {
         /** @var PostRepository $postRepo */
         $postRepo = $this->entityManager->getRepository(Post::class);
@@ -85,16 +84,18 @@ class PostTest extends KernelTestCase
         $postRepo->saveFromRequest($post, $request, $uploadedFile);
         $this->assertEquals($title, $post->getTitle());
         $this->assertEquals($date, $post->getDate()->format('Y-m-d H:i:s'));
+        $this->assertequals($location, $post->getLocation());
     }
 
     public function provideSaveFromRequest()
     {
         return [
             [
-                'postParams' => ['title' => 'Test title', 'author' => 'Bob'],
+                'postParams' => ['title' => 'Test title', 'author' => 'Bob', 'latitude' => '10', 'longitude' => '-20'],
                 'filepath' => __DIR__ . '/data/has_metadata.jpg',
                 'title' => 'Test title',
                 'date' => '2020-11-14 12:34:56',
+                'location' => new Point(-20, 10),
             ],
             [
                 'postParams' => ['author' => 'Bob'],

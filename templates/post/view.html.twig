@@ -4,6 +4,14 @@
     {% if post.title %}{{ post.title }}{% else %}Post {{ post.id }}{% endif %}
 {% endblock %}
 
+{% block stylesheets %}
+    {{ encore_entry_link_tags('map') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('map') }}
+{% endblock %}
+
 {% block body %}
 
     <article class="h-entry">
@@ -50,6 +58,15 @@
                 <li>SHA1 checksum: {{ post.file.checksum }}</li>
                 <li>Type: {{ post.file.mimeType }}</li>
             </ul>
+        {% endif %}
+
+        {% if post.location %}
+            <p class="h-geo">
+                Location:
+                <span class="p-latitude" title="Latitude">{{ post.location.latitude }}&deg;</span>,
+                <span class="p-longitude" title="Longitude">{{ post.location.longitude }}&deg;</span>
+            </p>
+            <div id="map" data-latitude="{{ post.location.latitude }}" data-longitude="{{ post.location.longitude }}"></div>
         {% endif %}
 
         {% if is_granted('ROLE_ADMIN') %}

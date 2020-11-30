@@ -2,6 +2,7 @@
     "license": "GPL-3.0-or-later",
     "private": true,
     "dependencies": {
+        "leaflet": "^1.7.1",
         "normalize.css": "^8.0.1"
     },
     "devDependencies": {

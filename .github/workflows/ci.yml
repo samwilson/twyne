@@ -26,7 +26,7 @@ jobs:
       matrix:
         os: [ 'ubuntu-latest' ]
         # All supported PHP versions https://www.php.net/supported-versions.php
-        php: [ '7.2', '7.3', '7.4' ]
+        php: [ '7.3', '7.4', '8.0' ]
         db: [ 'mariadb:10.3', 'mariadb:10.4', 'mariadb:10.5', 'mysql:5.7', 'mysql:8.0' ]
 
     runs-on: ${{ matrix.os }}
@@ -80,5 +80,5 @@ jobs:
     - name: Build and check assets
       run: |
         npm run build
-        git status
+        git diff
         git status | grep "nothing to commit, working tree clean"

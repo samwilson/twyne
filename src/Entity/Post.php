@@ -3,12 +3,15 @@
 namespace App\Entity;
 
 use App\Repository\PostRepository;
+use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Index;
+use Doctrine\ORM\Mapping\Table;
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
@@ -58,6 +61,11 @@ class Post
      * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="posts")
      */
     private $tags;
+
+    /**
+     * @ORM\Column(type="point", nullable=true)
+     */
+    private $location;
 
     public function __construct()
     {
@@ -183,6 +191,18 @@ class Post
         if ($this->tags->contains($tag)) {
             $this->tags->removeElement($tag);
         }
+        return $this;
+    }
+
+    public function getLocation(): ?Point
+    {
+        return $this->location;
+    }
+
+    public function setLocation(?Point $location = null): self
+    {
+        $this->location = $location;
+
         return $this;
     }
 }

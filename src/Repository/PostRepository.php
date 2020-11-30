@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\File;
 use App\Entity\Post;
 use App\Filesystems;
+use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use DateTime;
 use DateTimeZone;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -157,6 +158,15 @@ class PostRepository extends ServiceEntityRepository
 
         // URL.
         $post->setUrl($request->get('url'));
+
+        // Location.
+        $longitude = $request->get('longitude');
+        $latitude = $request->get('latitude');
+        if ($longitude && $latitude) {
+            $post->setLocation(new Point($longitude, $latitude));
+        } else {
+            $post->setLocation(null);
+        }
 
         // Save post thus far.
         $this->getEntityManager()->persist($post);

@@ -3,6 +3,7 @@
 namespace App\Twig;
 
 use App\Markdown;
+use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Symfony\Component\Console\Helper\Helper;
 use Symfony\Component\Process\Process;
 use Twig\Extension\AbstractExtension;
@@ -27,7 +28,18 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFunction('git_tag', [$this, 'gitTag']),
+            new TwigFunction('geo_hack', [$this, 'geoHack']),
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function geoHack(Point $point): string
+    {
+        $lat = abs($point->getLatitude()) . '_' . ($point->getLatitude() < 0 ? 'S' : 'N');
+        $lon = abs($point->getLongitude()) . '_' . ($point->getLongitude() < 0 ? 'W' : 'E');
+        return 'https://geohack.toolforge.org/geohack.php?params=' . $lat . '_' . $lon;
     }
 
     /**

@@ -10,8 +10,8 @@
         "ext-iconv": "*",
         "ext-intl": "*",
         "ext-json": "*",
+        "alexandret/doctrine2-spatial": "^2.0",
         "composer/package-versions-deprecated": "^1.11",
-        "creof/doctrine2-spatial": "dev-mysql-80-support",
         "doctrine/doctrine-bundle": "^2.1",
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "^2.7",
@@ -80,12 +80,6 @@
             "App\\Tests\\": "tests/"
         }
     },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/holtkamp/doctrine2-spatial.git"
-        }
-    ],
     "scripts": {
         "post-install-cmd": [
             "@auto-scripts"

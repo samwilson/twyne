@@ -23,10 +23,7 @@
                         <li><a href="{{ path('settings') }}">Settings</a></li>
                     {% endif %}
                     {% if app.user %}
-                        <li>
-                            Logged in as:
-                            <a href="{{ path('user', {id: app.user.id}) }}">{{ app.user.username }}</a>
-                        </li>
+                        <li>Logged in as {{ app.user.username }}</li>
                         <li><a href="{{ path('logout') }}">Log out</a></li>
                     {% else %}
                         <li><a href="{{ path('login') }}">Login</a></li>

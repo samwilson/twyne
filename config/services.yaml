@@ -30,3 +30,7 @@ services:
     App\Settings:
         arguments:
             $projectDir: '%kernel.project_dir%'
+
+    App\WebRequestProcessor:
+      tags: { name: monolog.processor }
+      autowire: true

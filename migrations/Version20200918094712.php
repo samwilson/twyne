@@ -12,7 +12,7 @@ final class Version20200918094712 extends AbstractMigration
 
     public function getDescription(): string
     {
-        return 'Initial installation';
+        return 'Initial installation.';
     }
 
     public function up(Schema $schema): void

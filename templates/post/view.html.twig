@@ -15,6 +15,19 @@
 {% block body %}
 
     <article class="h-entry">
+
+        {% if post.inReplyTo %}
+            <p>
+                This post is in reply to
+                <a href="{% if post.url %}
+                        {{ post.url }}
+                    {% else %}
+                        {{ path('post_view', {id:post.inReplyTo.id}) }}
+                    {% endif %}" class="u-in-reply-to">{{ post.inReplyTo.title }}</a>
+                by {{ post.inReplyTo.author.name }}.
+            </p>
+        {% endif %}
+
         <h1 class="p-name">{{ post.title }}</h1>
         <p class="meta">
             By
@@ -30,6 +43,14 @@
                 <span class="url">URL: <a href="{{ post.url }}">{{ post.url }}</a></span>
             {% endif %}
         </p>
+
+            {% if is_granted('ROLE_ADMIN') %}
+                <p>
+                    <a href="{{ path('post_edit', {id:post.id}) }}">Edit</a>
+                    &middot;
+                    <a href="{{ path('post_create', {in_reply_to:post.id}) }}">Reply</a>
+                </p>
+            {% endif %}
 
         <div class="e-content">{{ post.body|markdownToHtml }}</div>
 
@@ -69,8 +90,11 @@
             <div id="map" data-latitude="{{ post.location.latitude }}" data-longitude="{{ post.location.longitude }}"></div>
         {% endif %}
 
-        {% if is_granted('ROLE_ADMIN') %}
-            <p><a href="{{ path('post_edit', {id:post.id}) }}">Edit</a></p>
+        {% if post.replies|length %}
+            <section id="replies">
+                <h2>Replies</h2>
+                {% include 'post/_post_list.html.twig' with {posts: post.replies} %}
+            </section>
         {% endif %}
 
     </article>

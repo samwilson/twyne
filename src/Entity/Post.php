@@ -67,10 +67,21 @@ class Post
      */
     private $location;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Post::class, inversedBy="replies")
+     */
+    private $in_reply_to;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Post::class, mappedBy="in_reply_to")
+     */
+    private $replies;
+
     public function __construct()
     {
         $this->setDate(new DateTime('@' . time(), new DateTimeZone('Z')));
         $this->tags = new ArrayCollection();
+        $this->replies = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -202,6 +213,48 @@ class Post
     public function setLocation(?Point $location = null): self
     {
         $this->location = $location;
+
+        return $this;
+    }
+
+    public function getInReplyTo(): ?self
+    {
+        return $this->in_reply_to;
+    }
+
+    public function setInReplyTo(?self $in_reply_to): self
+    {
+        $this->in_reply_to = $in_reply_to;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getReplies(): Collection
+    {
+        return $this->replies;
+    }
+
+    public function addReply(self $reply): self
+    {
+        if (!$this->replies->contains($reply)) {
+            $this->replies[] = $reply;
+            $reply->setInReplyTo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReply(self $reply): self
+    {
+        if ($this->replies->removeElement($reply)) {
+            // set the owning side to null (unless already changed)
+            if ($reply->getInReplyTo() === $this) {
+                $reply->setInReplyTo(null);
+            }
+        }
 
         return $this;
     }

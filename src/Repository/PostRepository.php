@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Process\Process;
 
 /**
- * @method Post|null find($id, $lockMode = null, $lockVersion = null)
  * @method Post|null findOneBy(array $criteria, array $orderBy = null)
  * @method Post[]    findAll()
  * @method Post[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
@@ -49,6 +48,17 @@ class PostRepository extends ServiceEntityRepository
         $this->contactRepository = $contactRepository;
         $this->tagRepository = $tagRepository;
         $this->fileRepository = $fileRepository;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function find($id, $lockMode = null, $lockVersion = null): ?Post
+    {
+        if (substr($id, 0, 1) === 'P') {
+            $id = substr($id, 1);
+        }
+        return parent::find($id, $lockMode, $lockVersion);
     }
 
     /**
@@ -166,6 +176,12 @@ class PostRepository extends ServiceEntityRepository
             $post->setLocation(new Point($longitude, $latitude));
         } else {
             $post->setLocation(null);
+        }
+
+        // In reply to.
+        $inReplyToId = $request->get('in_reply_to');
+        if ($inReplyToId) {
+            $post->setInReplyTo($this->find($inReplyToId));
         }
 
         // Save post thus far.

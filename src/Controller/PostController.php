@@ -48,10 +48,18 @@ class PostController extends AbstractController
      * @Route("/P{id}/edit", name="post_edit", requirements={"id"="\d+"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function editPost(PostRepository $postRepository, ContactRepository $contactRepository, $id = null)
-    {
+    public function editPost(
+        Request $request,
+        PostRepository $postRepository,
+        ContactRepository $contactRepository,
+        $id = null
+    ) {
+        $post = $id ? $postRepository->find($id) : new Post();
+        if ($request->get('in_reply_to')) {
+            $post->setInReplyTo($postRepository->find($request->get('in_reply_to')));
+        }
         return $this->render('post/form.html.twig', [
-            'post' => $id ? $postRepository->find($id) : new Post(),
+            'post' => $post,
             'contacts' => $contactRepository->findBy([], ['name' => 'ASC']),
             'max_filesize' => UploadedFile::getMaxFilesize(),
         ]);

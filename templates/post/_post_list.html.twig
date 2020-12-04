@@ -2,12 +2,24 @@
     {% for post in posts %}
         <li class="post h-entry">
             <header>
-                <h2 class="p-name">
-                    <a href="{% if post.url %}{{ post.url }}{% else %}{{ path('post_view', {id: post.id}) }}{% endif %}"
-                        class="u-url">
-                        {% if post.title %}{{ post.title }}{% else %}Post {{ post.id }}{% endif %}
-                    </a>
-                </h2>
+                <div class="titles">
+                    {% if post.inReplyTo %}
+                        <p class="in-reply-to">
+                            In reply to:
+                            <a href="{% if post.inReplyTo.url %}
+                                {{ post.inReplyTo.url }}
+                            {% else %}
+                                {{ path('post_view', {id:post.inReplyTo.id}) }}
+                            {% endif %}" class="u-in-reply-to">{{ post.inReplyTo.title }}</a>
+                        </p>
+                    {% endif %}
+                    <h2 class="p-name">
+                        <a href="{% if post.url %}{{ post.url }}{% else %}{{ path('post_view', {id: post.id}) }}{% endif %}"
+                            class="u-url">
+                            {% if post.title %}{{ post.title }}{% else %}Post {{ post.id }}{% endif %}
+                        </a>
+                    </h2>
+                </div>
                 <span class="author">
                     By
                     {% if post.author.homepage %}
@@ -50,6 +62,12 @@
                     {% if is_granted('ROLE_ADMIN') %}
                         &middot;
                         <a href="{{ path('post_edit', {id:post.id}) }}">Edit</a>
+                        &middot;
+                        <a href="{{ path('post_create', {in_reply_to:post.id}) }}">Reply</a>
+                    {% endif %}
+                    {% if post.replies|length %}
+                        &middot;
+                        <a href="{{ path('post_view', {id:post.id}) }}"#replies>{{ post.replies|length }} replies</a>
                     {% endif %}
                 </p>
             </footer>

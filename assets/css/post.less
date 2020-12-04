@@ -13,14 +13,28 @@ h1 { text-align: center; }
     header {
       display: flex;
       background-color: #f4f6fb;
-      padding: 0 1em 0.2em 1em;
+      padding: 0 0 0.2em 0;
       align-items: center;
-    }
 
-    header a.date {
-      flex: 1;
-      font-size: smaller;
-      text-align: right;
+      & > * { padding: 0 0.8em; }
+
+      .titles {
+        flex: 2;
+
+        p,
+        h2 {
+          margin: 0;
+          padding: 0;
+        }
+      }
+
+      .in-reply-to { font-size: smaller; }
+
+      a.date {
+        flex: 1;
+        font-size: smaller;
+        text-align: right;
+      }
     }
 
     @media @mobile {

@@ -11,7 +11,7 @@ final class Version20201027095911 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Add tags to posts';
+        return 'Add tags to posts.';
     }
 
     public function up(Schema $schema): void

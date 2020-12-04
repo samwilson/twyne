@@ -29,8 +29,14 @@
     <form action="{{ path('post_save') }}" method="post" enctype="multipart/form-data" class="post-edit">
         <p class="fields">
             <span class="field size-1">
+                <label for="in_reply_to">In reply to:</label>
+                <input type="text" name="in_reply_to" id="in_reply_to"
+                       {% if post.inReplyTo %}value="P{{ post.inReplyTo.id|e('html_attr') }}"{% endif %} />
+                {% if post.inReplyTo %}<a href="{{ path('post_view', {id: post.inReplyTo.id}) }}">{{ post.inReplyTo.title }}</a>{% endif %}
+            </span>
+            <span class="field size-6">
                 <label for="title">Title:</label>
-                <input type="text" name="title" id="title" value="{{ post.title|e('html_attr') }}" size="80" autofocus />
+                <input type="text" name="title" id="title" value="{{ post.title|e('html_attr') }}" autofocus />
             </span>
         </p>
         <p class="fields">

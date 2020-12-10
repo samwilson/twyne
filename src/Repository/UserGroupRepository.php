@@ -29,6 +29,7 @@ class UserGroupRepository extends ServiceEntityRepository
         $group = new UserGroup();
         $group->setName($name);
         $this->getEntityManager()->persist($group);
+        $this->getEntityManager()->flush();
         return $group;
     }
 }

@@ -2,12 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Post;
-use App\Entity\Setting;
-use App\Repository\SettingRepository;
 use App\Settings;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,19 +14,10 @@ class SettingController extends AbstractController
      * @Route("/settings", name="settings")
      * @isGranted("ROLE_ADMIN")
      */
-    public function index(Request $request, SettingRepository $settingRepository, EntityManagerInterface $em)
+    public function index(Request $request, Settings $settings)
     {
         if ($request->isMethod('POST')) {
-            foreach ($request->get('settings') as $name => $value) {
-                $setting = $settingRepository->findOneBy(['name' => $name]);
-                if (!$setting) {
-                    $setting = new Setting();
-                }
-                $setting->setName($name);
-                $setting->setValue($value);
-                $em->persist($setting);
-            }
-            $em->flush();
+            $settings->saveData($request->get('settings', []));
             $this->addFlash('success', 'Settings saved.');
             return $this->redirectToRoute('settings');
         }

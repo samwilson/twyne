@@ -17,7 +17,7 @@
 
         <fieldset>
             <legend>File storage</legend>
-            <p>
+            <p class="fields">
                 <label><input type="radio" name="settings[data_store]" value="local" {% if settings.dataStore == 'local' %}checked{% endif %} /> Local</label>
                 <label><input type="radio" name="settings[data_store]" value="aws" {% if settings.dataStore == 'aws' %}checked{% endif %} /> AWS</label>
             </p>
@@ -58,6 +58,25 @@
                 </span>
             </p>
         </fieldset>
+
+        <fieldset>
+            <legend>Flickr</legend>
+            <p class="fields">
+                <span class="field size-1">
+                    <label for="flickr_api_key">API Key:</label>
+                    <input id="flickr_api_key" type="text" value="{{ settings.flickrApiKey }}" name="settings[flickr_api_key]" />
+                </span>
+                <span class="field size-1">
+                    <label for="flickr_api_secret">API Secret:</label>
+                    <input id="flickr_api_secret" type="text" value="{{ settings.flickrApiSecret }}" name="settings[flickr_api_secret]" />
+                </span>
+            </p>
+            <p>
+                Access Token? {% if settings.flickrToken %}&check;{% else %}&cross;{% endif %}
+                Access Token Secret? {% if settings.flickrTokenSecret %}&check;{% else %}&cross;{% endif %}
+            </p>
+        </fieldset>
+
         <p>
             <input type="submit" value="Save all" />
         </p>

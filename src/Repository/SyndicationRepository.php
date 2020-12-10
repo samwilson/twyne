@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Post;
 use App\Entity\Syndication;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -17,5 +18,15 @@ class SyndicationRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Syndication::class);
+    }
+
+    public function addSyndication(Post $post, string $url, string $label): void
+    {
+        $syndication = new Syndication();
+        $syndication->setPost($post);
+        $syndication->setUrl($url);
+        $syndication->setLabel($label);
+        $this->getEntityManager()->persist($syndication);
+        $this->getEntityManager()->flush();
     }
 }

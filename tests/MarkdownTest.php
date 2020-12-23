@@ -35,6 +35,7 @@ class MarkdownTest extends TestCase
             ['the *foo* `bar` baz', '<p>the <em>foo</em> <code>bar</code> baz</p>'],
             // Blockquotes.
             ["foo\n\n> bar\n> baz\n>last", "<p>foo</p>\n\n<blockquote>\nbar\nbaz\nlast\n</blockquote>"],
+            ["> foo\n\nbar", "<blockquote>\nfoo\n</blockquote>\n\n<p>bar</p>"],
             // Separator.
             ["foo\n\n---\n\nbar", "<p>foo</p>\n\n<hr />\n\n<p>bar</p>"],
             // Header.

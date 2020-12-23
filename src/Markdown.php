@@ -29,7 +29,7 @@ class Markdown
         // Remove paragraphs if they contain nothing (including only whitespace).
         $out = preg_replace('|<p>\s*</p>|', '', $out);
         // Blockquotes
-        $out = preg_replace('|<p>>\s*(.*)|', "<blockquote>\n$1", $out);
+        $out = preg_replace('|<p>>\s*(.*)|', "<blockquote>\n> $1", $out);
         $out = preg_replace('|\n>\s*(.*)</p>|', "\n$1\n</blockquote>", $out);
         $out = preg_replace('|\n>\s(.*)|', "\n$1", $out);
         // Separator.

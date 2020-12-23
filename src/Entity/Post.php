@@ -77,11 +77,17 @@ class Post
      */
     private $replies;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Syndication::class, mappedBy="post")
+     */
+    private $syndications;
+
     public function __construct()
     {
         $this->setDate(new DateTime('@' . time(), new DateTimeZone('Z')));
         $this->tags = new ArrayCollection();
         $this->replies = new ArrayCollection();
+        $this->syndications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -257,5 +263,39 @@ class Post
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Syndication[]
+     */
+    public function getSyndications(): Collection
+    {
+        return $this->syndications;
+    }
+
+    /**
+     * @param Collection|Syndication[] $syndications
+     */
+    public function setSyndications(Collection $syndications): void
+    {
+        $this->syndications = $syndications;
+    }
+
+    public function addSyndication(Syndication $syndication): void
+    {
+        if (!$this->syndications->contains($syndication)) {
+            $this->syndications[] = $syndication;
+            $syndication->setPost($this);
+        }
+    }
+
+    public function removeSyndication(Syndication $syndication): void
+    {
+        if ($this->syndications->removeElement($syndication)) {
+            // set the owning side to null (unless already changed)
+            if ($syndication->getPost() === $this) {
+                $syndication->setPost(null);
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\File;
 use App\Entity\Post;
+use App\Entity\Syndication;
 use App\Filesystems;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use DateTime;
@@ -36,18 +37,23 @@ class PostRepository extends ServiceEntityRepository
     /** @var FileRepository */
     private $fileRepository;
 
+    /** @var SyndicationRepository */
+    private $syndicationRepository;
+
     public function __construct(
         ManagerRegistry $registry,
         Filesystems $filesystems,
         ContactRepository $contactRepository,
         TagRepository $tagRepository,
-        FileRepository $fileRepository
+        FileRepository $fileRepository,
+        SyndicationRepository $syndicationRepository
     ) {
         parent::__construct($registry, Post::class);
         $this->filesystems = $filesystems;
         $this->contactRepository = $contactRepository;
         $this->tagRepository = $tagRepository;
         $this->fileRepository = $fileRepository;
+        $this->syndicationRepository = $syndicationRepository;
     }
 
     /**
@@ -182,6 +188,22 @@ class PostRepository extends ServiceEntityRepository
         $inReplyToId = $request->get('in_reply_to');
         if ($inReplyToId) {
             $post->setInReplyTo($this->find($inReplyToId));
+        }
+
+        // Syndications. First add the new one, then delete any requested for deletion.
+        $newSyndication = $request->get('new_syndication');
+        if (!empty($newSyndication['url'])) {
+            $syn = new Syndication();
+            $syn->setPost($post);
+            $syn->setUrl($newSyndication['url']);
+            $syn->setLabel($newSyndication['label']);
+            $this->getEntityManager()->persist($syn);
+        }
+        foreach ($request->get('syndications_to_delete', []) as $synToDeleteId) {
+            $synToDelete = $this->syndicationRepository->find($synToDeleteId);
+            if ($synToDelete) {
+                $this->getEntityManager()->remove($synToDelete);
+            }
         }
 
         // Save post thus far.

@@ -64,6 +64,16 @@
             </p>
         {% endif %}
 
+        {% if post.syndications %}
+            <p class="syndications">
+                This post is syndicated at:
+                {% for syndication in post.syndications %}
+                    <a href="{{ syndication.url|e('html_attr') }}" class="u-syndication" rel="syndication">{{ syndication.label }}</a>
+                    {% if not loop.last %} &middot; {% endif %}
+                {% endfor %}
+            </p>
+        {% endif %}
+
         {% if post.file %}
             <p>
                 <img src="{{ path('file', {id:post.id, size:'D', ext:'jpg'}) }}" alt="Image of the file attached to this post." />

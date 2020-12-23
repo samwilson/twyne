@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\File;
 use App\Entity\Post;
+use App\Entity\Syndication;
 use App\Filesystems;
 use App\Repository\ContactRepository;
 use App\Repository\FileRepository;

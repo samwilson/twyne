@@ -95,6 +95,35 @@
                 (Max {{ max_filesize|format_memory }})
             </span>
         </p>
+        <table>
+            <caption>Syndications</caption>
+            <thead>
+                <tr>
+                    <th><label for="syn-new-url">URL</label></th>
+                    <th><label for="syn-new-label">Label</label></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for syndication in post.syndications %}
+                    <tr>
+                        <td><a href="{{ syndication.url|e('html_attr') }}">{{ syndication.url }}</td>
+                        <td>{{ syndication.label }}</td>
+                        <td>
+                            <input type="checkbox" name="syndications_to_delete[]" id="syn-del-{{ syndication.id }}" value="{{ syndication.id }}" />
+                            <label for="syn-del-{{ syndication.id }}">Delete?</label>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td><input id="syn-new-url" type="url" name="new_syndication[url]" /></td>
+                    <td><input id="syn-new-label" type="text" name="new_syndication[label]" /></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
         <p>
             <input type="submit" name="save" value="Save" />
             {% if post.id %}

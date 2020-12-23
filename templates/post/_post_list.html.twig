@@ -53,6 +53,15 @@
                         {% endfor %}
                     </p>
                 {% endif %}
+                {% if post.syndications %}
+                    <p>
+                        Elsewhere:
+                        {% for syndication in post.syndications %}
+                            <a href="{{ syndication.url|e('html_attr') }}">{{ syndication.label }}</a>
+                            {% if not loop.last %} &middot; {% endif %}
+                        {% endfor %}
+                    </p>
+                {% endif %}
                 <p>
                     {% if post.location %}
                         <a href="{{ geo_hack(post.location) }}" title="This post has a geographic location of: {{ post.location }}">📍</a>

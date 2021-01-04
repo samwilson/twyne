@@ -64,7 +64,7 @@
             </p>
         {% endif %}
 
-        {% if post.syndications %}
+        {% if post.syndications|length > 0 %}
             <p class="syndications">
                 This post is syndicated at:
                 {% for syndication in post.syndications %}

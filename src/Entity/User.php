@@ -39,6 +39,12 @@ class User implements UserInterface
      */
     private $email;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Contact::class, inversedBy="user", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $contact;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -132,5 +138,15 @@ class User implements UserInterface
         $this->email = $email;
 
         return $this;
+    }
+
+    public function getContact(): Contact
+    {
+        return $this->contact;
+    }
+
+    public function setContact(Contact $contact): void
+    {
+        $this->contact = $contact;
     }
 }

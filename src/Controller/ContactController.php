@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Contact;
+use App\Entity\User;
 use App\Repository\ContactRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class ContactController extends AbstractController
 {
@@ -44,7 +46,8 @@ class ContactController extends AbstractController
     public function saveContact(
         Request $request,
         ContactRepository $contactRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        UserPasswordEncoderInterface $passwordEncoder
     ) {
         $id = $request->get('id');
         $contact = $id ? $contactRepository->find($id) : new Contact();
@@ -52,6 +55,20 @@ class ContactController extends AbstractController
         $contact->setHomepage($request->get('homepage'));
         $contact->setDescriptionPublic($request->get('description_public'));
         $contact->setDescriptionPrivate($request->get('description_private'));
+
+        $username = $request->get('username');
+        if ($username) {
+            $user = $contact->getUser() ?? new User();
+            $user->setUsername($username);
+            $user->setEmail($request->get('email'));
+            $user->setContact($contact);
+            if (!$user->getPassword()) {
+                // If this is a new user, create a random password.
+                $user->setPassword($passwordEncoder->encodePassword($user, uniqid()));
+            }
+            $entityManager->persist($user);
+        }
+
         $entityManager->persist($contact);
         $entityManager->flush();
         return $this->redirectToRoute('contact_view', ['id' => $contact->getId()]);

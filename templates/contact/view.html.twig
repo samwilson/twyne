@@ -21,6 +21,13 @@
         </div>
     {% endif %}
 
+    {% if is_granted('ROLE_ADMIN') and contact.user %}
+        <ul>
+            <li>Username: {{ contact.user.username }}</li>
+            <li>Email address: {{ contact.user.email }}</li>
+        </ul>
+    {% endif %}
+
     <p>
         <a href="{{ path('contact_edit', {id:contact.id}) }}">Edit</a>
     </p>

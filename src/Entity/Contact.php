@@ -44,6 +44,11 @@ class Contact
      */
     private $posts;
 
+    /**
+     * @ORM\OneToOne(targetEntity=User::class, mappedBy="contact", cascade={"persist", "remove"})
+     */
+    private $user;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -131,6 +136,23 @@ class Contact
             if ($post->getAuthor() === $this) {
                 $post->setAuthor(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user): self
+    {
+        $this->user = $user;
+
+        // set the owning side of the relation if necessary
+        if ($user->getContact() !== $this) {
+            $user->setContact($this);
         }
 
         return $this;

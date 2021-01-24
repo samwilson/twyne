@@ -36,6 +36,22 @@
                 </span>
             </p>
         </fieldset>
+        <fieldset>
+            <legend>User</legend>
+            {% if not contact.user %}
+                <p>This contact does not have a user account. Create one by providing at least a username below.</p>
+            {% endif %}
+            <p class="fields">
+                <span class="field size-1">
+                    <label for="username">Username:</label>
+                    <input type="text" name="username" id="username" value="{% if contact.user %}{{ contact.user.username }}{% endif %}" />
+                </span>
+                <span class="field size-1">
+                    <label for="email">Email:</label>
+                    <input type="text" name="email" id="email" value="{% if contact.user %}{{ contact.user.email }}{% endif %}" />
+                </span>
+            </p>
+        </fieldset>
         <p>
             <input type="submit" name="save" value="Save" />
             {% if contact.id %}

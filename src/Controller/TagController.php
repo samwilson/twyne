@@ -17,7 +17,7 @@ class TagController extends AbstractController
     public function tags(TagRepository $tagRepository, $ids = '')
     {
         return $this->render('tag/index.html.twig', [
-            'tags' => $tagRepository->findAllOrderedByCount(),
+            'tags' => $tagRepository->findAllOrderedByCount($this->getUser()),
         ]);
     }
 

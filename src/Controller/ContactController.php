@@ -4,7 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Contact;
 use App\Entity\User;
+use App\Entity\UserGroup;
 use App\Repository\ContactRepository;
+use App\Repository\UserGroupRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,11 +34,15 @@ class ContactController extends AbstractController
      * @Route("/C{id}/edit", name="contact_edit", requirements={"id"="\d+"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function editContact(ContactRepository $contactRepository, $id = null)
-    {
+    public function editContact(
+        ContactRepository $contactRepository,
+        UserGroupRepository $userGroupRepository,
+        $id = null
+    ) {
         $contact = $id ? $contactRepository->find($id) : new Contact();
         return $this->render('contact/form.html.twig', [
             'contact' => $contact,
+            'user_groups' => $userGroupRepository->findAll(),
         ]);
     }
 
@@ -46,6 +53,7 @@ class ContactController extends AbstractController
     public function saveContact(
         Request $request,
         ContactRepository $contactRepository,
+        UserGroupRepository $userGroupRepository,
         EntityManagerInterface $entityManager,
         UserPasswordEncoderInterface $passwordEncoder
     ) {
@@ -65,6 +73,17 @@ class ContactController extends AbstractController
             if (!$user->getPassword()) {
                 // If this is a new user, create a random password.
                 $user->setPassword($passwordEncoder->encodePassword($user, uniqid()));
+            }
+            $user->setGroups(new ArrayCollection());
+            foreach ($request->get('user_groups', []) as $groupId => $value) {
+                $user->addGroup($userGroupRepository->find($groupId));
+            }
+            $newGroup = $request->get('new_group');
+            if ($newGroup) {
+                $group = new UserGroup();
+                $group->setName($newGroup);
+                $user->addGroup($group);
+                $entityManager->persist($group);
             }
             $entityManager->persist($user);
         }

@@ -8,7 +8,7 @@
 
     <form action="" method="post">
 
-        <p>
+        <p class="fields">
             <span class="field size-1">
                 <label for="site_name">Site name:</label>
                 <input id="site_name" type="text" value="{{ settings.siteName }}" name="settings[site_name]" />
@@ -16,24 +16,42 @@
         </p>
 
         <fieldset>
+            <legend>Authorisation levels</legend>
+            <p class="fields">
+                <span class="field size-1">
+                    <label for="auth_level_count">Number of levels:</label>
+                    <input type="number" value="{{ auth_levels|length }}" />
+                </span>
+            </p>
+            {% for auth_level in auth_levels %}
+                <p class="fields">
+                    <span class="field size-1">
+                        <label for="auth_level_count"></label>
+                        <input type="number" value="" />
+                    </span>
+                </p>
+            {% endfor %}
+        </fieldset>
+
+        <fieldset>
             <legend>File storage</legend>
             <p>
                 <label><input type="radio" name="settings[data_store]" value="local" {% if settings.dataStore == 'local' %}checked{% endif %} /> Local</label>
                 <label><input type="radio" name="settings[data_store]" value="aws" {% if settings.dataStore == 'aws' %}checked{% endif %} /> AWS</label>
             </p>
-            <p>
+            <p class="fields">
                 <span class="field size-1">
                     <label for="data_dir">Data directory:</label>
                     <input id="data_dir" type="text" value="{{ settings.dataDir }}" name="settings[data_dir]" />
                 </span>
             </p>
-            <p>
+            <p class="fields">
                 <span class="field size-1">
                     <label for="temp_dir">Temporary directory:</label>
                     <input id="temp_dir" type="text" value="{{ settings.tempDir }}" name="settings[temp_dir]" />
                 </span>
             </p>
-            <p>
+            <p class="fields">
                 <span class="field size-1">
                     <label for="aws_key">AWS Key:</label>
                     <input id="aws_key" type="text" value="{{ settings.awsKey }}" name="settings[aws_key]" />
@@ -43,7 +61,7 @@
                     <input id="aws_secret" type="text" value="{{ settings.awsSecret }}" name="settings[aws_secret]" />
                 </span>
             </p>
-            <p>
+            <p class="fields">
                 <span class="field size-1">
                     <label for="aws_endpoint">AWS Endpoint:</label>
                     <input id="aws_endpoint" type="text" value="{{ settings.awsEndpoint }}" name="settings[aws_endpoint]" />
@@ -58,7 +76,6 @@
                 </span>
             </p>
         </fieldset>
-
         <p>
             <input type="submit" value="Save all" />
         </p>

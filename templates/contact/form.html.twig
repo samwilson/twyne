@@ -48,7 +48,22 @@
                 </span>
                 <span class="field size-1">
                     <label for="email">Email:</label>
-                    <input type="text" name="email" id="email" value="{% if contact.user %}{{ contact.user.email }}{% endif %}" />
+                    <input type="email" name="email" id="email" value="{% if contact.user %}{{ contact.user.email }}{% endif %}" />
+                </span>
+            </p>
+            <p><strong>Groups:</strong></p>
+            <p class="fields">
+                {% for group in user_groups %}
+                    <span class="field size-1">
+                        <label for="user-groups-{{ group.id }}">{{ group.name }}</label>
+                        <input type="checkbox" id="user-groups-{{ group.id }}" name="user_groups[{{ group.id }}]"
+                               {% if group.users.contains(contact.user) %}checked="checked"{% endif %}
+                        />
+                    </span>
+                {% endfor %}
+                <span class="field size-1">
+                    <label for="new_group">New group:</label>
+                    <input type="text" name="new_group" id="new_group" />
                 </span>
             </p>
         </fieldset>

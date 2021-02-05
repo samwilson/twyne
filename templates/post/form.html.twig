@@ -55,6 +55,14 @@
                     {% endfor %}
                 </datalist>
             </span>
+            <span class="field size-1">
+                <label for="view_group">Viewers:</label>
+                <select name="view_group" id="view_group">
+                    {% for g in user_groups %}
+                        <option value="{{ g.id }}" {% if post.isSelectedGroup(g) %}selected{% endif %}>{{ g.name }}</option>
+                    {% endfor %}
+                </select>
+            </span>
         </p>
         <p class="fields">
             <span class="field size-3">

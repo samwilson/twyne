@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\Contact;
 use App\Entity\User;
+use App\Entity\UserGroup;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -17,9 +19,14 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
-    public function __construct(ManagerRegistry $registry)
+
+    /** @var UserGroupRepository */
+    private $userGroupRepository;
+
+    public function __construct(ManagerRegistry $registry, UserGroupRepository $userGroupRepository)
     {
         parent::__construct($registry, User::class);
+        $this->userGroupRepository = $userGroupRepository;
     }
 
     /**
@@ -36,32 +43,21 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findOrCreate(string $username): User
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $existing = $this->findOneBy(['username' => $username]);
+        if ($existing) {
+            return $existing;
+        }
+        // If not found, create a new User and matching Contact.
+        $user = new User();
+        $user->setUsername($username);
+        $user->setPassword('');
+        $contact = new Contact();
+        $contact->setName($username);
+        $user->setContact($contact);
+        $user->addGroup($this->userGroupRepository->find(UserGroup::PUBLIC));
+        $this->getEntityManager()->persist($user);
+        return $user;
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

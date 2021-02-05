@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -44,6 +46,16 @@ class User implements UserInterface
      * @ORM\JoinColumn(nullable=false)
      */
     private $contact;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=UserGroup::class, inversedBy="users")
+     */
+    private $groups;
+
+    public function __construct()
+    {
+        $this->groups = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -148,5 +160,54 @@ class User implements UserInterface
     public function setContact(Contact $contact): void
     {
         $this->contact = $contact;
+    }
+
+    /**
+     * @param Collection|UserGroup[] $groups
+     */
+    public function setGroups(Collection $groups): void
+    {
+        $this->groups = $groups;
+    }
+
+    /**
+     * @return Collection|UserGroup[]
+     */
+    public function getGroups(): Collection
+    {
+        return $this->groups;
+    }
+
+    /**
+     * Get comma-separated string of User Group IDs.
+     * @return string
+     */
+    public function getGroupIdList(): string
+    {
+        return join(', ', array_map(function (UserGroup $g) {
+            return $g->getId();
+        }, $this->getGroups()->toArray()));
+    }
+
+    public function addGroup(UserGroup $group): void
+    {
+        if (!$this->groups->contains($group)) {
+            $this->groups[] = $group;
+        }
+    }
+
+    public function removeGroup(UserGroup $group): void
+    {
+        $this->groups->removeElement($group);
+    }
+
+    public function isInGroup(UserGroup $group): bool
+    {
+        foreach ($this->getGroups() as $g) {
+            if ($g->getId() === $group->getId()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

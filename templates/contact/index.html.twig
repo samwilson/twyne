@@ -11,6 +11,7 @@
                 <th>ID</th>
                 <th>Name</th>
                 <th>Username</th>
+                <th>Groups</th>
                 <th>Posts</th>
                 <th>Homepage</th>
                 <th colspan="2">Descriptions</th>
@@ -25,6 +26,14 @@
                     <td>
                         {% if contact.user %}
                             <code>{{ contact.user.username }}</code>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if contact.user %}
+                            {% for g in contact.user.groups %}{#
+                                #}{% if loop.length > 1 and loop.last %}{% if loop.length != 2 %},{% endif %} and {% elseif not loop.first %}, {% endif %}{#
+                                #}<em>{{ g.name }}</em>{#
+                            #}{% endfor %}
                         {% endif %}
                     </td>
                     <td>{{ contact.posts.count }}</td>

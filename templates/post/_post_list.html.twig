@@ -70,6 +70,8 @@
                     <a href="{{ path('post_view', {id:post.id}) }}">P{{ post.id }}</a>
                     {% if is_granted('ROLE_ADMIN') %}
                         &middot;
+                        <em title="The group that can view this post">{{ post.viewGroup.name }}</em>
+                        &middot;
                         <a href="{{ path('post_edit', {id:post.id}) }}">Edit</a>
                         &middot;
                         <a href="{{ path('post_create', {in_reply_to:post.id}) }}">Reply</a>

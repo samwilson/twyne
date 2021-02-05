@@ -41,7 +41,7 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{matrix.php}}
-        extensions: fileinfo, json, pdo, mbstring
+        extensions: fileinfo, json, pdo, mysql, pdo_mysql, mbstring
 
     - name: Install
       env:

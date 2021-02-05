@@ -7,6 +7,8 @@ use App\Entity\File;
 use App\Entity\Post;
 use App\Kernel;
 use App\Repository\PostRepository;
+use App\Repository\UserGroupRepository;
+use App\Repository\UserRepository;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -39,6 +41,13 @@ class PostTest extends KernelTestCase
             ->getManager();
     }
 
+    private function createPost(): Post
+    {
+        /** @var PostRepository $postRepo */
+        $postRepo = self::$container->get(PostRepository::class);
+        return $postRepo->createNew();
+    }
+
     public function testAuthor()
     {
         // Test author.
@@ -47,7 +56,7 @@ class PostTest extends KernelTestCase
         $this->entityManager->persist($author);
 
         // Test post.
-        $post = new Post();
+        $post = $this->createPost();
         $post->setAuthor($author);
         $this->entityManager->persist($post);
 
@@ -64,7 +73,7 @@ class PostTest extends KernelTestCase
      */
     public function testDefaultDate()
     {
-        $post = new Post();
+        $post = $this->createPost();
         $this->assertEquals('2020-11-15 07:36:41', $post->getDate()->format('Y-m-d H:i:s'));
     }
 
@@ -79,7 +88,7 @@ class PostTest extends KernelTestCase
         $postRepo = $this->entityManager->getRepository(Post::class);
         $request = new Request([], $postParams);
         $uploadedFile = new UploadedFile($filepath, basename($filepath));
-        $post = new Post();
+        $post = $this->createPost();
         $this->assertEquals('2020-11-15 07:36:41', $post->getDate()->format('Y-m-d H:i:s'));
         $postRepo->saveFromRequest($post, $request, $uploadedFile);
         $this->assertEquals($title, $post->getTitle());
@@ -126,7 +135,7 @@ class PostTest extends KernelTestCase
 
     public function testFile()
     {
-        $post = new Post();
+        $post = $this->createPost();
         $this->entityManager->persist($post);
         $author = new Contact();
         $author->setName('Bob');
@@ -152,6 +161,32 @@ class PostTest extends KernelTestCase
         $this->entityManager->flush();
         $this->assertNull($post->getId());
         $this->assertNull($file->getId());
+    }
+
+    public function testPermissions()
+    {
+        /** @var UserRepository $userRepo */
+        $userRepo = self::$container->get(UserRepository::class);
+        /** @var UserGroupRepository $groupRepo */
+        $groupRepo = self::$container->get(UserGroupRepository::class);
+
+        // Two test users and one test group. The users will already be in the default Public group.
+        $user1 = $userRepo->findOrCreate('User One');
+        $user2 = $userRepo->findOrCreate('User Two');
+        $group = $groupRepo->findOrCreate('Other Group');
+        $user1->addGroup($group);
+        $this->entityManager->flush();
+        $this->assertTrue($user1->isInGroup($group));
+        $this->assertFalse($user2->isInGroup($group));
+
+        // Test post.
+        $post = $this->createPost();
+        $post->setAuthor($user1->getContact());
+        $post->setViewGroup($group);
+        $this->entityManager->persist($post);
+        $this->entityManager->flush();
+        $this->assertTrue($post->canBeViewedBy($user1));
+        $this->assertFalse($post->canBeViewedBy($user2));
     }
 
     protected function tearDown(): void

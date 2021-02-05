@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Post;
 use App\Entity\Tag;
+use App\Entity\User;
+use App\Entity\UserGroup;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -34,10 +36,14 @@ class TagRepository extends ServiceEntityRepository
         ];
     }
 
-    public function findAllOrderedByCount()
+    public function findAllOrderedByCount(?User $user)
     {
+        $groupList = $user ? $user->getGroupIdList() : UserGroup::PUBLIC;
         $sql = 'SELECT tag.*, COUNT(*) AS posts_count'
-            . ' FROM tag JOIN post_tag ON (tag_id=tag.id)'
+            . ' FROM tag'
+            . '   JOIN post_tag ON (tag_id=tag.id)'
+            . '   JOIN post ON post_tag.post_id=post.id'
+            . ' WHERE post.view_group_id IN (' . $groupList . ')'
             . ' GROUP BY tag.id'
             . ' ORDER BY posts_count DESC';
         $stmt = $this->getEntityManager()->getConnection()->query($sql);

@@ -2,9 +2,12 @@
 
 namespace App\Repository;
 
+use App\Entity\Contact;
 use App\Entity\File;
 use App\Entity\Post;
 use App\Entity\Syndication;
+use App\Entity\User;
+use App\Entity\UserGroup;
 use App\Filesystems;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use DateTime;
@@ -40,13 +43,17 @@ class PostRepository extends ServiceEntityRepository
     /** @var SyndicationRepository */
     private $syndicationRepository;
 
+    /** @var UserGroupRepository */
+    private $userGroupRepository;
+
     public function __construct(
         ManagerRegistry $registry,
         Filesystems $filesystems,
         ContactRepository $contactRepository,
         TagRepository $tagRepository,
         FileRepository $fileRepository,
-        SyndicationRepository $syndicationRepository
+        SyndicationRepository $syndicationRepository,
+        UserGroupRepository $userGroupRepository
     ) {
         parent::__construct($registry, Post::class);
         $this->filesystems = $filesystems;
@@ -54,6 +61,7 @@ class PostRepository extends ServiceEntityRepository
         $this->tagRepository = $tagRepository;
         $this->fileRepository = $fileRepository;
         $this->syndicationRepository = $syndicationRepository;
+        $this->userGroupRepository = $userGroupRepository;
     }
 
     /**
@@ -70,13 +78,26 @@ class PostRepository extends ServiceEntityRepository
     /**
      * @return Post[]
      */
-    public function recent(int $limit = 10): array
+    public function recent(int $limit = 10, ?User $user = null): array
     {
-        return $this->createQueryBuilder('p')
+        $groupList = $user ? $user->getGroupIdList() : UserGroup::PUBLIC;
+        $query = $this->createQueryBuilder('p')
+            ->join('p.tags', 't')
+            ->where("p.view_group IN ($groupList)")
             ->orderBy('p.date', 'DESC')
-            ->setMaxResults($limit)
+            ->setMaxResults($limit);
+        return $query
             ->getQuery()
             ->getResult();
+    }
+
+    public function createNew(): Post
+    {
+        $post = new Post();
+        $publicGroup = $this->userGroupRepository->find(UserGroup::PUBLIC);
+        $post->setViewGroup($publicGroup);
+        $this->getEntityManager()->persist($post);
+        return $post;
     }
 
     /**
@@ -115,15 +136,17 @@ class PostRepository extends ServiceEntityRepository
         return $months;
     }
 
-    public function findByDateRange($year, $month)
+    public function findByDateRange($year, $month, ?User $user = null)
     {
-        return $this->createQueryBuilder('p')
+        $groupList = $user ? $user->getGroupIdList() : UserGroup::PUBLIC;
+        $query = $this->createQueryBuilder('p')
             ->andWhere('YEAR(p.date) = :year')
             ->setParameter('year', $year)
             ->andWhere('MONTH(p.date) = :month')
+            ->andWhere('p.view_group IN (' . $groupList . ')')
             ->setParameter('month', $month)
-            ->orderBy('p.date', 'DESC')
-            ->getQuery()
+            ->orderBy('p.date', 'DESC');
+        return $query->getQuery()
             ->getResult();
     }
 
@@ -167,6 +190,12 @@ class PostRepository extends ServiceEntityRepository
         $author = $request->get('author');
         if ($author) {
             $post->setAuthor($this->contactRepository->getOrCreate($author));
+        }
+
+        // View group.
+        $viewGroup = $request->get('view_group');
+        if ($viewGroup) {
+            $post->setViewGroup($this->userGroupRepository->find($viewGroup));
         }
 
         // Tags.

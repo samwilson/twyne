@@ -42,7 +42,7 @@ class SyndicationsTest extends KernelTestCase
             'author' => 'test',
             'new_syndication' => [ 'label' => 'syn label', 'url' => 'syn URL'],
         ]);
-        $post = new Post();
+        $post = $postRepo->createNew();
         $this->assertEmpty($post->getSyndications());
         $postRepo->saveFromRequest($post, $request1);
         $this->assertSame('syn label', $post->getSyndications()->first()->getLabel());

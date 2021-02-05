@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\File;
 use App\Entity\Post;
 use App\Entity\Syndication;
+use App\Entity\User;
 use App\Filesystems;
 use App\Repository\ContactRepository;
 use App\Repository\FileRepository;
 use App\Repository\PostRepository;
+use App\Repository\UserGroupRepository;
 use App\Rss;
 use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,12 +27,21 @@ class PostController extends AbstractController
 {
 
     /**
+     * @return User|null
+     */
+    protected function getUser()
+    {
+        return parent::getUser();
+    }
+
+
+    /**
      * @Route("/", name="home")
      */
     public function home(PostRepository $postRepository): Response
     {
         return $this->render('home.html.twig', [
-            'posts' => $postRepository->recent(),
+            'posts' => $postRepository->recent(10, $this->getUser()),
         ]);
     }
 
@@ -39,7 +50,7 @@ class PostController extends AbstractController
      */
     public function rss(Rss $rss, PostRepository $postRepository): Response
     {
-        return new Response($rss->get($postRepository->recent()), 200, [
+        return new Response($rss->get($postRepository->recent(20, $this->getUser())), 200, [
             'Content-Type' => 'text/xml',
         ]);
     }
@@ -53,6 +64,7 @@ class PostController extends AbstractController
         Request $request,
         PostRepository $postRepository,
         ContactRepository $contactRepository,
+        UserGroupRepository $userGroupRepository,
         $id = null
     ) {
         $post = $id ? $postRepository->find($id) : new Post();
@@ -63,6 +75,7 @@ class PostController extends AbstractController
             'post' => $post,
             'contacts' => $contactRepository->findBy([], ['name' => 'ASC']),
             'max_filesize' => UploadedFile::getMaxFilesize(),
+            'user_groups' => $userGroupRepository->findAll(),
         ]);
     }
 
@@ -99,6 +112,7 @@ class PostController extends AbstractController
         Request $request,
         ContactRepository $contactRepository,
         FileRepository $fileRepository,
+        UserGroupRepository $userGroupRepository,
         PostRepository $postRepository
     ) {
         if ($request->isMethod('get')) {
@@ -106,6 +120,7 @@ class PostController extends AbstractController
                 'max_filesize' => UploadedFile::getMaxFilesize(),
                 'contacts' => $contactRepository->findBy([], ['name' => 'ASC']),
                 'timezones' => DateTimeZone::listIdentifiers(),
+                'user_groups' => $userGroupRepository->findAll(),
             ]);
         }
         /** @var UploadedFile[] $files */
@@ -155,6 +170,9 @@ class PostController extends AbstractController
         if (!$post) {
             throw $this->createNotFoundException();
         }
+        if (!$post->canBeViewedBy($this->getUser())) {
+            throw $this->createAccessDeniedException();
+        }
         $fileRecord = $post->getFile();
         if (!$fileRecord) {
             throw $this->createNotFoundException();
@@ -182,8 +200,12 @@ class PostController extends AbstractController
      */
     public function viewPost($id, PostRepository $postRepository)
     {
+        $post = $postRepository->find($id);
+        if (!$post->canBeViewedBy($this->getUser())) {
+            throw $this->createAccessDeniedException();
+        }
         return $this->render('post/view.html.twig', [
-            'post' => $postRepository->find($id),
+            'post' => $post,
         ]);
     }
 
@@ -218,7 +240,7 @@ class PostController extends AbstractController
             'month' => $month,
             'years' => $postRepository->getYears(),
             'months' => $postRepository->getMonths($year),
-            'posts' => $postRepository->findByDateRange($year, $month),
+            'posts' => $postRepository->findByDateRange($year, $month, $this->getUser()),
         ]);
     }
 }

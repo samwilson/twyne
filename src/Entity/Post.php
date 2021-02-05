@@ -82,6 +82,12 @@ class Post
      */
     private $syndications;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=UserGroup::class, inversedBy="posts")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $view_group;
+
     public function __construct()
     {
         $this->setDate(new DateTime('@' . time(), new DateTimeZone('Z')));
@@ -297,5 +303,47 @@ class Post
                 $syndication->setPost(null);
             }
         }
+    }
+
+    public function getViewGroup(): ?UserGroup
+    {
+        return $this->view_group;
+    }
+
+    public function setViewGroup(?UserGroup $view_group): self
+    {
+        $this->view_group = $view_group;
+
+        return $this;
+    }
+
+    /**
+     * Can this post be viewed by the given user?
+     * @param User|null $user
+     * @return bool
+     */
+    public function canBeViewedBy(?User $user = null): bool
+    {
+        if ($this->getViewGroup()->getId() === UserGroup::PUBLIC) {
+            return true;
+        }
+        return $user && $user->isInGroup($this->getViewGroup());
+    }
+
+    /**
+     * Find out whether a given group should be selected for this post.
+     * @param UserGroup $group
+     * @return bool
+     */
+    public function isSelectedGroup(UserGroup $group): bool
+    {
+        $g = false;
+        if ($this->getViewGroup()) {
+            $g = $this->getViewGroup();
+        }
+        if ($this->getInReplyTo()) {
+            $g = $this->getInReplyTo()->getViewGroup();
+        }
+        return $g && $g->getId() == $group->getId();
     }
 }

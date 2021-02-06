@@ -16,24 +16,6 @@
         </p>
 
         <fieldset>
-            <legend>Authorisation levels</legend>
-            <p class="fields">
-                <span class="field size-1">
-                    <label for="auth_level_count">Number of levels:</label>
-                    <input type="number" value="{{ auth_levels|length }}" />
-                </span>
-            </p>
-            {% for auth_level in auth_levels %}
-                <p class="fields">
-                    <span class="field size-1">
-                        <label for="auth_level_count"></label>
-                        <input type="number" value="" />
-                    </span>
-                </p>
-            {% endfor %}
-        </fieldset>
-
-        <fieldset>
             <legend>File storage</legend>
             <p>
                 <label><input type="radio" name="settings[data_store]" value="local" {% if settings.dataStore == 'local' %}checked{% endif %} /> Local</label>

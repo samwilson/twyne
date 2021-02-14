@@ -5,6 +5,7 @@ namespace App\Tests;
 use App\Entity\Contact;
 use App\Entity\File;
 use App\Entity\Post;
+use App\Entity\UserGroup;
 use App\Kernel;
 use App\Repository\PostRepository;
 use App\Repository\UserGroupRepository;
@@ -12,6 +13,7 @@ use App\Repository\UserRepository;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -187,6 +189,29 @@ class PostTest extends KernelTestCase
         $this->entityManager->flush();
         $this->assertTrue($post->canBeViewedBy($user1));
         $this->assertFalse($post->canBeViewedBy($user2));
+    }
+
+    public function testAbortedSave()
+    {
+        $postRepo = $this->entityManager->getRepository(Post::class);
+
+        // Save a post that works.
+        $request1 = new Request([], ['author' => 'Test', 'view_group' => UserGroup::PUBLIC]);
+        $post1 = new Post();
+        $this->assertSame(null, $post1->getId());
+        $postRepo->saveFromRequest($post1, $request1);
+        $this->assertNotNull($post1->getId());
+
+        // Then save one that fails.
+        $request2 = new Request([], ['author' => 'Test', 'view_group' => UserGroup::PUBLIC]);
+        $post2 = new Post();
+        $this->assertNull($post2->getId());
+        try {
+            $uploadedFile = new UploadedFile('/non/existing/file.png', 'file.png');
+            $postRepo->saveFromRequest($post2, $request2, $uploadedFile);
+        } catch (FileNotFoundException $exception) {
+        }
+        $this->assertNull($post2->getId());
     }
 
     protected function tearDown(): void

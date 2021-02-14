@@ -152,6 +152,13 @@ class PostRepository extends ServiceEntityRepository
 
     public function saveFromRequest(Post $post, Request $request, ?UploadedFile $uploadedFile = null): void
     {
+        $this->getEntityManager()->transactional(function () use ($post, $request, $uploadedFile) {
+            $this->doSaveFromRequest($post, $request, $uploadedFile);
+        });
+    }
+
+    private function doSaveFromRequest(Post $post, Request $request, ?UploadedFile $uploadedFile = null): void
+    {
         // Title (the filename without the extension).
         if ($request->get('title')) {
             $post->setTitle($request->get('title'));

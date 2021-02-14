@@ -94,6 +94,9 @@ class PostController extends AbstractController
         $submittedToken = $request->request->get('token');
         if ($request->isMethod('post') && $this->isCsrfTokenValid('delete-post', $submittedToken)) {
             $filesystems->remove($post->getFile());
+            foreach ($post->getSyndications() as $syndication) {
+                $entityManager->remove($syndication);
+            }
             $entityManager->remove($post);
             $entityManager->flush();
             $this->addFlash('success', 'Post deleted.');
@@ -201,6 +204,9 @@ class PostController extends AbstractController
     public function viewPost($id, PostRepository $postRepository)
     {
         $post = $postRepository->find($id);
+        if (!$post) {
+            throw $this->createNotFoundException();
+        }
         if (!$post->canBeViewedBy($this->getUser())) {
             throw $this->createAccessDeniedException();
         }

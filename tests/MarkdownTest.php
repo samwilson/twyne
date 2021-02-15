@@ -46,6 +46,8 @@ class MarkdownTest extends TestCase
             // Links.
             ['foo https://example.org bar', '<p>foo <a href="https://example.org">https://example.org</a> bar</p>'],
             ['https://x.net/foo_bar', '<p><a href="https://x.net/foo_bar">https://x.net/foo_bar</a></p>'],
+            // No HTML.
+            ['<p>T & <stuff x="y"></p>', '<p>&lt;p&gt;T &amp; &lt;stuff x=&quot;y&quot;&gt;&lt;/p&gt;</p>']
         ];
     }
 }

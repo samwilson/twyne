@@ -20,13 +20,12 @@
                         </a>
                     </h2>
                 </div>
-                <span class="author">
+                <span class="author u-author h-card">
                     By
-                    {% if post.author.homepage %}
-                        <a href="{{ post.author.homepage }}" rel="author">{{ post.author.name }}</a>.
-                    {% else %}
-                        {{ post.author.name }}.
-                    {% endif %}
+                    {% if post.author.homepage %}<a href="{{ post.author.homepage }}" rel="author" class="p-url">{% endif %}{#
+                        #}<span class="p-name">{{ post.author.name }}</span>{#
+                    #}{% if post.author.homepage %}</a>{% endif %}{#
+                    #}.
                 </span>
                 <a href="{{ path('month', {year: post.date.format('Y'), month:post.date.format('m')}) }}" class="date">
                     <time datetime="{{ post.date.format('Y-m-d\\TH:i:s\\Z') }}" class="dt-published">
@@ -46,9 +45,9 @@
             </article>
             <footer>
                 {% if post.tags|length > 0 %}
-                    <p>
+                    <p class="tags">
                         {% for tag in post.tags %}
-                            <a class="tag" href="{{ path('tag_view', {id:tag.id}) }}">{{ tag.title }}</a>
+                            <a class="tag p-category" href="{{ path('tag_view', {id:tag.id}) }}">{{ tag.title }}</a>
                             {% if not loop.last %} &middot; {% endif %}
                         {% endfor %}
                     </p>

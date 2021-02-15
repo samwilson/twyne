@@ -81,12 +81,11 @@ class PostRepository extends ServiceEntityRepository
     public function recent(int $limit = 10, ?User $user = null): array
     {
         $groupList = $user ? $user->getGroupIdList() : UserGroup::PUBLIC;
-        $query = $this->createQueryBuilder('p')
-            ->join('p.tags', 't')
+        return $this->createQueryBuilder('p')
+            ->leftJoin('p.tags', 't')
             ->where("p.view_group IN ($groupList)")
             ->orderBy('p.date', 'DESC')
-            ->setMaxResults($limit);
-        return $query
+            ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
     }

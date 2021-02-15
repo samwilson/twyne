@@ -289,18 +289,18 @@ class TwyneFlickrCommand extends Command
         // Approximate dates.
         if (!empty($photoInfo['dates']['takengranularity'])) {
             $tags[] = 'Approximate date';
-            switch ($photo['dates']['takengranularity']) {
+            switch ($photoInfo['dates']['takengranularity']) {
                 case 8:
                     $tags[] = 'circa';
-                    $tags[] = 'c. ' . date('Y', strtotime($photo['dates']['taken']));
+                    $tags[] = 'c. ' . date('Y', strtotime($photoInfo['dates']['taken']));
                     break;
                 case 6:
                     $tags[] = 'year';
-                    $tags[] = date('Y', strtotime($photo['dates']['taken']));
+                    $tags[] = date('Y', strtotime($photoInfo['dates']['taken']));
                     break;
                 case 4:
                     $tags[] = 'month';
-                    $tags[] = date('F Y', strtotime($photo['dates']['taken']));
+                    $tags[] = date('F Y', strtotime($photoInfo['dates']['taken']));
                     break;
             }
         }

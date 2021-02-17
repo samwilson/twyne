@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Map
+{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('map') }}
+    <style>
+        #map { height: 70vh; }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('map') }}
+{% endblock %}
+
+{% block body %}
+
+    <h1>Map</h1>
+
+    <div id="map"></div>
+
+{% endblock %}

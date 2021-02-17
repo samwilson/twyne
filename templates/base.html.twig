@@ -16,6 +16,7 @@
                     <li><a href="{{ path('home') }}">Home</a></li>
                     <li><a href="{{ path('tags') }}">Tags</a></li>
                     <li><a href="{{ path('dates') }}">Dates</a></li>
+                    <li><a href="{{ path('map') }}">Map</a></li>
                     {% if is_granted('ROLE_ADMIN') %}
                         <li><a href="{{ path('post_create') }}">New post</a></li>
                         <li><a href="{{ path('post_upload') }}">Upload</a></li>
@@ -52,6 +53,9 @@
                 <li><a href="https://www.gnu.org/licenses/gpl-3.0-standalone.html">GPL 3.0+</a></li>
             </ul>
         </footer>
+        <script>
+            const appBaseUrl = "{{ url('home') }}";
+        </script>
         {{ encore_entry_script_tags('app') }}
         {% block javascripts %}{% endblock %}
     </body>

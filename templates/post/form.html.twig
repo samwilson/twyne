@@ -73,7 +73,7 @@
                 <label>Location:</label>
                 <input type="hidden" name="latitude" id="latitude" value="{% if post.location %}{{ post.location.latitude }}{% endif %}" />
                 <input type="hidden" name="longitude" id="longitude" value="{% if post.location %}{{ post.location.longitude }}{% endif %}" />
-                <span id="map" class="form-input"
+                <span id="map" class="form-input" data-edit="1"
                       {% if post.location %}data-latitude="{{ post.location.latitude }}"{% endif %}
                       {% if post.location %}data-longitude="{{ post.location.longitude }}"{% endif %}
                 >

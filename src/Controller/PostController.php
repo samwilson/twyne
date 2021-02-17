@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use IntlDateFormatter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -248,5 +249,32 @@ class PostController extends AbstractController
             'months' => $postRepository->getMonths($year),
             'posts' => $postRepository->findByDateRange($year, $month, $this->getUser()),
         ]);
+    }
+
+    /**
+     * @Route("/map/{ne_lat}_{ne_lng}_{sw_lat}_{sw_lng}.json", name="mapdata", requirements={
+     *     "ne_lat"="[0-9.-]+",
+     *     "ne_lng"="[0-9.-]+",
+     *     "sw_lat"="[0-9.-]+",
+     *     "sw_lng"="[0-9.-]+"
+     * })
+     */
+    public function mapData(Request $request, PostRepository $postRepository)
+    {
+        return new JsonResponse($postRepository->findByBoundingBox(
+            $request->get('ne_lat'),
+            $request->get('ne_lng'),
+            $request->get('sw_lat'),
+            $request->get('sw_lng'),
+            $this->getUser()
+        ));
+    }
+
+    /**
+     * @Route("/map", name="map")
+     */
+    public function map()
+    {
+        return $this->render('post/map.html.twig');
     }
 }

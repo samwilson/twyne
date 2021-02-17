@@ -90,6 +90,28 @@ class PostRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findByBoundingBox(string $neLat, string $neLng, string $swLat, string $swLng, ?User $user = null)
+    {
+        $ne = "$neLng $neLat";
+        $se = "$neLng $swLat";
+        $sw = "$swLng $swLat";
+        $nw = "$swLng $neLat";
+        // Note start and end points are the same.
+        $wkt = "Polygon(($ne, $se, $sw, $nw, $ne))";
+        $groupList = $user ? $user->getGroupIdList() : UserGroup::PUBLIC;
+        $sql = "SELECT ST_X(location) AS lng, ST_Y(location) AS lat"
+            . " FROM post"
+            . " WHERE"
+            . "   location IS NOT NULL"
+            . "   AND ST_Contains(GeomFromText(:wkt), location)"
+            . "   AND view_group_id IN ($groupList)"
+            . " LIMIT 5000";
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->bindParam('wkt', $wkt);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
     public function createNew(): Post
     {
         $post = new Post();

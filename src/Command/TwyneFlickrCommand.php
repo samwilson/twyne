@@ -239,7 +239,7 @@ class TwyneFlickrCommand extends Command
                 '      - ' . $photo['id'] . ' already imported as P' . $syndication->getPost()->getId()
                 . ' (syndication match)'
             );
-            $this->saveComments($syndication->getPost(), $photo['id']);
+            $this->saveComments($syndication->getPost(), $photo['id'], $this->recheckComments);
             return;
         }
 
@@ -255,7 +255,7 @@ class TwyneFlickrCommand extends Command
                 '      - ' . $photo['id'] . ' already imported as P' . $file->getPost()->getId()
                 . ' (checksum match)'
             );
-            $this->saveComments($file->getPost(), $photo['id']);
+            $this->saveComments($file->getPost(), $photo['id'], $this->recheckComments);
             // Also add a new syndication.
             $this->syndicationRepository->addSyndication($file->getPost(), $photoUrl, 'Flickr');
             return;
@@ -333,12 +333,14 @@ class TwyneFlickrCommand extends Command
         ];
         $this->postRepository->saveFromRequest($post, new Request([], $requestParams), $uploadedFile);
         $this->io->writeln("      - {$photo['id']} imported as P" . $post->getId());
-        $this->saveComments($post, $photo['id']);
+        $this->saveComments($post, $photo['id'], true);
+
+        unlink($tmpFile);
     }
 
-    private function saveComments(Post $parentPost, string $flickrId): void
+    private function saveComments(Post $parentPost, string $flickrId, bool $checkComments): void
     {
-        if (!$this->recheckComments) {
+        if (!$checkComments) {
             return;
         }
         $this->logger->debug('Checking for comments for ' . $flickrId);

@@ -72,6 +72,9 @@ class PostController extends AbstractController
         if ($request->get('in_reply_to')) {
             $post->setInReplyTo($postRepository->find($request->get('in_reply_to')));
         }
+        if (!$post->getAuthor()) {
+            $post->setAuthor($this->getUser()->getContact());
+        }
         return $this->render('post/form.html.twig', [
             'post' => $post,
             'contacts' => $contactRepository->findBy([], ['name' => 'ASC']),

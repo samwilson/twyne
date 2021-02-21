@@ -81,7 +81,12 @@ class TagRepository extends ServiceEntityRepository
     {
         $post->setTags(new ArrayCollection());
         foreach (array_unique(array_filter(array_map('trim', explode(';', $tags)))) as $t) {
-            $tag = $this->findOneBy(['title' => $t]);
+            $tag = $this->createQueryBuilder('t')
+                ->where('t.title LIKE :t')
+                ->setParameter('t', $t)
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getOneOrNullResult();
             if (!$tag) {
                 $tag = new Tag();
                 $tag->setTitle($t);

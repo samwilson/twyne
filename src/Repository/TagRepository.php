@@ -91,6 +91,7 @@ class TagRepository extends ServiceEntityRepository
                 $tag = new Tag();
                 $tag->setTitle($t);
                 $this->getEntityManager()->persist($tag);
+                $this->getEntityManager()->flush();
             }
             $post->addTag($tag);
         }

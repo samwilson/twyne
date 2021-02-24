@@ -27,7 +27,7 @@ class FileRepository extends ServiceEntityRepository
      */
     public function checkFile(UploadedFile $file): bool
     {
-        if (!in_array($file->guessExtension(), ['png', 'pdf', 'jpg', 'jpeg'])) {
+        if (!in_array($file->guessExtension(), ['png', 'pdf', 'jpg', 'jpeg', 'gif'])) {
             return false;
         }
         $existing = $this->findBy(['checksum' => sha1_file($file->getPathname())]);

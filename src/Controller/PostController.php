@@ -162,7 +162,7 @@ class PostController extends AbstractController
      * @Route(
      *     "/P{id}{size}.{ext}",
      *     name="file",
-     *     requirements={"id"="\d+", "size"="(F|D|T)", "ext"="(jpg|png|pdf)"}
+     *     requirements={"id"="\d+", "size"="(F|D|T)", "ext"="(jpg|png|gif|pdf)"}
      * )
      */
     public function renderFile(

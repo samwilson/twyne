@@ -12,7 +12,6 @@ use Mediawiki\Api\SimpleRequest;
  */
 class CommonsFileUploader extends FileUploader
 {
-
     /**
      * @param MediawikiApi $api
      */

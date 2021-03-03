@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SyndicationRepositoryTest extends RepositoryTestBase
 {
-
     /**
      * A post can be syndicated to a URL.
      */

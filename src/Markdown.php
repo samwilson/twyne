@@ -10,7 +10,6 @@ namespace App;
  */
 class Markdown
 {
-
     /**
      * Convert Twyne-flavoured Markdown to HTML.
      *

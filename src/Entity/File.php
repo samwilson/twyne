@@ -11,7 +11,6 @@ use Symfony\Component\Mime\MimeTypes;
  */
 class File
 {
-
     /** @var string */
     public const SIZE_FULL = 'F';
 

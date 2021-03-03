@@ -45,6 +45,14 @@
             </p>
         </fieldset>
 
+        <fieldset>
+            <legend>Overland</legend>
+            <p>
+                <label for="overland_device_id">Device ID:</label>
+                <input type="text" name="settings[overland_device_id]" id="overland_device_id" value="{{ settings.overlandDeviceId }}" />
+            </p>
+        </fieldset>
+
         <p>
             <input type="hidden" name="token" value="{{ csrf_token('settings-save') }}" />
             <input type="hidden" name="returnroute" value="settings" />

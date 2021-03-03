@@ -18,7 +18,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class RedirectController extends ControllerBase
 {
-
     /**
      * @Route("/redirects", name="redirects")
      * @IsGranted("ROLE_ADMIN")

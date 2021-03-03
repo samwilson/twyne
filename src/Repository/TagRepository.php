@@ -25,7 +25,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class TagRepository extends ServiceEntityRepository
 {
-
     /** @var RedirectRepository */
     private $redirectRepository;
 

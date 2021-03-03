@@ -82,7 +82,6 @@ class PostRepository extends ServiceEntityRepository
     {
         $groupList = $user ? $user->getGroupIdList() : UserGroup::PUBLIC;
         return $this->createQueryBuilder('p')
-            ->leftJoin('p.tags', 't')
             ->where("p.view_group IN ($groupList)")
             ->orderBy('p.date', 'DESC')
             ->setMaxResults($limit)

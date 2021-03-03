@@ -13,7 +13,6 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 abstract class RepositoryTestBase extends KernelTestCase
 {
-
     /**
      * @var \Doctrine\ORM\EntityManager
      */

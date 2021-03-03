@@ -9,7 +9,6 @@ use Doctrine\Migrations\AbstractMigration;
 
 final class Version20201016112805 extends AbstractMigration
 {
-
     public function getDescription(): string
     {
         return 'Add deletion cascade to files.';

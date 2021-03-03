@@ -28,7 +28,6 @@ use Symfony\Component\Process\Process;
  */
 class PostRepository extends ServiceEntityRepository
 {
-
     /** @var ContactRepository */
     private $contactRepository;
 

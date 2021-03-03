@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class MapController extends ControllerBase
 {
-
     private $mapTilesViewUrl;
     private $mapTilesViewConfig;
     private $mapTilesEditUrl;

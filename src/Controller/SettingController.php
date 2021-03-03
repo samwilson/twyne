@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SettingController extends ControllerBase
 {
-
     /**
      * @Route("/settings", name="settings_save", methods={"POST"})
      * @isGranted("ROLE_ADMIN")

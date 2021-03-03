@@ -12,7 +12,6 @@ use Doctrine\ORM\Query\SqlWalker;
  */
 class MonthFunction extends FunctionNode
 {
-
     public $date;
 
     public function parse(Parser $parser)

@@ -13,7 +13,6 @@ use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 
 class TagController extends ControllerBase
 {
-
     /**
      * @Route("/tags", name="tags")
      */

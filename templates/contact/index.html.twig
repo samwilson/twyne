@@ -36,7 +36,7 @@
                             #}{% endfor %}
                         {% endif %}
                     </td>
-                    <td>{{ contact.posts.count }}</td>
+                    <td>{{ contact.posts.count() }}</td>
                     <td><a href="{{ contact.homepage }}">{{ contact.homepage }}</a></td>
                     <td class="description public">{{ contact.descriptionPublic|markdownToHtml }}</td>
                     <td class="description {% if contact.descriptionPrivate %}private{% endif %}">

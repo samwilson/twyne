@@ -40,7 +40,7 @@ class Contact
     private $homepage;
 
     /**
-     * @ORM\OneToMany(targetEntity=Post::class, mappedBy="author")
+     * @ORM\OneToMany(targetEntity=Post::class, mappedBy="author", fetch="EXTRA_LAZY")
      */
     private $posts;
 

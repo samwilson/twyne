@@ -32,10 +32,13 @@
         <a href="{{ path('contact_edit', {id:contact.id}) }}">Edit</a>
     </p>
 
-    {% if contact.posts.count > 0 %}
+    {% if contact.posts.count() > 0 %}
         <h2>Posts</h2>
+        {% if contact.posts.count() > 100 %}
+            <p>The most recent 100 posts by this user are listed.</p>
+        {% endif %}
         <ol>
-            {% for post in contact.posts %}
+            {% for post in contact.posts.slice(0, 100) %}
                 <li>
                     <a href="{{ path('post_view', {id:post.id}) }}">P{{ post.id}}:</a> {{ post.title }}
                     {% if post.url %}

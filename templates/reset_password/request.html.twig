@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reset your password{% endblock %}
+
+{% block body %}
+    {% for flashError in app.flashes('reset_password_error') %}
+        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+    {% endfor %}
+    <h1>Reset your password</h1>
+
+    <form method="post" action="{{ path('reset') }}" class="login">
+        <p>
+            <label for="username">Username:</label>
+            <input id="username" type="text" required name="username" autofocus>
+        </p>
+        <p>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token('reset_request') }}">
+            <span class="field size-1">
+                <input type="submit" value="Request email" />
+            </span>
+            <span class="field size-1">
+                <a href="{{ path('login') }}" class="button">Log in</a>
+            </span>
+        </p>
+    </form>
+
+{% endblock %}

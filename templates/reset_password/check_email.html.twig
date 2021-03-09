@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reminder{% endblock %}
+
+{% block body %}
+
+    <h1>Check your email</h1>
+
+    <p>
+        If your details are correct,
+        you will receive an email
+        containing a URL at which to reset your password.
+    </p>
+
+    <p>
+        If you don't receive an email please
+        check your spam folder,
+        <a href="{{ path('reset') }}">try again</a>,
+        or contact a site administrator.
+    </p>
+
+{% endblock %}

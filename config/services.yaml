@@ -30,6 +30,7 @@ services:
     App\Settings:
         arguments:
             $projectDir: '%kernel.project_dir%'
+            $mailFrom: '%env(APP_MAIL_SENDER)%'
 
     App\WebRequestProcessor:
       tags: { name: monolog.processor }

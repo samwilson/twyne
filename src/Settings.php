@@ -18,17 +18,22 @@ class Settings
     /** @var string */
     private $projectDir;
 
+    /** @var string */
+    private $mailFrom;
+
     /** @var mixed[] Keys are settings' names, values are their values. */
     private $data;
 
     public function __construct(
         SettingRepository $settingRepository,
         EntityManagerInterface $entityManager,
-        string $projectDir
+        string $projectDir,
+        string $mailFrom
     ) {
         $this->settingRepository = $settingRepository;
         $this->entityManager = $entityManager;
         $this->projectDir = $projectDir;
+        $this->mailFrom = $mailFrom;
     }
 
     private function getData(): array
@@ -60,6 +65,14 @@ class Settings
     public function siteName(): string
     {
         return $this->getData()['site_name'] ?? 'A Twyne Site';
+    }
+
+    /**
+     * Get the email address to send mail from.
+     */
+    public function getMailFrom()
+    {
+        return $this->mailFrom;
     }
 
     public function dataStore(): string

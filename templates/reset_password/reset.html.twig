@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reset your password{% endblock %}
+
+{% block body %}
+    <h1>Set your new password</h1>
+
+    <form method="post" action="{{ path('reset_token') }}" class="login">
+        <p>
+            <label for="password">Password:</label>
+            <input id="password" type="password" required name="password" autofocus>
+        </p>
+        <p>
+            <label for="password_verification">Repeat:</label>
+            <input id="password_verification" type="password" required name="password_verification">
+        </p>
+        <p>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token('reset_password') }}">
+            <span class="field size-1">
+                <input type="submit" value="Reset password" />
+            </span>
+        </p>
+    </form>
+
+{% endblock %}

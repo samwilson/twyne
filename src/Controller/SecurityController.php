@@ -50,13 +50,6 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/reminder", name="reminder")
-     */
-    public function reminder(AuthenticationUtils $authenticationUtils): Response
-    {
-    }
-
-    /**
      * @Route("/login", name="login")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response

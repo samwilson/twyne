@@ -1,0 +1,7 @@
+<p>A request was received to reset your password on <em>{{ settings.siteName }}</em>.</p>
+
+<p>If this was not you, please disregard this email; there is no need to take any action.</p>
+
+<p>To reset your password, please visit the following link:</p>
+
+<p><a href="{{ url('reset_token', {token: resetToken.token}) }}">{{ url('reset_token', {token: resetToken.token}) }}</a></p>

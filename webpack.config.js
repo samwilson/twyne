@@ -59,6 +59,12 @@ Encore
     // requires WebpackEncoreBundle 1.4 or higher
     //.enableIntegrityHashes(Encore.isProduction())
 
+    // Copy the images' directory.
+    .copyFiles({
+        from: './assets/img/',
+        to: 'images/[path][name].[ext]',
+     })
+
 ;
 
 module.exports = Encore.getWebpackConfig();

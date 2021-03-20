@@ -1,6 +1,6 @@
 {
   "extends": "stylelint-config-standard",
-  "ignoreFiles": ["**/*.js"],
+  "ignoreFiles": ["**/*.js", "**/*.png"],
   "rules": {
     "no-descending-specificity": null
   }

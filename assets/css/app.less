@@ -139,18 +139,18 @@ form {
   background-color: #efefef;
   padding: 1rem;
 
-  p label { display: block; }
+  label { display: block; }
 
-  p.fields {
+  .fields {
     display: flex;
     align-items: start;
     margin-bottom: 0.4rem;
     flex-wrap: wrap;
+    .field.size-1 { flex: 1; }
+    .field.size-2 { flex: 2; }
+    .field.size-4 { flex: 4; }
+    .field.size-6 { flex: 6; }
   }
-  p .field.size-1 { flex: 1; }
-  p .field.size-2 { flex: 2; }
-  p .field.size-4 { flex: 4; }
-  p .field.size-6 { flex: 6; }
 
   textarea,
   input[type="text"],
@@ -165,6 +165,12 @@ form {
     background-color: white;
     box-sizing: border-box;
     height: 1.9rem;
+  }
+  textarea { height: auto; }
+
+  input[disabled] {
+    background-color: #fdfafa;
+    cursor: not-allowed;
   }
 
   input[type='submit'],

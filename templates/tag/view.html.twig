@@ -4,9 +4,86 @@
 
 {% block body %}
 
-    <h1>T{{ tag.id }}: {{ tag.title }}</h1>
+    <article>
 
-    {{ tag.description|markdownToHtml }}
+        <h1>T{{ tag.id }}: {{ tag.title }}</h1>
+
+        {% if is_granted('ROLE_ADMIN') %}
+            <p>
+                <a href="{{ path('tag_edit', {id:tag.id}) }}" class="button">Edit</a>
+            </p>
+        {% endif %}
+
+        {% if tag.wikidata %}
+            <table class="wikidata">
+                <caption>
+                    <img src="{{ asset('build/images/wikidata-logo.png') }}" alt="Wikidata logo." />
+                    Wikidata item
+                    <a href="https://www.wikidata.org/wiki/{{ tag.wikidata }}">{{ tag.wikidata }}</a>:
+                    <strong>{{ entity.label }}</strong>
+                    {% if entity.description %}
+                        &mdash; <dfn>{{ entity.description }}</dfn>
+                    {% endif %}
+                </caption>
+                <tbody>
+                    {% for prop in entity.properties %}
+                        <tr>
+                            <th>{{ prop.label }}</th>
+                            <td>
+                                <ul>
+                                    {% for val in prop.values %}
+                                        <li>
+                                            {% if prop.type == 'wikibase-item' %}
+                                                {% if val.tag_id %}
+                                                    <a href="{{ path('tag_view', {id:val.tag_id}) }}">
+
+                                                        {{ val.label }}
+                                                    </a>
+                                                {% else %}
+                                                    {{ val.label }}
+                                                {% endif %}
+                                            {% elseif prop.type == 'url' %}
+                                                <a href="{{ val }}">{{ val }}</a>
+                                            {% elseif prop.type == 'globe-coordinate' %}
+                                                {{ val.longitude }}&deg;, {{ val.latitude }}&deg;
+                                            {% elseif prop.type == 'time' %}
+                                                {{ val.time }}
+                                            {% elseif prop.type == 'quantity' %}
+                                                {{ val.amount }}
+                                            {% elseif prop.type == 'string' %}
+                                                {{ val }}
+                                            {% elseif prop.type == 'monolingualtext' %}
+                                                {{ val.text }}
+                                            {% else %}
+                                                <em>Property type '{{ prop.type }}' not supported yet.</em>
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+        {{ tag.description|markdownToHtml }}
+
+        {% if tag.wikidata and entity.authorities is defined %}
+            <p class="authority-control">
+                <strong>Authority Control:</strong><br />&mdash;
+                {% for auth in entity.authorities %}
+                    {{ auth.label }}:
+                    {% for id,url in auth.values %}
+                        <a href="{{ url }}">{{ id }}</a>
+                    {% endfor %}
+                    &mdash;
+                {% endfor %}
+            </p>
+        {% endif %}
+
+        <hr class="end" />
+    </article>
 
     <nav class="pagination">
         {% if page_num == 2 %}

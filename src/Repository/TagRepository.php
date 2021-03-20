@@ -14,6 +14,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @method Tag|null find($id, $lockMode = null, $lockVersion = null)
@@ -110,6 +111,23 @@ class TagRepository extends ServiceEntityRepository
         return $out;
     }
 
+    /**
+     * Get a map of Wikidata IDs to Twyne Tag IDs.
+     * @return array<string,int>
+     */
+    public function findWikidata(): array
+    {
+        $data = $this->getEntityManager()
+            ->getConnection()
+            ->query('SELECT wikidata, id FROM tag WHERE wikidata IS NOT NULL')
+            ->fetchAll();
+        $out = [];
+        foreach ($data as $row) {
+            $out[$row['wikidata']] = $row['id'];
+        }
+        return $out;
+    }
+
     public function getFromString($str): Collection
     {
         $out = new ArrayCollection();
@@ -142,5 +160,16 @@ class TagRepository extends ServiceEntityRepository
             }
             $post->addTag($tag);
         }
+    }
+
+    public function saveFromRequest(Tag $tag, Request $request): void
+    {
+        $tag->setTitle(trim($request->get('title')));
+        $tag->setDescription(trim($request->get('description')));
+        $wdNum = preg_filter('/[^0-9]/', '', $request->get('wikidata'));
+        $wdId = $wdNum ? "Q$wdNum" : null;
+        $tag->setWikidata($wdId);
+        $this->getEntityManager()->persist($tag);
+        $this->getEntityManager()->flush();
     }
 }

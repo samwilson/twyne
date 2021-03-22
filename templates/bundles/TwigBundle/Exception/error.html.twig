@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Error{% endblock %}
+
+{% block body %}
+    <div class="flashes">
+        <div class="error">
+            <h1>Error {{ exception.statusCode }}: {{ exception.statusText }}</h1>
+            <p>{{ exception.message }}</p>
+        </div>
+    </div>
+{% endblock %}

@@ -40,9 +40,11 @@
         <span class="field size-1">
             <a class="button" href="{{ path('reset') }}">Reset password</a>
         </span>
-        <span class="field size-1">
-            <a class="button" href="{{ path('register') }}">Register</a>
-        </span>
+        {% if user_registrations %}
+            <span class="field size-1">
+                <a class="button" href="{{ path('register') }}">Register</a>
+            </span>
+        {% endif %}
     </p>
 </form>
 

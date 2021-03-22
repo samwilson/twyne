@@ -15,6 +15,11 @@
             </span>
         </p>
 
+        <p class="fields">
+            <label for="user_registrations">Allow user registrations?</label>
+            <input id="user_registrations" type="checkbox" {% if settings.userRegistrations %}checked{% endif %} name="settings[user_registrations]" />
+        </p>
+
         <fieldset>
             <legend>File storage</legend>
             <p class="fields">

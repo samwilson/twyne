@@ -50,6 +50,7 @@ class Settings
 
     public function saveData(array $data)
     {
+        $data['user_registrations'] = isset($data['user_registrations']);
         foreach ($data as $name => $value) {
             $setting = $this->settingRepository->findOneBy(['name' => $name]);
             if (!$setting) {
@@ -65,6 +66,14 @@ class Settings
     public function siteName(): string
     {
         return $this->getData()['site_name'] ?? 'A Twyne Site';
+    }
+
+    /**
+     * Whether users can register new accounts. Site admins are always able to create new users.
+     */
+    public function userRegistrations(): bool
+    {
+        return $this->getData()['user_registrations'] ?? true;
     }
 
     /**

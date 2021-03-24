@@ -9,7 +9,11 @@ use App\Entity\UserGroup;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 
 /**
  * @method Tag|null find($id, $lockMode = null, $lockVersion = null)
@@ -34,6 +38,49 @@ class TagRepository extends ServiceEntityRepository
             'include' => $include,
             'exclude' => $exclude,
         ];
+    }
+
+    public function countPosts(Tag $tag, ?User $user = null): int
+    {
+        return $this->getPostsQueryBuilder($tag, $user)
+            ->select('COUNT(p)')
+            ->getQuery()
+            ->getResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
+    }
+
+    /**
+     * @param Tag $tag
+     * @param User|null $user
+     * @param int|null $pageNum
+     * @return array<Post>
+     */
+    public function findPosts(Tag $tag, ?User $user = null, ?int $pageNum = 1): array
+    {
+        $pageSize = 10;
+        return $this->getPostsQueryBuilder($tag, $user)
+            ->setMaxResults($pageSize)
+            ->setFirstResult(($pageNum - 1) * $pageSize)
+            ->getQuery()
+            ->getResult();
+    }
+
+    private function getPostsQueryBuilder(Tag $tag, ?User $user = null): QueryBuilder
+    {
+        if (!$tag->getId()) {
+            throw new Exception('Tag not loaded.');
+        }
+        $groupList = $user ? $user->getGroupIdList() : false;
+        if (!$groupList) {
+            $groupList = UserGroup::PUBLIC;
+        }
+        return $this->getEntityManager()
+            ->createQueryBuilder()
+            ->select('p')
+            ->from(Post::class, 'p')
+            ->join('p.tags', 't', Join::WITH, 't.id = :tag_id')
+            ->setParameter('tag_id', $tag->getId())
+            ->andWhere('p.view_group IN (' . $groupList . ')')
+            ->orderBy('p.date', 'DESC');
     }
 
     public function findAllOrderedByCount(?User $user)

@@ -20,6 +20,11 @@
             <input id="user_registrations" type="checkbox" {% if settings.userRegistrations %}checked{% endif %} name="settings[user_registrations]" />
         </p>
 
+        <p class="fields">
+            <label for="api_key">API Key:</label>
+            <input id="api_key" type="text" name="settings[api_key]" value="{{ settings.apiKey }}" />
+        </p>
+
         <fieldset>
             <legend>File storage</legend>
             <p class="fields">

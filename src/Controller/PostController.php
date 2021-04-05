@@ -12,6 +12,7 @@ use App\Repository\FileRepository;
 use App\Repository\PostRepository;
 use App\Repository\UserGroupRepository;
 use App\Rss;
+use App\Settings;
 use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
 use IntlDateFormatter;
@@ -143,6 +144,68 @@ class PostController extends AbstractController
             $this->addFlash('success', 'Uploaded: P' . $post->getId() . ' — ' . $post->getTitle());
         }
         return $this->redirectToRoute('post_upload');
+    }
+
+    /**
+     * @Route("/post/search", name="post_search")
+     */
+    public function infoApi(FileRepository $fileRepository, Request $request, Settings $settings)
+    {
+        $apiKey = $request->get('api_key');
+        $publicOnly = (!$apiKey || $apiKey !== $settings->apiKey());
+        $checksums = array_filter(explode('|', $request->get('checksums')));
+        $posts = [];
+        if ($checksums) {
+            $files = $fileRepository->findByChecksums($checksums, $publicOnly);
+            /** @var File $file */
+            foreach ($files as $file) {
+                $posts[] = [
+                    'id' => $file->getPost()->getId(),
+                    'title' => $file->getPost()->getTitle(),
+                ];
+            }
+        }
+        return $this->json([
+            'post_count' => count($posts),
+            'posts' => $posts,
+        ]);
+    }
+
+    /**
+     * @Route("/upload-api", name="post_upload_api")
+     */
+    public function uploadApi(
+        Request $request,
+        FileRepository $fileRepository,
+        PostRepository $postRepository,
+        Settings $settings
+    ) {
+        if (!$request->isMethod('POST')) {
+            return $this->json(['error' => 'post-request-required']);
+        }
+        $apiKey = $request->get('api_key');
+        if (!$apiKey || $apiKey !== $settings->apiKey()) {
+            return $this->json(['error' => 'invalid-api-key']);
+        }
+        $files = $request->files->get('files');
+        if (!$files) {
+            return $this->json(['error' => 'no-files']);
+        }
+        $out = [
+            'success' => [],
+            'fail' => [],
+        ];
+        foreach ($files as $uploadedFile) {
+            if (!$fileRepository->checkFile($uploadedFile)) {
+                $out['fail'][] = 'Unable to upload file: ' . $uploadedFile->getClientOriginalName();
+                continue;
+            }
+            $post = new Post();
+            $postRepository->saveFromRequest($post, $request, $uploadedFile);
+            $out['success'][] = 'Uploaded: P' . $post->getId() . ' — ' . $post->getTitle();
+        }
+        $out['upload_count'] = count($out['success']);
+        return $this->json($out);
     }
 
     /**

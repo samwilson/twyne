@@ -99,6 +99,11 @@ class Settings
         return rtrim($this->getData()['temp_dir'] ?? $this->projectDir . '/var/app_tmp/', '/') . '/';
     }
 
+    public function apiKey(): string
+    {
+        return $this->getData()['api_key'] ?? '';
+    }
+
     public function awsKey(): string
     {
         return $this->getData()['aws_key'] ?? '';

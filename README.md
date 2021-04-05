@@ -24,3 +24,9 @@ A web-based journal for writing and photography.
 4. Create the database (if needed): `./bin/console doctrine:database:create`
 5. Install the database: `./bin/console doctrine:migrations:migrate`
 6. Open the site in a browser. The first account you create will be the administrator.
+
+## Usage
+
+Documentation will be available at [twyne.github.io](https://twyne.github.io/).
+
+A [Twyne command-line client](https://github.com/samwilson/twyne-client) is also available.

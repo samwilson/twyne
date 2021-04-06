@@ -8,7 +8,8 @@ framework:
     # Remove or comment this section to explicitly disable session support.
     session:
         name: twyne
-        handler_id: null
+        handler_id: 'session.handler.native_file'
+        save_path: "%kernel.project_dir%/var/sessions/%kernel.environment%"
         cookie_secure: auto
         cookie_samesite: lax
         cookie_lifetime: 86400

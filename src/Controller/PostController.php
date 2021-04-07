@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PostController extends AbstractController
 {
@@ -146,22 +147,29 @@ class PostController extends AbstractController
         return $this->redirectToRoute('post_upload');
     }
 
+    private function hasApiKey(Request $request, Settings $settings): bool
+    {
+        $apiKey = $request->headers->get('Authorization');
+        return $apiKey && $apiKey === 'Twyne api_key=' . $settings->apiKey();
+    }
+
     /**
      * @Route("/post/search", name="post_search")
      */
     public function infoApi(FileRepository $fileRepository, Request $request, Settings $settings)
     {
-        $apiKey = $request->get('api_key');
-        $publicOnly = (!$apiKey || $apiKey !== $settings->apiKey());
+        $publicOnly = !$this->hasApiKey($request, $settings);
         $checksums = array_filter(explode('|', $request->get('checksums')));
         $posts = [];
         if ($checksums) {
             $files = $fileRepository->findByChecksums($checksums, $publicOnly);
             /** @var File $file */
             foreach ($files as $file) {
+                $postId = $file->getPost()->getId();
                 $posts[] = [
-                    'id' => $file->getPost()->getId(),
+                    'id' => $postId,
                     'title' => $file->getPost()->getTitle(),
+                    'url' => $this->generateUrl('post_view', ['id' => $postId], UrlGeneratorInterface::ABSOLUTE_URL),
                 ];
             }
         }
@@ -178,13 +186,13 @@ class PostController extends AbstractController
         Request $request,
         FileRepository $fileRepository,
         PostRepository $postRepository,
+        UserGroupRepository $userGroupRepository,
         Settings $settings
     ) {
         if (!$request->isMethod('POST')) {
             return $this->json(['error' => 'post-request-required']);
         }
-        $apiKey = $request->get('api_key');
-        if (!$apiKey || $apiKey !== $settings->apiKey()) {
+        if (!$this->hasApiKey($request, $settings)) {
             return $this->json(['error' => 'invalid-api-key']);
         }
         $files = $request->files->get('files');
@@ -195,6 +203,11 @@ class PostController extends AbstractController
             'success' => [],
             'fail' => [],
         ];
+        // Turn a user group's name into its ID.
+        $viewGroup = $request->get('view_group');
+        if (!is_numeric($viewGroup)) {
+            $request->attributes->set('view_group', $userGroupRepository->findOrCreate($viewGroup));
+        }
         foreach ($files as $uploadedFile) {
             if (!$fileRepository->checkFile($uploadedFile)) {
                 $out['fail'][] = 'Unable to upload file: ' . $uploadedFile->getClientOriginalName();
@@ -202,7 +215,8 @@ class PostController extends AbstractController
             }
             $post = new Post();
             $postRepository->saveFromRequest($post, $request, $uploadedFile);
-            $out['success'][] = 'Uploaded: P' . $post->getId() . ' — ' . $post->getTitle();
+            $url = $this->generateUrl('post_view', ['id' => $post->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
+            $out['success'][] = "Uploaded: $url — " . $post->getTitle();
         }
         $out['upload_count'] = count($out['success']);
         return $this->json($out);

@@ -22,7 +22,7 @@ yarn-error.log
 ###< squizlabs/php_codesniffer ###
 
 /.idea
-
+/php.ini
 
 ###> symfony/phpunit-bridge ###
 .phpunit

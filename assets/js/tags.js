@@ -1,34 +1,50 @@
-import AutoComplete from '@tarekraafat/autocomplete.js/dist/js/autoComplete.js';
-import '@tarekraafat/autocomplete.js/dist/css/autoComplete.css';
+var $ = require('jquery');
+require('select2/dist/js/select2.min');
+require('select2/dist/css/select2.min.css');
 
-const elementId = '#wikidata';
+var wikidataResultTemplate = function (result) {
+    console.log(result);
+    if (result.loading) {
+        return result.text;
+    }
+    return $(`
+        <a href="https://www.wikidata.org/wiki/${result.id}" target="_blank">${result.id}</a>:
+        <strong>${result.text}</strong> &mdash;
+        <dfn>${result.description}</dfn>
+    `);
+};
 
-// eslint-disable-next-line no-new
-new AutoComplete({
-    selector: elementId + '-label',
-    debounce: 500,
-    maxResults: 20,
-    data: {
-        src: async () => {
-            const input = document.querySelector(elementId + '-label');
-            input.disabled = true;
-            const source = await fetch(`/wikidata.json?q=${input.value}`);
-            const data = await source.json();
-            input.disabled = false;
-            return data;
-        },
-        key: ['title']
-    },
-    resultItem: {
-        content: (data, element) => {
-            element.innerHTML = `
-                <a href="https://www.wikidata.org/wiki/${data.value.value}">${data.value.value}</a>:
-                <strong>${data.value.title}</strong> &mdash;
-                <dfn>${data.value.description}</dfn>`;
+$('select#tags').select2({
+    multiple: true,
+    tags: true,
+    ajax: {
+        url: '/tags.json',
+        dataType: 'json',
+        delay: 250,
+        data: function (params) {
+            return { q: params.term, page: params.page || 1 };
         }
     },
-    onSelection: feedback => {
-        document.querySelector(elementId).value = feedback.selection.value.value;
-        document.querySelector(elementId + '-label').value = feedback.selection.value.title;
-    }
+    minimumInputLength: 1
+});
+
+$('select#depicts').select2({
+    multiple: true,
+    ajax: {
+        url: '/wikidata.json',
+        dataType: 'json',
+        delay: 250
+    },
+    templateResult: wikidataResultTemplate,
+    minimumInputLength: 1
+});
+
+$('select#wikidata').select2({
+    ajax: {
+        url: '/wikidata.json',
+        dataType: 'json',
+        delay: 250
+    },
+    templateResult: wikidataResultTemplate,
+    minimumInputLength: 1
 });

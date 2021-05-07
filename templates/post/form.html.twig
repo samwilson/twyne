@@ -88,7 +88,11 @@
         </p>
         <p>
             <label for="tags">Tags (semicolon-separated):</label>
-            <input type="text" id="tags" name="tags" data-searchUrl="{{ path('tag_search') }}" value="{{ post.tagsString|e('html_attr') }}" tabindex="80" />
+            <select multiple id="tags" name="tags[]" class="app-select2" tabindex="80">
+                {% for tag in post.tags %}
+                    <option value="{{ tag.title }}" selected>{{ tag.title }}</option>
+                {% endfor %}
+            </select>
         </p>
         <p class="fields">
             {% if post.file %}
@@ -130,6 +134,13 @@
                     <td><input id="syn-new-label" type="text" name="new_syndication[label]" /></td>
                     <td></td>
                 </tr>
+                {% if post.id %}
+                    <tr>
+                        <td colspan="3">
+                            <a href="{{ path('commons', {id:post.id}) }}">Copy to Wikimedia Commons</a>
+                        </td>
+                    </tr>
+                {% endif %}
             </tfoot>
         </table>
         <p>

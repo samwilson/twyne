@@ -35,3 +35,14 @@ services:
     App\WebRequestProcessor:
       tags: { name: monolog.processor }
       autowire: true
+
+    App\Repository\CommonsRepository:
+        arguments:
+            $commonsUrl: '%env(APP_COMMONS_URL)%'
+            $depictsProp: '%env(APP_COMMONS_DEPICTS_PROP)%'
+            $commonsUsername: '%env(APP_COMMONS_USERNAME)%'
+            $commonsPassword: '%env(APP_COMMONS_PASSWORD)%'
+
+    App\Repository\WikidataRepository:
+        arguments:
+            $wikidataUrl: '%env(APP_WIKIDATA_URL)%'

@@ -13,12 +13,12 @@
         </p>
         <div class="fields">
             <span class="field size-1">
-                <label for="wikidata">Wikidata ID:</label>
-                <input type="text" id="wikidata" name="wikidata" value="{{ tag.wikidata }}" />
-            </span>
-            <span class="field size-4">
-                <label for="wikidata-label">Wikidata lookup:</label>
-                <input type="text" id="wikidata-label" spellcheck="false" autocomplete="off" />
+                <label for="wikidata">Wikidata item:</label>
+                <select id="wikidata" name="wikidata">
+                    {% if tag.wikidata %}
+                        <option value="{{ tag.wikidata }}" selected>{{ entity.label }}</option>
+                    {% endif %}
+                </select>
             </span>
         </div>
         <p>

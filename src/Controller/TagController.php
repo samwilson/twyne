@@ -75,6 +75,42 @@ class TagController extends AbstractController
     }
 
     /**
+     * @Route("/tags.json", name="tag_search_json")
+     */
+    public function tagSearchJson(
+        Request $request,
+        TagRepository $tagRepository,
+        WikidataRepository $wikidataRepository
+    ) {
+        $q = $request->get('q', '');
+        $page = (int)$request->get('page', 1);
+        $tagsResults = $tagRepository->search($q, $page, $this->getUser());
+        $tags = [
+            'results' => [],
+        ];
+        if ($page === 1) {
+            $tags['pagination'] = ['more' => true];
+        }
+        foreach ($tagsResults as $tag) {
+            $tags['results'][] = [
+                'id' => $tag->getTitle(),
+                'text' => $tag->getTitle(),
+            ];
+        }
+        // If not many local results are found, augment them with Wikidata items.
+        if ($q && $page > 1 && count($tags['results']) < 10) {
+            $wikidata = $wikidataRepository->search($q);
+            foreach ($wikidata['results'] as $result) {
+                $tags['results'][] = [
+                    'id' => $result['text'],
+                    'text' => $result['text'] . ' (' . $result['id'] . ' - ' . $result['description'] . ')',
+                ];
+            }
+        }
+        return new JsonResponse($tags);
+    }
+
+    /**
      * @Route("/wikidata.json", name="tag_wikidata_search")
      */
     public function searchWikidata(Request $request, WikidataRepository $wikidataRepository)
@@ -86,14 +122,19 @@ class TagController extends AbstractController
      * @Route("/T{id}/edit", name="tag_edit", requirements={"id"="\d+"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function edit(Request $request, $id, TagRepository $tagRepository)
+    public function edit(WikidataRepository $wikidataRepository, TagRepository $tagRepository, $id)
     {
         $tag = $tagRepository->find($id);
         if (!$tag) {
             throw $this->createNotFoundException();
         }
+        $entity = false;
+        if ($tag->getWikidata()) {
+            $entity = $wikidataRepository->getData($tag->getWikidata());
+        }
         return $this->render('tag/edit.html.twig', [
             'tag' => $tag,
+            'entity' => $entity,
         ]);
     }
 

@@ -43,7 +43,7 @@
     </p>
     <p>
         <label for="tags">Tags (semicolon-separated):</label>
-        <input type="text" id="tags" name="tags" data-searchUrl="{{ path('tag_search') }}" />
+        <select multiple id="tags" name="tags[]" class="app-select2"></select>
     </p>
     <p>
         <input type="submit" value="Upload" />

@@ -30,10 +30,10 @@ class TagRepositoryTest extends RepositoryTestBase
 
         // Create two posts tagged the same, one of which is private.
         $publicPost = new Post();
-        $publicPostData = ['tags' => 'Tag 1', 'view_group' => UserGroup::PUBLIC, 'author' => 1];
+        $publicPostData = ['tags' => ['Tag 1'], 'view_group' => UserGroup::PUBLIC, 'author' => 1];
         $postRepo->saveFromRequest($publicPost, new Request([], $publicPostData));
         $privatePost = new Post();
-        $privatePostData = ['tags' => 'Tag 1', 'view_group' => $privateGroup->getId(), 'author' => 1];
+        $privatePostData = ['tags' => ['Tag 1'], 'view_group' => $privateGroup->getId(), 'author' => 1];
         $postRepo->saveFromRequest($privatePost, new Request([], $privatePostData));
 
         // Make sure the user is only in the public group.

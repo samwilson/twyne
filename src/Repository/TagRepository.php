@@ -29,18 +29,6 @@ class TagRepository extends ServiceEntityRepository
         parent::__construct($registry, Tag::class);
     }
 
-    public function getFromIdsString(string $ids): array
-    {
-        $include = [];
-        $exclude = [];
-        foreach (array_map('trim', explode(',', $ids)) as $t) {
-        }
-        return [
-            'include' => $include,
-            'exclude' => $exclude,
-        ];
-    }
-
     public function countPosts(Tag $tag, ?User $user = null): int
     {
         return $this->getPostsQueryBuilder($tag, $user)
@@ -112,15 +100,15 @@ class TagRepository extends ServiceEntityRepository
     }
 
     /**
-     * Get a map of Wikidata IDs to Twyne Tag IDs.
+     * Get a map of all Wikidata IDs to Twyne Tag IDs.
      * @return array<string,int>
      */
     public function findWikidata(): array
     {
         $data = $this->getEntityManager()
             ->getConnection()
-            ->query('SELECT wikidata, id FROM tag WHERE wikidata IS NOT NULL')
-            ->fetchAll();
+            ->executeQuery('SELECT wikidata, id FROM tag WHERE wikidata IS NOT NULL')
+            ->fetchAllAssociative();
         $out = [];
         foreach ($data as $row) {
             $out[$row['wikidata']] = $row['id'];
@@ -128,24 +116,42 @@ class TagRepository extends ServiceEntityRepository
         return $out;
     }
 
-    public function getFromString($str): Collection
+    /**
+     * Search for tags by title.
+     * @param string $term
+     * @param int $pageNum
+     * @param User|null $user
+     * @return array
+     */
+    public function search(string $term, int $pageNum, ?User $user = null): array
     {
-        $out = new ArrayCollection();
-        foreach (explode(';', $str) as $t) {
-            $tag = $this->findBy(['title' => $t]);
-            if (!$tag) {
-                $tag = new Tag();
-                $tag->setTitle($t);
-            }
-            $out->add($tag);
+        if (empty($term)) {
+            return [];
         }
-        return $out;
+        $pageSize = 20;
+        $groupList = $user ? $user->getGroupIdList() : false;
+        if (!$groupList) {
+            $groupList = UserGroup::PUBLIC;
+        }
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        return $qb
+            ->select('t')
+            ->from(Tag::class, 't')
+            ->join('t.posts', 'p')
+            ->where($qb->expr()->like('t.title', ':q'))
+            ->setParameter('q', "%$term%")
+            ->andWhere('p.view_group IN (' . $groupList . ')')
+            ->orderBy('t.title', 'DESC')
+            ->setMaxResults($pageSize)
+            ->setFirstResult(($pageNum - 1) * $pageSize)
+            ->getQuery()
+            ->getResult();
     }
 
-    public function setTagsOnPost(Post $post, string $tags): void
+    public function setTagsOnPost(Post $post, array $tags): void
     {
         $post->setTags(new ArrayCollection());
-        foreach (array_unique(array_filter(array_map('trim', explode(';', $tags)))) as $t) {
+        foreach ($tags as $t) {
             $tag = $this->createQueryBuilder('t')
                 ->where('t.title LIKE :t')
                 ->setParameter('t', $t)

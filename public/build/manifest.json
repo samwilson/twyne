@@ -1,11 +1,11 @@
 {
-  "build/0.6cd39f54.js": "/build/0.6cd39f54.js",
-  "build/1.9589bded.css": "/build/1.9589bded.css",
-  "build/1.b86898a6.js": "/build/1.b86898a6.js",
+  "build/0.653a83fa.js": "/build/0.653a83fa.js",
+  "build/1.05390554.css": "/build/1.05390554.css",
+  "build/1.5e8f2df6.js": "/build/1.5e8f2df6.js",
   "build/2.6f545252.css": "/build/2.6f545252.css",
-  "build/2.fec4ad29.js": "/build/2.fec4ad29.js",
-  "build/app.css": "/build/app.18b9bcba.css",
-  "build/app.js": "/build/app.e9c073ce.js",
+  "build/2.d4cf09a0.js": "/build/2.d4cf09a0.js",
+  "build/app.css": "/build/app.a37ff4a0.css",
+  "build/app.js": "/build/app.5782ff2a.js",
   "build/map.css": "/build/map.356b1cd7.css",
   "build/map.js": "/build/map.a1ac52e2.js",
   "build/runtime.js": "/build/runtime.d94b3b43.js",
@@ -14,6 +14,5 @@
   "build/images/marker-icon-2x.png": "/build/images/marker-icon-2x.680f69f3.png",
   "build/images/marker-icon.png": "/build/images/marker-icon.2b3e1faf.png",
   "build/images/marker-shadow.png": "/build/images/marker-shadow.a0c6cc14.png",
-  "build/images/search.svg": "/build/images/search.45e26a17.svg",
   "build/images/wikidata-logo.png": "/build/images/wikidata-logo.png"
 }

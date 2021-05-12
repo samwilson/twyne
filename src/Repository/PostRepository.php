@@ -229,7 +229,7 @@ class PostRepository extends ServiceEntityRepository
         }
 
         // Tags.
-        $this->tagRepository->setTagsOnPost($post, $request->get('tags', ''));
+        $this->tagRepository->setTagsOnPost($post, $request->get('tags', []));
 
         // URL.
         $post->setUrl($request->get('url'));

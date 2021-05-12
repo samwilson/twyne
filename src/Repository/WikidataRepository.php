@@ -2,18 +2,21 @@
 
 namespace App\Repository;
 
-use App\Entity\Tag;
 use DateInterval;
 use Exception;
+use Mediawiki\Api\MediawikiApi;
+use Mediawiki\Api\SimpleRequest;
 use Psr\Cache\CacheItemPoolInterface;
-use stdClass;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class WikidataRepository
 {
 
     /** @var string */
-    private const API_URL = 'https://www.wikidata.org/w/api.php';
+    private $wikidataUrl;
+
+    /** @var MediawikiApi */
+    private $api;
 
     /** @var HttpClientInterface */
     private $httpClient;
@@ -27,17 +30,23 @@ class WikidataRepository
     public function __construct(
         HttpClientInterface $httpClient,
         CacheItemPoolInterface $cache,
-        TagRepository $tagRepository
+        TagRepository $tagRepository,
+        string $wikidataUrl
     ) {
         $this->httpClient = $httpClient;
         $this->cache = $cache;
         $this->tagRepository = $tagRepository;
+        $this->wikidataUrl = $wikidataUrl;
     }
 
     public function search(string $q)
     {
+        if (empty($q)) {
+            return [
+                'results' => [],
+            ];
+        }
         $params = [
-            'action' => 'wbsearchentities',
             'search' => $q,
             'language' => 'en',
             'uselang' => 'en',
@@ -46,34 +55,39 @@ class WikidataRepository
             'limit' => 20,
             'props' => '',
         ];
-        $response = $this->httpClient->request('GET', self::API_URL . '?' . http_build_query($params));
-        $results = json_decode($response->getContent());
+        $results = $this->getMediaWikiApi()->getRequest(new SimpleRequest('wbsearchentities', $params));
         $data = [];
-        foreach ($results->search ?? [] as $result) {
+        foreach ($results['search'] ?? [] as $result) {
             $data[] = [
-                'value' => $result->id,
-                'title' => $result->label ?? $result->id,
-                'description' => $result->description ?? '',
+                'id' => $result['id'],
+                'text' => $result['label'] ?? $result['id'],
+                'description' => $result['description'] ?? '',
             ];
         }
-        return $data;
+        return [
+            'results' => $data,
+        ];
     }
 
+    /**
+     * @param $id
+     * @return array With keys 'label', 'description', 'properties' and maybe 'authorities'.
+     */
     public function getData($id): array
     {
         $entity = $this->getEntities([$id])[$id];
         $out = [
-            'label' => $entity->labels->en->value,
-            'description' => $entity->descriptions->en->value,
+            'label' => $entity['labels']['en']['value'] ?? '(No label)',
+            'description' => $entity['descriptions']['en']['value'] ?? '(No description)',
             'properties' => [],
         ];
         $propIds = [];
-        foreach ($entity->claims as $propId => $claim) {
+        foreach ($entity['claims'] as $propId => $claim) {
             $propIds[] = $propId;
         }
         $tags = $this->tagRepository->findWikidata();
         $props = $this->getEntities($propIds);
-        foreach ($entity->claims as $propId => $claim) {
+        foreach ($entity['claims'] as $propId => $claim) {
             $values = [];
             foreach ($claim as $c) {
                 if ($c->mainsnak->datatype === 'wikibase-item') {
@@ -86,9 +100,12 @@ class WikidataRepository
                     } else {
                         $valueId = $c->mainsnak->datavalue->value->id;
                         $valueEntity = $this->getEntities([$valueId])[$valueId];
+                        $valueLabel = isset($valueEntity['labels']['en'])
+                            ? $valueEntity['labels']['en']['value']
+                            : '[No label]';
                         $values[] = [
-                            'id' => $valueEntity->id,
-                            'label' => isset($valueEntity->labels->en) ? $valueEntity->labels->en->value : '[No label]',
+                            'id' => $valueEntity['id'],
+                            'label' => $valueLabel,
                             'tag_id' => $tags[$valueId] ?? false,
                         ];
                     }
@@ -99,35 +116,34 @@ class WikidataRepository
                 }
             }
             $property = $props[$propId];
-            if ($property->datatype === 'external-id') {
-                if (isset($property->claims->P1630)) {
-                    $formatterUrl = $property->claims->P1630[0]->mainsnak->datavalue->value;
+            if ($property['datatype'] === 'external-id') {
+                if (isset($property['claims']['P1630'])) {
+                    $formatterUrl = $property['claims']['P1630'][0]['mainsnak']['datavalue']['value'];
                     $formattedValues = [];
                     foreach ($values as $val) {
                         $formattedValues[$val] = str_replace('$1', $val, $formatterUrl);
                     }
                     $out['authorities'][] = [
-                        'id' => $property->id,
-                        'label' => $property->labels->en->value,
+                        'id' => $property['id'],
+                        'label' => $property['labels']['en']['value'],
                         'values' => $formattedValues,
                     ];
                 }
             } else {
                 $out['properties'][] = [
-                    'id' => $property->id,
-                    'label' => $property->labels->en->value,
-                    'type' => $property->datatype,
+                    'id' => $property['id'],
+                    'label' => $property['labels']['en']['value'],
+                    'type' => $property['datatype'],
                     'values' => $values,
                 ];
             }
         }
-        //dd($out);
         return $out;
     }
 
     /**
      * @param array<int,string> $id
-     * @return array<string,stdClass>
+     * @return array<string,array>
      */
     public function getEntities(array $ids)
     {
@@ -148,31 +164,30 @@ class WikidataRepository
         }
         if (count($idsToFetch) > 0) {
             foreach (array_chunk($idsToFetch, 50) as $chunkOfIds) {
-                $params = [
-                    'action' => 'wbgetentities',
-                    'format' => 'json',
-                    'ids' => join('|', $chunkOfIds),
-                ];
-                $url = self::API_URL . '?' . http_build_query($params);
-                $response = $this->httpClient->request('GET', $url);
-                $json = $response->getContent();
-                $responseData = json_decode($json);
-                if ($responseData === null) {
-                    throw new Exception('Unable to decode Wikidata response.');
-                }
-                if (!isset($responseData->entities)) {
+                $params = ['ids' => join('|', $chunkOfIds)];
+                $responseData = $this->getMediaWikiApi()->getRequest(new SimpleRequest('wbgetentities', $params));
+                if (!isset($responseData['entities'])) {
                     throw new Exception('Entities not found in response.');
                 }
-                foreach ($responseData->entities as $entity) {
+                foreach ($responseData['entities'] as $entity) {
                     // Cache each entity for two weeks.
-                    $cacheItems[$entity->id]->set($entity);
-                    $cacheItems[$entity->id]->expiresAfter(new DateInterval('P14D'));
-                    $this->cache->save($cacheItems[$entity->id]);
-                    $out[$entity->id] = $entity;
+                    $cacheItems[$entity['id']]->set($entity);
+                    $cacheItems[$entity['id']]->expiresAfter(new DateInterval('P14D'));
+                    $this->cache->save($cacheItems[$entity['id']]);
+                    $out[$entity['id']] = $entity;
                 }
             }
             $this->cache->commit();
         }
         return $out;
+    }
+
+    private function getMediaWikiApi(): MediawikiApi
+    {
+        if ($this->api instanceof MediawikiApi) {
+            return $this->api;
+        }
+        $this->api = MediawikiApi::newFromPage($this->wikidataUrl);
+        return $this->api;
     }
 }

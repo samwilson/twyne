@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Copy a file to Wikimedia Commons
+{% endblock %}
+
+{% block body %}
+
+    <h1>Copy a file to Wikimedia Commons</h1>
+
+    <p><a href="{{ path('post_edit', {id:post.id}) }}">&larr; Return to editing this post</a></p>
+
+    <form action="{{ path('commons_save', {id:post.id}) }}" method="post" class="commons">
+        <div class="image">
+            <img src="{{ path('file', {id:post.id, size:'D', ext:'jpg'}) }}" alt="Image of the file attached to this post." />
+        </div>
+        <div class="form">
+            <p>Commons URL: {{ commons_url }}</p>
+            <p>
+                <label for="filename">Filename on Commons:</label>
+                <input type="text" id="filename" name="filename" value="{{ commons_filename }}" />
+            </p>
+            <p>
+                <label for="caption">Caption:</label>
+                <input type="text" id="caption" name="caption" />
+            </p>
+            <p>
+                <label for="depicts">Depicts:</label>
+                <select id="depicts" name="depicts[]">
+                    {% for tag in post.tags %}
+                        {% if tag.wikidata %}
+                            <option value="{{ tag.wikidata }}">{{ tag.title }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </p>
+            {% for tag in post.tags %}
+                {% if tag.wikidata %}
+                   option value="{{ tag.wikidata }}">{{ tag.title }}</option
+                {% endif %}
+            {% endfor %}
+
+            <p>
+                <label for="wikitext">Page wikitext:</label>
+                <textarea name="wikitext" id="wikitext" rows="12">{{ wikitext }}</textarea>
+            </p>
+            <p>
+                <input type="submit" value="Upload to Commons" />
+            </p>
+        </div>
+    </form>
+
+{% endblock %}

@@ -90,15 +90,15 @@ class WikidataRepository
         foreach ($entity['claims'] as $propId => $claim) {
             $values = [];
             foreach ($claim as $c) {
-                if ($c->mainsnak->datatype === 'wikibase-item') {
-                    if (in_array($c->mainsnak->snaktype, ['novalue', 'somevalue'])) {
+                if ($c['mainsnak']['datatype'] === 'wikibase-item') {
+                    if (in_array($c['mainsnak']['snaktype'], ['novalue', 'somevalue'])) {
                         $values[] = [
                             'id' => false,
                             'label' => '[No value]',
                             'tag_id' => false,
                         ];
                     } else {
-                        $valueId = $c->mainsnak->datavalue->value->id;
+                        $valueId = $c['mainsnak']['datavalue']['value']['id'];
                         $valueEntity = $this->getEntities([$valueId])[$valueId];
                         $valueLabel = isset($valueEntity['labels']['en'])
                             ? $valueEntity['labels']['en']['value']
@@ -109,10 +109,10 @@ class WikidataRepository
                             'tag_id' => $tags[$valueId] ?? false,
                         ];
                     }
-                } elseif (!isset($c->mainsnak->datavalue)) {
+                } elseif (!isset($c['mainsnak']['datavalue'])) {
                     // @TODO: handle novalue and somevalue snaktypes.
                 } else {
-                    $values[] = $c->mainsnak->datavalue->value;
+                    $values[] = $c['mainsnak']['datavalue']['value'];
                 }
             }
             $property = $props[$propId];

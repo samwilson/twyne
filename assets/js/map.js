@@ -2,14 +2,6 @@ import L, { LatLng } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import '../css/map.less';
 
-/* This code is needed to properly load the images in the Leaflet CSS */
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-    iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png').default,
-    iconUrl: require('leaflet/dist/images/marker-icon.png').default,
-    shadowUrl: require('leaflet/dist/images/marker-shadow.png').default
-});
-
 const map = L.map('map', {
     preferCanvas: true
 });
@@ -72,7 +64,15 @@ map.on('click', clickEvent => {
 });
 
 function makeMarker (latLng) {
-    marker = new L.Marker(latLng, { draggable: true });
+    marker = new L.Marker(latLng, {
+        draggable: mapData.edit,
+        icon: L.icon({
+            iconUrl: '/build/images/map-pin.png',
+            iconRetinaUrl: '/build/images/map-pin-2x.png',
+            iconSize: [20, 24],
+            iconAnchor: [10, 24]
+        })
+    });
     map.addLayer(marker);
     marker.on('dragend', dragEvent => {
         moveMarker(dragEvent.target.getLatLng());
@@ -80,7 +80,7 @@ function makeMarker (latLng) {
 }
 
 function moveMarker (latLng) {
-    marker.setLatLng(latLng, { draggable: true });
+    marker.setLatLng(latLng);
     map.panTo(latLng);
     // Round the coordinates https://xkcd.com/2170/
     document.getElementById('latitude').value = latLng.lat.toFixed(5);

@@ -1,8 +1,8 @@
-var $ = require('jquery');
+import $ from 'jquery';
 require('select2/dist/js/select2.min');
 require('select2/dist/css/select2.min.css');
 
-var wikidataResultTemplate = function (result) {
+const wikidataResultTemplate = function (result) {
     console.log(result);
     if (result.loading) {
         return result.text;

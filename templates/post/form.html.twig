@@ -145,6 +145,7 @@
         </table>
         <p>
             <input type="submit" name="save" value="Save" tabindex="90" />
+            <input type="submit" name="save-edit" value="Save and keep editing" tabindex="95" />
             {% if post.id %}
                 <a class="button" href="{{ path('post_view', {id:post.id}) }}" tabindex="100">Cancel</a>
                 <a class="button" href="{{ path('post_delete', {id:post.id}) }}" tabindex="110">Delete</a>

@@ -9,7 +9,14 @@
     <ol class="tag-cloud">
         {% for tag in tags %}
             <li class="tag count-{{ tag.posts_count }} weight-{{ tag.weight}}">
-                <a href="{{ path('tag_view', {id:tag.id}) }}" title="{{ tag.posts_count }} posts">{{ tag.title }}</a>
+                <a href="{{ path('tag_view', {id:tag.id}) }}" title="{{ tag.posts_count }} posts">
+                    {{ tag.title }}
+                    {% if tag.wikidata %}
+                        <sup>
+                            <img src="{{ asset('build/images/wikidata-logo.png') }}" alt="Wikidata logo." />
+                        </sup>
+                    {% endif %}
+                </a>
             </li>
         {% endfor %}
     </ol>

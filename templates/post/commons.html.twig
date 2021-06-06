@@ -22,7 +22,7 @@
             </p>
             <p>
                 <label for="caption">Caption:</label>
-                <input type="text" id="caption" name="caption" />
+                <input type="text" id="caption" name="caption" value="{{ post.body }}" />
             </p>
             <p>
                 <label for="depicts">Depicts:</label>
@@ -34,11 +34,6 @@
                     {% endfor %}
                 </select>
             </p>
-            {% for tag in post.tags %}
-                {% if tag.wikidata %}
-                   option value="{{ tag.wikidata }}">{{ tag.title }}</option
-                {% endif %}
-            {% endfor %}
 
             <p>
                 <label for="wikitext">Page wikitext:</label>

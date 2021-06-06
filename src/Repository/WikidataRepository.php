@@ -76,6 +76,13 @@ class WikidataRepository
     public function getData($id): array
     {
         $entity = $this->getEntities([$id])[$id];
+        if (!isset($entity['labels'])) {
+            return [
+                'label' => '',
+                'description' => '',
+                'properties' => [],
+            ];
+        }
         $out = [
             'label' => $entity['labels']['en']['value'] ?? '(No label)',
             'description' => $entity['descriptions']['en']['value'] ?? '(No description)',

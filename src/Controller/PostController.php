@@ -233,7 +233,8 @@ class PostController extends AbstractController
         $post = $id ? $postRepository->find($id) : new Post();
         $postRepository->saveFromRequest($post, $request, $request->files->get('new_file'));
         $this->addFlash('success', 'Post saved.');
-        return $this->redirectToRoute('post_view', ['id' => $post->getId()]);
+        $returnRoute = $request->get('save-edit') ? 'post_edit' : 'post_view';
+        return $this->redirectToRoute($returnRoute, ['id' => $post->getId()]);
     }
 
     /**

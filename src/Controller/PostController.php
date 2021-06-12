@@ -302,8 +302,13 @@ class PostController extends AbstractController
      * @Route("/dates", name="dates")
      * @Route("/D{year}", name="year", requirements={"year"="\d{4}"})
      * @Route("/D{year}{month}", name="month", requirements={"year"="\d{4}", "month"="\d{2}"})
+     * @Route(
+     *     "/D{year}{month}/page-{pageNum}",
+     *     name="month_page",
+     *     requirements={"year"="\d{4}", "month"="\d{2}", "pageNum"="\d+"}
+     * )
      */
-    public function dates(Request $request, PostRepository $postRepository)
+    public function dates(Request $request, PostRepository $postRepository, $pageNum = 1)
     {
         $year = $request->get('year');
         $month = $request->get('month');
@@ -318,18 +323,33 @@ class PostController extends AbstractController
             }
         }
 
+        if ($pageNum === 1 && $request->get('_route') === 'month_page' || $pageNum < 1) {
+            // Ensure only one form of URL for page 1, and avoid page 0.
+            return $this->redirectToRoute('month', ['year' => $year, 'month' => $month]);
+        }
+
         // Page title.
-        $fmt = new IntlDateFormatter(null, IntlDateFormatter::LONG, IntlDateFormatter::NONE);
-        $fmt->setPattern('MMMM YYYY');
-        $title = $fmt->format(mktime(0, 0, 0, $month, 1, $year));
+        if ($month) {
+            $fmt = new IntlDateFormatter(null, IntlDateFormatter::LONG, IntlDateFormatter::NONE);
+            $fmt->setPattern('MMMM YYYY');
+            $title = $fmt->format(mktime(0, 0, 0, $month, 1, $year));
+        } else {
+            $title = $year;
+        }
+
+        $postCount = $postRepository->countByDate($year, $month, $this->getUser());
+        $pageCount = ceil($postCount / 10);
 
         return $this->render('post/dates.html.twig', [
             'title' => $title,
             'year' => $year,
             'month' => $month,
             'years' => $postRepository->getYears(),
-            'months' => $postRepository->getMonths($year),
-            'posts' => $postRepository->findByDateRange($year, $month, $this->getUser()),
+            'months' => $postRepository->getMonths($year, $this->getUser()),
+            'posts' => $postRepository->findByDate($year, $month, $this->getUser(), $pageNum),
+            'post_count' => $postCount,
+            'page_count' => $pageCount,
+            'page_num' => $pageNum,
         ]);
     }
 

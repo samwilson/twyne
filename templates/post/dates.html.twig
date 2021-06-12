@@ -13,11 +13,12 @@
                     <a href="{{ path('year', {year:y}) }}" {% if year == y %}class="current"{% endif %}>{{ y }}</a>
                     {% if year == y %}
                         <ol>
-                            {% for m_num, m_name in months %}
+                            {% for m in months %}
                                 <li>
-                                    <a href="{{ path('month', {year: year, month:m_num}) }}" {% if month == m_num %}class="current"{% endif %}>
-                                        {{ m_name }}
+                                    <a href="{{ path('month', {year: year, month:m.num}) }}" {% if month == m.num %}class="current"{% endif %}>
+                                        {{ m.name }}
                                     </a>
+                                    ({{ m.count }})
                                 </li>
                             {% endfor %}
                         </ol>
@@ -27,6 +28,23 @@
         </ol>
     </nav>
 
-    {% include 'post/_post_list.html.twig' with {posts: posts} %}
+    {% if posts %}
+        {% import "_macros.twig" as macros %}
+        {{ macros.pagination(
+            page_count,
+            page_num,
+            post_count,
+            path('month_page', {year: year, month:month, pageNum: page_num - 1}),
+            path('month_page', {year: year, month:month, pageNum: page_num + 1}),
+        ) }}
+        {% include 'post/_post_list.html.twig' with {posts: posts} %}
+        {{ macros.pagination(
+            page_count,
+            page_num,
+            post_count,
+            path('month_page', {year: year, month:month, pageNum: page_num - 1}),
+            path('month_page', {year: year, month:month, pageNum: page_num + 1}),
+        ) }}
+    {% endif %}
 
 {% endblock %}

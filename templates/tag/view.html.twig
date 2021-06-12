@@ -85,22 +85,22 @@
         <hr class="end" />
     </article>
 
-    <nav class="pagination">
-        {% if page_num == 2 %}
-            <a href="{{ path('tag_view', {id: tag.id}) }}">&larr; Prev</a>
-        {% elseif page_num > 1 %}
-            <a href="{{ path('tag_view_page', {id: tag.id, pageNum: page_num - 1}) }}">&larr; Prev</a>
-        {% else %}
-            <span>&larr; Prev</span>
-        {% endif %}
-        | Page {{ page_num }} of {{ page_count }} ({{ post_count }} posts) |
-        {% if page_num < page_count %}
-            <a href="{{ path('tag_view_page', {id: tag.id, pageNum: page_num + 1}) }}">Next &rarr;</a>
-        {% else %}
-            <span>Next &rarr;</span>
-        {% endif %}
-    </nav>
+    {% import "_macros.twig" as macros %}
 
+    {{ macros.pagination(
+        page_count,
+        page_num,
+        post_count,
+        path('tag_view_page', {id: tag.id, pageNum: page_num - 1}),
+        path('tag_view_page', {id: tag.id, pageNum: page_num + 1})
+    ) }}
     {% include 'post/_post_list.html.twig' with {posts: posts} %}
+    {{ macros.pagination(
+        page_count,
+        page_num,
+        post_count,
+        path('tag_view_page', {id: tag.id, pageNum: page_num - 1}),
+        path('tag_view_page', {id: tag.id, pageNum: page_num + 1})
+    ) }}
 
 {% endblock %}

@@ -10,6 +10,8 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use DateTime;
 use DateTimeZone;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use IntlDateFormatter;
@@ -131,38 +133,66 @@ class PostRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return string[]
+     * @return string[][]
      */
-    public function getMonths($year): array
+    public function getMonths($year, ?User $user = null): array
     {
-        $sql = "SELECT DATE_FORMAT(date, '%m') AS month FROM post
+        $groupList = $user ? $user->getGroupIdList() : false;
+        if (!$groupList) {
+            $groupList = UserGroup::PUBLIC;
+        }
+        $sql = "SELECT DATE_FORMAT(date, '%m') AS month, COUNT(*) AS count FROM post
             WHERE YEAR(date) = :year
+                AND post.view_group_id IN ($groupList)
             GROUP BY MONTH(date)
             ORDER BY month DESC";
         $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
         $stmt->bindParam('year', $year);
         $stmt->execute();
         $months = [];
+        $fmt = new IntlDateFormatter(null, IntlDateFormatter::LONG, IntlDateFormatter::NONE);
+        $fmt->setPattern('MMMM');
         foreach ($stmt->fetchAll() as $row) {
-            $fmt = new IntlDateFormatter(null, IntlDateFormatter::LONG, IntlDateFormatter::NONE);
-            $fmt->setPattern('MMMM');
-            $months[$row['month']] = $fmt->format(mktime(0, 0, 0, $row['month'], 1, $year));
+            $months[$row['month']] = [
+                'name' => $fmt->format(mktime(0, 0, 0, $row['month'], 1, $year)),
+                'count' => $row['count'],
+                'num' => $row['month']
+            ];
         }
         return $months;
     }
 
-    public function findByDateRange($year, $month, ?User $user = null)
+    public function findByDate($year, $month, User $user = null, int $pageNum = 1)
     {
-        $groupList = $user ? $user->getGroupIdList() : UserGroup::PUBLIC;
-        $query = $this->createQueryBuilder('p')
+        $pageSize = 10;
+        return $this->getDateQueryBuilder($year, $month, $user)
+            ->setMaxResults($pageSize)
+            ->setFirstResult(($pageNum - 1) * $pageSize)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function countByDate($year, $month, $user): int
+    {
+        return $this->getDateQueryBuilder($year, $month, $user)
+            ->select('COUNT(p)')
+            ->getQuery()
+            ->getResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
+    }
+
+    private function getDateQueryBuilder($year, $month, $user): QueryBuilder
+    {
+        $groupList = $user ? $user->getGroupIdList() : false;
+        if (!$groupList) {
+            $groupList = UserGroup::PUBLIC;
+        }
+        return $this->createQueryBuilder('p')
             ->andWhere('YEAR(p.date) = :year')
             ->setParameter('year', $year)
             ->andWhere('MONTH(p.date) = :month')
             ->andWhere('p.view_group IN (' . $groupList . ')')
             ->setParameter('month', $month)
             ->orderBy('p.date', 'DESC');
-        return $query->getQuery()
-            ->getResult();
     }
 
     public function saveFromRequest(Post $post, Request $request, ?UploadedFile $uploadedFile = null): void

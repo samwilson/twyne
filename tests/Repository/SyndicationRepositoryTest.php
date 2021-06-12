@@ -1,33 +1,14 @@
 <?php
 
-namespace App\Tests;
+namespace App\Test\Repository;
 
 use App\Entity\Post;
-use App\Kernel;
 use App\Repository\PostRepository;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use App\Tests\Repository\RepositoryTestBase;
 use Symfony\Component\HttpFoundation\Request;
 
-class SyndicationsTest extends KernelTestCase
+class SyndicationRepositoryTest extends RepositoryTestBase
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $entityManager;
-
-    protected static function getKernelClass()
-    {
-        return Kernel::class;
-    }
-
-    public function setUp()
-    {
-        parent::setUp();
-        $kernel = self::bootKernel();
-        $this->entityManager = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
-    }
 
     /**
      * A post can be syndicated to a URL.

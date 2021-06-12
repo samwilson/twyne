@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests;
+namespace App\Test\Repository;
 
 use App\Entity\Contact;
 use App\Entity\File;
@@ -10,44 +10,23 @@ use App\Kernel;
 use App\Repository\PostRepository;
 use App\Repository\UserGroupRepository;
 use App\Repository\UserRepository;
+use App\Tests\Repository\RepositoryTestBase;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Symfony\Bridge\PhpUnit\ClockMock;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 
-class PostTest extends KernelTestCase
+class PostRepositoryTest extends RepositoryTestBase
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $entityManager;
 
-    protected static function getKernelClass()
-    {
-        return Kernel::class;
-    }
+    /** @var PostRepository */
+    protected $postRepo;
 
     protected function setUp(): void
     {
-        // Set a fake clock time of 2020-11-15 07:36:41 and register all our classes that use the time() function.
-        ClockMock::withClockMock(1605425801);
-        ClockMock::register(PostRepository::class);
-        ClockMock::register(PostTest::class);
-        ClockMock::register(Post::class);
-
-        $kernel = self::bootKernel();
-        $this->entityManager = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
-    }
-
-    private function createPost(): Post
-    {
-        /** @var PostRepository $postRepo */
-        $postRepo = self::$container->get(PostRepository::class);
-        return $postRepo->createNew();
+        parent::setUp();
+        $this->postRepo = self::$container->get(PostRepository::class);
     }
 
     public function testAuthor()
@@ -58,7 +37,7 @@ class PostTest extends KernelTestCase
         $this->entityManager->persist($author);
 
         // Test post.
-        $post = $this->createPost();
+        $post = $this->postRepo->createNew();
         $post->setAuthor($author);
         $this->entityManager->persist($post);
 
@@ -75,7 +54,7 @@ class PostTest extends KernelTestCase
      */
     public function testDefaultDate()
     {
-        $post = $this->createPost();
+        $post = $this->postRepo->createNew();
         $this->assertEquals('2020-11-15 07:36:41', $post->getDate()->format('Y-m-d H:i:s'));
     }
 
@@ -90,7 +69,7 @@ class PostTest extends KernelTestCase
         $postRepo = $this->entityManager->getRepository(Post::class);
         $request = new Request([], $postParams);
         $uploadedFile = new UploadedFile($filepath, basename($filepath));
-        $post = $this->createPost();
+        $post = $this->postRepo->createNew();
         $this->assertEquals('2020-11-15 07:36:41', $post->getDate()->format('Y-m-d H:i:s'));
         $postRepo->saveFromRequest($post, $request, $uploadedFile);
         $this->assertEquals($title, $post->getTitle());
@@ -103,32 +82,32 @@ class PostTest extends KernelTestCase
         return [
             [
                 'postParams' => ['title' => 'Test title', 'author' => 'Bob', 'latitude' => '10', 'longitude' => '-20'],
-                'filepath' => __DIR__ . '/data/has_metadata.jpg',
+                'filepath' => dirname(__DIR__) . '/data/has_metadata.jpg',
                 'title' => 'Test title',
                 'date' => '2020-11-14 12:34:56',
                 'location' => new Point(-20, 10),
             ],
             [
                 'postParams' => ['author' => 'Bob'],
-                'filepath' => __DIR__ . '/data/has_metadata.jpg',
+                'filepath' => dirname(__DIR__) . '/data/has_metadata.jpg',
                 'title' => 'has metadata',
                 'date' => '2020-11-14 12:34:56',
             ],
             [
                 'postParams' => ['author' => 'Bob', 'date' => '2020-01-01 13:45:00'],
-                'filepath' => __DIR__ . '/data/has_metadata.jpg',
+                'filepath' => dirname(__DIR__) . '/data/has_metadata.jpg',
                 'title' => 'has metadata',
                 'date' => '2020-01-01 13:45:00',
             ],
             [
                 'postParams' => ['author' => 'Kev'],
-                'filepath' => __DIR__ . '/data/no-metadata.jpg',
+                'filepath' => dirname(__DIR__) . '/data/no-metadata.jpg',
                 'title' => 'no-metadata',
                 'date' => '2020-11-15 07:36:41',
             ],
             [
                 'postParams' => ['author' => 'Bob', 'timezone' => 'Australia/Perth'],
-                'filepath' => __DIR__ . '/data/has_metadata.jpg',
+                'filepath' => dirname(__DIR__) . '/data/has_metadata.jpg',
                 'title' => 'has metadata',
                 'date' => '2020-11-14 04:34:56',
             ],
@@ -137,7 +116,7 @@ class PostTest extends KernelTestCase
 
     public function testFile()
     {
-        $post = $this->createPost();
+        $post = $this->postRepo->createNew();
         $this->entityManager->persist($post);
         $author = new Contact();
         $author->setName('Bob');
@@ -182,7 +161,7 @@ class PostTest extends KernelTestCase
         $this->assertFalse($user2->isInGroup($group));
 
         // Test post.
-        $post = $this->createPost();
+        $post = $this->postRepo->createNew();
         $post->setAuthor($user1->getContact());
         $post->setViewGroup($group);
         $this->entityManager->persist($post);
@@ -212,12 +191,5 @@ class PostTest extends KernelTestCase
         } catch (FileNotFoundException $exception) {
         }
         $this->assertNull($post2->getId());
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        $this->entityManager->close();
-        $this->entityManager = null;
     }
 }

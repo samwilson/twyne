@@ -2,13 +2,10 @@
 
 namespace App\Repository;
 
-use App\Entity\Contact;
-use App\Entity\File;
 use App\Entity\Post;
 use App\Entity\Syndication;
 use App\Entity\User;
 use App\Entity\UserGroup;
-use App\Filesystems;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use DateTime;
 use DateTimeZone;
@@ -28,9 +25,6 @@ use Symfony\Component\Process\Process;
 class PostRepository extends ServiceEntityRepository
 {
 
-    /** @var Filesystems */
-    private $filesystems;
-
     /** @var ContactRepository */
     private $contactRepository;
 
@@ -48,7 +42,6 @@ class PostRepository extends ServiceEntityRepository
 
     public function __construct(
         ManagerRegistry $registry,
-        Filesystems $filesystems,
         ContactRepository $contactRepository,
         TagRepository $tagRepository,
         FileRepository $fileRepository,
@@ -56,7 +49,6 @@ class PostRepository extends ServiceEntityRepository
         UserGroupRepository $userGroupRepository
     ) {
         parent::__construct($registry, Post::class);
-        $this->filesystems = $filesystems;
         $this->contactRepository = $contactRepository;
         $this->tagRepository = $tagRepository;
         $this->fileRepository = $fileRepository;
@@ -274,18 +266,12 @@ class PostRepository extends ServiceEntityRepository
             if (!$this->fileRepository->checkFile($uploadedFile)) {
                 throw new Exception('Unable to save file.');
             }
-            $file = $post->getFile() ?? new File();
-            $file->setPost($post);
-            $file->setMimeType($uploadedFile->getMimeType());
-            $file->setSize($uploadedFile->getSize());
-            $file->setChecksum(sha1_file($uploadedFile->getPathname()));
-            $this->getEntityManager()->persist($file);
-            $post->setFile($file);
-            $this->getEntityManager()->persist($post);
-            $this->getEntityManager()->flush();
-            // Remove before adding, for replacement files with new extensions.
-            $this->filesystems->remove($file);
-            $this->filesystems->write($this->filesystems->data(), $file, $uploadedFile->getPathname());
+            $this->fileRepository->saveFile(
+                $post,
+                $uploadedFile->getPathname(),
+                $uploadedFile->getMimeType(),
+                $uploadedFile->getSize()
+            );
         }
     }
 }

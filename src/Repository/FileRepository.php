@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\File;
 use App\Entity\Post;
 use App\Entity\UserGroup;
+use App\Filesystems;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
@@ -20,9 +21,32 @@ use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
  */
 class FileRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    protected $filesystems;
+
+    public function __construct(ManagerRegistry $registry, Filesystems $filesystems)
     {
         parent::__construct($registry, File::class);
+        $this->filesystems = $filesystems;
+    }
+
+    public function saveFile(Post $post, string $filePath, string $mimeType, int $size): File
+    {
+        $file = $post->getFile() ?? new File();
+        $file->setPost($post);
+        $file->setChecksum(sha1_file($filePath));
+        $file->setMimeType($mimeType);
+        $file->setSize($size);
+
+        $this->getEntityManager()->persist($file);
+        $post->setFile($file);
+        $this->getEntityManager()->persist($post);
+        $this->getEntityManager()->flush();
+
+        // Remove before adding, for replacement files with new extensions.
+        $this->filesystems->remove($file);
+        $this->filesystems->write($this->filesystems->data(), $file, $filePath);
+
+        return $file;
     }
 
     /**

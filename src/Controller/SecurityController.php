@@ -9,15 +9,24 @@ use App\Repository\UserGroupRepository;
 use App\Repository\UserRepository;
 use App\Security\LoginFormAuthenticator;
 use App\Settings;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\Writer\PngWriter;
+use Otp\GoogleAuthenticator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends ControllerBase
 {
+
+    /** @var string */
+    private $twoFASessionKey = 'twyne-2fa-secret';
 
     /**
      * @Route("/register", name="register")
@@ -67,20 +76,67 @@ class SecurityController extends ControllerBase
      */
     public function login(AuthenticationUtils $authenticationUtils, Settings $settings): Response
     {
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
-
-        // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
-        $lastUsername = $authenticationUtils->getLastUsername();
+        if ($error) {
+            if ($error instanceof AuthenticationException) {
+                $this->addFlash(self::FLASH_ERROR, 'Incorrect username, password, and/or 2FA key.');
+            } else {
+                $this->addFlash(self::FLASH_ERROR, $error->getMessage());
+            }
+        }
 
         return $this->render('security/login.html.twig', [
-            'last_username' => $lastUsername,
-            'error' => $error,
+            'last_username' => $authenticationUtils->getLastUsername(),
             'user_registrations' => $settings->userRegistrations(),
         ]);
+    }
+
+    /**
+     * @Route("/2fa", name="2fa_get", methods={"GET"})
+     */
+    public function twoFASetup(Settings $settings, SessionInterface $session)
+    {
+        if (!$this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
+        $label = $settings->siteName() . ' (' . $this->getUser()->getUsername() . ')';
+        $secret = GoogleAuthenticator::generateRandom();
+        $session->set($this->twoFASessionKey, $secret);
+        $qrCode = Builder::create()
+            ->writer(new PngWriter())
+            ->data(GoogleAuthenticator::getKeyUri('totp', $label, $secret))
+            ->encoding(new Encoding('UTF-8'))
+            ->size(300)
+            ->build()
+            ->getDataUri();
+        return $this->render('security/2fa.html.twig', [
+            'secret' => $secret,
+            'qr_code' => $qrCode,
+        ]);
+    }
+
+    /**
+     * @Route("/2fa", name="2fa_post", methods={"POST"})
+     */
+    public function twoFAVerification(SessionInterface $session, Request $request, UserRepository $userRepository)
+    {
+        if ($this->getUser()->getTwoFASecret()) {
+            return $this->redirectToRoute('home');
+        }
+
+        $secret = $session->get($this->twoFASessionKey);
+        $session->remove($this->twoFASessionKey);
+        $key = $request->get('verification');
+        if (!$secret || !$key || !$this->getUser()) {
+            return $this->redirectToRoute('2fa_get');
+        }
+
+        if ($userRepository->checkTwoFA($secret, $key)) {
+            $this->getUser()->setTwoFASecret($secret);
+            $userRepository->save($this->getUser());
+            // @TODO cache used key and check before using it.
+        }
+        return $this->redirectToRoute('home');
     }
 
     /**

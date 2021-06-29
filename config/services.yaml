@@ -46,3 +46,7 @@ services:
     App\Repository\WikidataRepository:
         arguments:
             $wikidataUrl: '%env(APP_WIKIDATA_URL)%'
+
+    App\EventListener\ControllerListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller }

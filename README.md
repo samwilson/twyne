@@ -7,7 +7,7 @@ A web-based journal for writing and photography.
 
 ## Requirements
 
-* PHP (7.2 or above)
+* PHP (7.3 or above)
 * MariaDB (10.3 or above) or MySQL (5.7 or above)
 * Shell access
 

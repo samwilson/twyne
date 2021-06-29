@@ -4,7 +4,7 @@
     "description": "A web-based journal for writing and photography.",
     "license": "GPL-3.0-or-later",
     "require": {
-        "php": ">=7.2.5",
+        "php": ">=7.3",
         "ext-ctype": "*",
         "ext-curl": "*",
         "ext-dom": "*",
@@ -61,7 +61,7 @@
     "config": {
         "optimize-autoloader": true,
         "platform": {
-            "php": "7.2.9"
+            "php": "7.3"
         },
         "preferred-install": {
             "*": "dist"

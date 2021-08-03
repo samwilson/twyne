@@ -17,7 +17,6 @@ use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
 use IntlDateFormatter;
 use PHPUnit\Util\Json;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +26,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class PostController extends AbstractController
+class PostController extends ControllerBase
 {
 
     /**
@@ -106,7 +105,7 @@ class PostController extends AbstractController
             }
             $entityManager->remove($post);
             $entityManager->flush();
-            $this->addFlash('success', 'Post deleted.');
+            $this->addFlash(self::FLASH_SUCCESS, 'Post deleted.');
             return $this->redirectToRoute('home');
         }
         return $this->render('post/delete.html.twig', [
@@ -137,12 +136,12 @@ class PostController extends AbstractController
         $files = $request->files->get('files');
         foreach ($files as $uploadedFile) {
             if (!$fileRepository->checkFile($uploadedFile)) {
-                $this->addFlash('notice', 'Unable to upload file: ' . $uploadedFile->getClientOriginalName());
+                $this->addFlash(self::FLASH_NOTICE, 'Unable to upload file: ' . $uploadedFile->getClientOriginalName());
                 continue;
             }
             $post = new Post();
             $postRepository->saveFromRequest($post, $request, $uploadedFile);
-            $this->addFlash('success', 'Uploaded: P' . $post->getId() . ' — ' . $post->getTitle());
+            $this->addFlash(self::FLASH_SUCCESS, 'Uploaded: P' . $post->getId() . ' — ' . $post->getTitle());
         }
         return $this->redirectToRoute('post_upload');
     }
@@ -232,7 +231,7 @@ class PostController extends AbstractController
         /** @var Post $post */
         $post = $id ? $postRepository->find($id) : new Post();
         $postRepository->saveFromRequest($post, $request, $request->files->get('new_file'));
-        $this->addFlash('success', 'Post saved.');
+        $this->addFlash(self::FLASH_SUCCESS, 'Post saved.');
         $returnRoute = $request->get('save-edit') ? 'post_edit' : 'post_view';
         return $this->redirectToRoute($returnRoute, ['id' => $post->getId()]);
     }

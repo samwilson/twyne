@@ -3,12 +3,11 @@
 namespace App\Controller;
 
 use App\Settings;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-class SettingController extends AbstractController
+class SettingController extends ControllerBase
 {
     /**
      * @Route("/settings", name="settings")
@@ -18,7 +17,7 @@ class SettingController extends AbstractController
     {
         if ($request->isMethod('POST')) {
             $settings->saveData($request->get('settings', []));
-            $this->addFlash('success', 'Settings saved.');
+            $this->addFlash(self::FLASH_SUCCESS, 'Settings saved.');
             return $this->redirectToRoute('settings');
         }
         return $this->render('setting/index.html.twig', [

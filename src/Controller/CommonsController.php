@@ -7,14 +7,13 @@ use App\Repository\CommonsRepository;
 use App\Repository\PostRepository;
 use App\Repository\SyndicationRepository;
 use App\Repository\WikidataRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class CommonsController extends AbstractController
+class CommonsController extends ControllerBase
 {
 
     /**
@@ -108,11 +107,11 @@ class CommonsController extends AbstractController
         if (isset($uploaded['warnings'])) {
             foreach ($uploaded['warnings'] as $key => $val) {
                 $formattedVal = is_string($val) ? $val : var_export($val, true);
-                $this->addFlash('error', "Unable to upload to Commons. $key: $formattedVal");
+                $this->addFlash(self::FLASH_ERROR, "Unable to upload to Commons. $key: $formattedVal");
             }
         }
 
-        $this->addFlash('success', 'Uploaded: ' . $uploaded['url']);
+        $this->addFlash(self::FLASH_SUCCESS, 'Uploaded: ' . $uploaded['url']);
         return $this->redirectToRoute('post_view', ['id' => $id]);
     }
 }

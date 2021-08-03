@@ -7,7 +7,6 @@ use App\Repository\UserRepository;
 use App\Settings;
 use Exception;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
@@ -18,7 +17,7 @@ use SymfonyCasts\Bundle\ResetPassword\Controller\ResetPasswordControllerTrait;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
 
-class ResetPasswordController extends AbstractController
+class ResetPasswordController extends ControllerBase
 {
     use ResetPasswordControllerTrait;
 
@@ -113,7 +112,7 @@ class ResetPasswordController extends AbstractController
             /** @var User $user */
             $user = $this->resetPasswordHelper->validateTokenAndFetchUser($token);
         } catch (ResetPasswordExceptionInterface $e) {
-            $this->addFlash('error', $e->getReason());
+            $this->addFlash(self::FLASH_ERROR, $e->getReason());
             return $this->redirectToRoute('reset');
         }
 
@@ -129,7 +128,7 @@ class ResetPasswordController extends AbstractController
         $pass = $request->get('password');
         $pass2 = $request->get('password_verification');
         if (!$pass || !$pass2 || $pass !== $pass2) {
-            $this->addFlash('error', 'Passwords do not match.');
+            $this->addFlash(self::FLASH_ERROR, 'Passwords do not match.');
             return $this->redirectToRoute('reset_token');
         }
 
@@ -142,7 +141,7 @@ class ResetPasswordController extends AbstractController
         $em->persist($user);
         $em->flush();
         $this->cleanSessionAfterReset();
-        $this->addFlash('success', 'Password changed. You can now log in with your new password.');
+        $this->addFlash(self::FLASH_SUCCESS, 'Password changed. You can now log in with your new password.');
         return $this->redirectToRoute('login');
     }
 }

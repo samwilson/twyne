@@ -29,11 +29,13 @@ class ControllerListener
         }
 
         // Others might need special responses.
-        $authResponse = $controller->getAuthResponse();
-        if ($authResponse) {
-            $event->setController(function () use ($authResponse) {
-                return $authResponse;
-            });
+        if ($controller instanceof ControllerBase) {
+            $authResponse = $controller->getAuthResponse();
+            if ($authResponse) {
+                $event->setController(function () use ($authResponse) {
+                    return $authResponse;
+                });
+            }
         }
     }
 }

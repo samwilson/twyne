@@ -2,7 +2,9 @@
 
 namespace App;
 
+use App\Entity\Contact;
 use App\Entity\Setting;
+use App\Repository\ContactRepository;
 use App\Repository\SettingRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -11,6 +13,15 @@ class Settings
 
     /** @var SettingRepository */
     private $settingRepository;
+
+    /** @var ContactRepository */
+    private $contactRepository;
+
+    /** @var int */
+    private $mainContactId;
+
+    /** @var Contact|null */
+    private $mainContact;
 
     /** @var EntityManagerInterface */
     private $entityManager;
@@ -26,11 +37,15 @@ class Settings
 
     public function __construct(
         SettingRepository $settingRepository,
+        ContactRepository $contactRepository,
+        int $mainContactId,
         EntityManagerInterface $entityManager,
         string $projectDir,
         string $mailFrom
     ) {
         $this->settingRepository = $settingRepository;
+        $this->contactRepository = $contactRepository;
+        $this->mainContactId = $mainContactId;
         $this->entityManager = $entityManager;
         $this->projectDir = $projectDir;
         $this->mailFrom = $mailFrom;
@@ -147,5 +162,13 @@ class Settings
     public function flickrTokenSecret(): string
     {
         return $this->getData()['flickr_token_secret'] ?? '';
+    }
+
+    public function getMainContact(): ?Contact
+    {
+        if ($this->mainContact === null) {
+            $this->mainContact = $this->contactRepository->find($this->mainContactId ?? 1);
+        }
+        return $this->mainContact;
     }
 }

@@ -46,12 +46,22 @@
 
         </main>
         <footer>
-            <ul>
-                <li>Powered by <a href="https://github.com/samwilson/twyne">Twyne</a> <dfn title="Current application version">{{ git_tag() }}</dfn></li>
-                <li><a href="https://github.com/samwilson/twyne/issues">Issues</a></li>
-                <li><a href="https://github.com/samwilson/twyne">Source code</a></li>
-                <li><a href="https://www.gnu.org/licenses/gpl-3.0-standalone.html">GPL 3.0+</a></li>
-            </ul>
+            <div class="footer-inner">
+                {% if settings.mainContact %}
+                    <div class="h-card">
+                        <p><strong class="p-name">{{ settings.mainContact.name }}</strong></p>
+                        <p>
+                            <a class="u-url" rel="me" href="{{ settings.mainContact.homepage }}">🔗 {{ settings.mainContact.homepage }}</a>
+                            <a class="u-email" rel="me" href="mailto:{{ settings.mainContact.user.email }}">📧 {{ settings.mainContact.user.email }}</a>
+                        </p>
+                        <div class="p-note">{{ settings.mainContact.descriptionPublic|markdownToHtml|raw }}</div>
+                    </div>
+                {% endif %}
+                <p class="powered-by">
+                    Powered by <a href="https://github.com/samwilson/twyne">Twyne</a>
+                    <dfn title="Current application version">{{ git_tag() }}</dfn>
+                </p>
+            </div>
         </footer>
         <script>
             const appBaseUrl = "{{ url('home') }}";

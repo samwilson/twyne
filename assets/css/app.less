@@ -73,28 +73,39 @@ table {
 body {
   color: @font-color;
   font-family: @font-family;
-  display: flex;
-  flex-direction: column;
 }
 
 body > main {
-  flex: 10;
   padding: 1rem;
 }
 
 body > footer {
-  flex: 1;
-  text-align: right;
-  font-size: smaller;
   border-top: @border-primary;
   padding: 1rem;
 
-  ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    li { flex: 1; }
+  .footer-inner {
+    max-width: 99em;
+    margin: auto;
+  }
+
+  .p-name {
+    display: block;
+    font-size: larger;
+    color: inherit;
+  }
+
+  .u-email {
+    display: inline-block;
+    margin-left: 2em;
+  }
+
+  .p-note {
+    max-width: 40em;
+  }
+
+  .powered-by {
+    margin-top: 3em;
+    font-size: smaller;
   }
 }
 

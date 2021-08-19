@@ -8,21 +8,23 @@
 
 <form class="login" method="post">
 
-    {% if error %}
-        <div class="text-orange-500 bg-orange-100 px-4 mx-0">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
-
     <p>
         <span class="field size-1">
-            <label for="username">Username</label>
+            <label for="username">Username:</label>
             <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                   id="username" type="text" name="username" autofocus value="{{ last_username|e('html_attr') }}" required>
+                   id="username" type="text" name="username" autofocus value="{{ last_username|e('html_attr') }}" required />
         </span>
     </p>
     <p>
         <span class="field size-1">
-            <label for="password">Password</label>
-            <input id="password" type="password" required name="password">
+            <label for="password">Password:</label>
+            <input id="password" type="password" required name="password" />
+        </span>
+    </p>
+    <p>
+        <span class="field size-1">
+            <label for="two_fa_key">2FA key (if you have enabled it):</label>
+            <input id="two_fa_key" type="text" name="two_fa_key" />
         </span>
     </p>
     <p>

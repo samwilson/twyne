@@ -14,6 +14,12 @@
     "aws/aws-sdk-php": {
         "version": "3.185.3"
     },
+    "bacon/bacon-qr-code": {
+        "version": "2.0.4"
+    },
+    "christian-riesen/otp": {
+        "version": "2.7.0"
+    },
     "composer/package-versions-deprecated": {
         "version": "1.11.99.2"
     },
@@ -34,6 +40,9 @@
             "version": "4.0",
             "ref": "56eaa387b5e48ebcc7c95a893b47dfa1ad51449c"
         }
+    },
+    "dasprid/enum": {
+        "version": "1.0.3"
     },
     "doctrine/annotations": {
         "version": "1.0",
@@ -118,6 +127,9 @@
     "egulias/email-validator": {
         "version": "3.1.1"
     },
+    "endroid/qr-code": {
+        "version": "4.2.1"
+    },
     "ergebnis/composer-normalize": {
         "version": "2.15.0"
     },
@@ -178,6 +190,12 @@
     "nikic/php-parser": {
         "version": "v4.10.5"
     },
+    "paragonie/constant_time_encoding": {
+        "version": "v2.4.0"
+    },
+    "php": {
+        "version": "7.3"
+    },
     "psr/cache": {
         "version": "1.0.1"
     },
@@ -226,6 +244,9 @@
     "symfony/asset": {
         "version": "v5.2.10"
     },
+    "symfony/browser-kit": {
+        "version": "v5.2.12"
+    },
     "symfony/cache": {
         "version": "v5.2.10"
     },
@@ -247,6 +268,9 @@
             "bin/console"
         ]
     },
+    "symfony/css-selector": {
+        "version": "v5.2.12"
+    },
     "symfony/dependency-injection": {
         "version": "v5.2.10"
     },
@@ -255,6 +279,9 @@
     },
     "symfony/doctrine-bridge": {
         "version": "v5.2.10"
+    },
+    "symfony/dom-crawler": {
+        "version": "v5.2.12"
     },
     "symfony/dotenv": {
         "version": "v5.2.10"

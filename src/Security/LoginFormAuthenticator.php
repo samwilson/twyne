@@ -3,12 +3,15 @@
 namespace App\Security;
 
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Core\Security;
@@ -31,16 +34,21 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
     private $csrfTokenManager;
     private $passwordEncoder;
 
+    /** @var UserRepository */
+    private $userRepository;
+
     public function __construct(
         EntityManagerInterface $entityManager,
         UrlGeneratorInterface $urlGenerator,
         CsrfTokenManagerInterface $csrfTokenManager,
-        UserPasswordEncoderInterface $passwordEncoder
+        UserPasswordEncoderInterface $passwordEncoder,
+        UserRepository $userRepository
     ) {
         $this->entityManager = $entityManager;
         $this->urlGenerator = $urlGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->passwordEncoder = $passwordEncoder;
+        $this->userRepository = $userRepository;
     }
 
     public function supports(Request $request)
@@ -54,6 +62,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
         $credentials = [
             'username' => $request->request->get('username'),
             'password' => $request->request->get('password'),
+            'two_fa_key' => $request->request->get('two_fa_key'),
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
         $request->getSession()->set(
@@ -84,7 +93,18 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
+        $validPassword = $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
+        if (!$validPassword) {
+            throw new BadCredentialsException();
+        }
+        $twoFA = true;
+        if ($user->getTwoFASecret()) {
+            $twoFA = $this->userRepository->checkTwoFA($user->getTwoFASecret(), $credentials['two_fa_key']);
+            if (!$twoFA) {
+                throw new BadCredentialsException();
+            }
+        }
+        return $validPassword && $twoFA;
     }
 
     /**

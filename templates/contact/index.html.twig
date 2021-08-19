@@ -26,6 +26,9 @@
                     <td>
                         {% if contact.user %}
                             <code>{{ contact.user.username }}</code>
+                            {% if contact.user.twoFASecret %}
+                                2FA
+                            {% endif %}
                         {% endif %}
                     </td>
                     <td>

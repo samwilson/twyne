@@ -52,6 +52,11 @@ class User implements UserInterface
      */
     private $groups;
 
+    /**
+     * @ORM\Column(name="2fa_secret", type="string", nullable=true)
+     */
+    private $twoFASecret;
+
     public function __construct()
     {
         $this->groups = new ArrayCollection();
@@ -209,5 +214,15 @@ class User implements UserInterface
             }
         }
         return false;
+    }
+
+    public function getTwoFASecret(): ?string
+    {
+        return $this->twoFASecret;
+    }
+
+    public function setTwoFASecret(?string $twoFASecret): void
+    {
+        $this->twoFASecret = $twoFASecret;
     }
 }

@@ -7,6 +7,8 @@ use App\Entity\User;
 use App\Entity\UserGroup;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Otp\Otp;
+use ParagonIE\ConstantTime\Encoding as ConstantTimeEncoding;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -59,5 +61,23 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->addGroup($this->userGroupRepository->find(UserGroup::PUBLIC));
         $this->getEntityManager()->persist($user);
         return $user;
+    }
+
+    public function save(User $user): void
+    {
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * @param string $secret
+     * @param string $key
+     * @return bool
+     */
+    public function checkTwoFA(string $secret, string $key): bool
+    {
+        $sanitizedKey = preg_replace('/[^0-9]/', '', $key);
+        $otp = new Otp();
+        return $otp->checkTotp(ConstantTimeEncoding::base32DecodeUpper($secret), $sanitizedKey);
     }
 }

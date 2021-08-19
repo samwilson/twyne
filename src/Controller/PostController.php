@@ -30,15 +30,6 @@ class PostController extends ControllerBase
 {
 
     /**
-     * @return User|null
-     */
-    protected function getUser()
-    {
-        return parent::getUser();
-    }
-
-
-    /**
      * @Route("/", name="home")
      */
     public function home(PostRepository $postRepository): Response

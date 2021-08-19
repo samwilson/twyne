@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Set up two-factor authentication{% endblock %}
+
+{% block body %}
+
+    <h1></h1>
+
+    <form method="post" class="login" action="{{ path('2fa_post') }}">
+
+        <p>Scan this with your TOPT app:</p>
+
+        <p><img src="{{ qr_code }}" alt="QR code" /></p>
+
+        <p>Or type this:<br /><code>{{ secret }}</code></p>
+
+        <p class="fields">
+            <span class="field size-1">
+                <label for="verification">Enter the six-digit verification code here:</label>
+                <input type="text" name="verification" id="verification" required />
+            </span>
+        </p>
+
+        <p>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('2fa') }}">
+            <span class="field size-1">
+                <input type="submit" value="Enable 2FA" />
+            </span>
+        </p>
+    </form>
+
+{% endblock %}

@@ -7,9 +7,10 @@ Prerequesites
 To install Twyne, you need the following:
 
 1. a web server with PHP 7.3 or above;
-2. command-line access to that server;
-3. the `Git`_ version control system; and
-4. the PHP package manager, `Composer`_.
+2. MariaDB (10.3 or above) or MySQL (5.7 or above)
+3. command-line access to that server;
+4. the `Git`_ version control system; and
+5. the PHP package manager, `Composer`_.
 
 .. _`Git`: https://git-scm.com/
 .. _`Composer`: https://getcomposer.org/

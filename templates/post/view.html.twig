@@ -35,9 +35,11 @@
                 #}<span class="p-name">{{ post.author.name }}</span>{#
                 #}{% if post.author.homepage %}</a>{% endif %}{#
             #}.
-            <time datetime="{{ post.date.format('Y-m-d\\TH:i:s\\Z') }}" class="dt-published">
-                {{ post.date.format('Y F j (l), g:iA') }}
-            </time>
+            <a href="{{ path('month', {year:post.date.format('Y'), month: post.date.format('m') }) }}">
+                <time datetime="{{ post.date.format('Y-m-d\\TH:i:s\\Z') }}" class="dt-published">
+                    {{ post.date.format('Y F j (l), g:iA') }}
+                </time>
+            </a>
             {% if post.url %}
                 <span class="url">URL: <a href="{{ post.url }}">{{ post.url }}</a></span>
             {% endif %}

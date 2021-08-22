@@ -5,7 +5,7 @@
         // Convert to local browser time for actual display.
         const date = new Date(Date.parse(timeEl.dateTime));
         const options = {
-            timeZoneName: 'long',
+            timeZoneName: 'short',
             year: 'numeric',
             month: 'long',
             day: 'numeric',

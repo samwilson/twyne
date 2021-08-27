@@ -67,6 +67,7 @@ jobs:
         fi
         echo DATABASE_URL=$DATABASE_URL > .env.test.local
         sudo apt-get update -q
+        sudo apt-get --fix-broken install
         sudo apt-get install -y exiftool
         composer install
         ./bin/console doctrine:migrations:migrate

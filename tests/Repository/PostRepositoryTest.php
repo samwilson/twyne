@@ -12,6 +12,7 @@ use App\Repository\UserGroupRepository;
 use App\Repository\UserRepository;
 use App\Tests\Repository\RepositoryTestBase;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use DateTime;
 use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -27,6 +28,17 @@ class PostRepositoryTest extends RepositoryTestBase
     {
         parent::setUp();
         $this->postRepo = self::$container->get(PostRepository::class);
+    }
+
+    private function getTestPost(): Post
+    {
+        $post = $this->postRepo->createNew();
+        $this->entityManager->persist($post);
+        $author = new Contact();
+        $author->setName('Bob');
+        $this->entityManager->persist($author);
+        $post->setAuthor($author);
+        return $post;
     }
 
     public function testAuthor()
@@ -116,12 +128,7 @@ class PostRepositoryTest extends RepositoryTestBase
 
     public function testFile()
     {
-        $post = $this->postRepo->createNew();
-        $this->entityManager->persist($post);
-        $author = new Contact();
-        $author->setName('Bob');
-        $this->entityManager->persist($author);
-        $post->setAuthor($author);
+        $post = $this->getTestPost();
 
         $file = new File();
         $file->setSize(100);
@@ -191,5 +198,25 @@ class PostRepositoryTest extends RepositoryTestBase
         } catch (FileNotFoundException $exception) {
         }
         $this->assertNull($post2->getId());
+    }
+
+    public function testNextAndPrevPosts()
+    {
+        $post1 = $this->getTestPost();
+        $post2 = $this->getTestPost();
+        $post3 = $this->getTestPost();
+        $post1->setDate(new DateTime('2021-08-24 12:00:00'));
+        $post2->setDate(new DateTime('2021-08-24 13:00:00'));
+        $post3->setDate(new DateTime('2021-08-24 13:00:00'));
+        $this->entityManager->persist($post1);
+        $this->entityManager->persist($post2);
+        $this->entityManager->persist($post3);
+        $this->entityManager->flush();
+        $this->assertSame($post2, $this->postRepo->findNextByDate($post1));
+        $this->assertSame($post3, $this->postRepo->findNextByDate($post2));
+        $this->assertNull($this->postRepo->findNextByDate($post3));
+        $this->assertNull($this->postRepo->findPrevByDate($post1));
+        $this->assertSame($post1, $this->postRepo->findPrevByDate($post2));
+        $this->assertSame($post2, $this->postRepo->findPrevByDate($post3));
     }
 }

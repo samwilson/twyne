@@ -73,6 +73,8 @@ class PostController extends ControllerBase
             'contacts' => $contactRepository->findBy([], ['name' => 'ASC']),
             'max_filesize' => UploadedFile::getMaxFilesize(),
             'user_groups' => $userGroupRepository->findAll(),
+            'prev_post' => $postRepository->findPrevByDate($post, $this->getUser()),
+            'next_post' => $postRepository->findNextByDate($post, $this->getUser()),
         ]);
     }
 
@@ -285,6 +287,8 @@ class PostController extends ControllerBase
         }
         return $this->render('post/view.html.twig', [
             'post' => $post,
+            'prev_post' => $postRepository->findPrevByDate($post, $this->getUser()),
+            'next_post' => $postRepository->findNextByDate($post, $this->getUser()),
         ]);
     }
 

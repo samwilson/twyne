@@ -44,6 +44,23 @@
                 <span class="url">URL: <a href="{{ post.url }}">{{ post.url }}</a></span>
             {% endif %}
         </p>
+        <nav>
+            <span class="prev-post">
+                {% if prev_post %}
+                    <a rel="prev" href="{{ path('post_view', {id:prev_post.id}) }}">&larr; Previous</a>
+                {% else %}
+                    &larr; Previous
+                {% endif %}
+            </span>
+            &middot;
+            <span class="next-post">
+                {% if next_post %}
+                    <a rel="prev" href="{{ path('post_view', {id:next_post.id}) }}">Next &rarr;</a>
+                {% else %}
+                    Next &rarr;
+                {% endif %}
+            </span>
+        </nav>
 
             {% if is_granted('ROLE_ADMIN') %}
                 <p>

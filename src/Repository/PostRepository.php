@@ -11,6 +11,8 @@ use DateTime;
 use DateTimeZone;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\Query\Expr;
+use Doctrine\ORM\Query\Expr\OrderBy;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
@@ -160,6 +162,50 @@ class PostRepository extends ServiceEntityRepository
             ];
         }
         return $months;
+    }
+
+    public function findPrevByDate(Post $post, ?User $user = null): ?Post
+    {
+        $groupList = $user ? $user->getGroupIdList() : false;
+        if (!$groupList) {
+            $groupList = UserGroup::PUBLIC;
+        }
+        $qb = $this->createQueryBuilder('p');
+        $orderBy = new OrderBy();
+        $orderBy->add('p.date', 'DESC');
+        $orderBy->add('p.id', 'DESC');
+        $out = $qb
+            ->andWhere('p.view_group IN (' . $groupList . ')')
+            ->andWhere($qb->expr()->orX('p.date < :date', 'p.date = :date AND p.id < :id'))
+            ->setParameter('date', $post->getDate())
+            ->setParameter('id', $post->getId())
+            ->orderBy($orderBy)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+        return $out[0] ?? null;
+    }
+
+    public function findNextByDate(Post $post, ?User $user = null): ?Post
+    {
+        $groupList = $user ? $user->getGroupIdList() : false;
+        if (!$groupList) {
+            $groupList = UserGroup::PUBLIC;
+        }
+        $qb = $this->createQueryBuilder('p');
+        $orderBy = new OrderBy();
+        $orderBy->add('p.date', 'ASC');
+        $orderBy->add('p.id', 'ASC');
+        $out = $qb
+            ->andWhere('p.view_group IN (' . $groupList . ')')
+            ->andWhere($qb->expr()->orX('p.date > :date', 'p.date = :date AND p.id > :id'))
+            ->setParameter('date', $post->getDate())
+            ->setParameter('id', $post->getId())
+            ->orderBy($orderBy)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+        return $out[0] ?? null;
     }
 
     public function findByDate($year, $month, User $user = null, int $pageNum = 1)

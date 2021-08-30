@@ -19,7 +19,7 @@
                 <caption>
                     <img src="{{ asset('build/images/wikidata-logo.png') }}" alt="Wikidata logo." />
                     Wikidata item
-                    <a href="https://www.wikidata.org/wiki/{{ tag.wikidata }}">{{ tag.wikidata }}</a>:
+                    <a href="https://www.wikidata.org/wiki/{{ entity.id }}">{{ entity.id }}</a>:
                     <strong>{{ entity.label }}</strong>
                     {% if entity.description %}
                         &mdash; <dfn>{{ entity.description }}</dfn>

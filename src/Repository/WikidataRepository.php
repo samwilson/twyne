@@ -70,20 +70,23 @@ class WikidataRepository
     }
 
     /**
-     * @param $id
-     * @return array With keys 'label', 'description', 'properties' and maybe 'authorities'.
+     * @param string $id
+     * @return array With keys 'id', 'label', 'description', 'properties' and maybe 'authorities'.
+     * The ID will differ from $id if the entity has been redirected.
      */
-    public function getData($id): array
+    public function getData(string $id): array
     {
         $entity = $this->getEntities([$id])[$id];
         if (!isset($entity['labels'])) {
             return [
+                'id' => '',
                 'label' => '',
                 'description' => '',
                 'properties' => [],
             ];
         }
         $out = [
+            'id' => $entity['id'],
             'label' => $entity['labels']['en']['value'] ?? '(No label)',
             'description' => $entity['descriptions']['en']['value'] ?? '(No description)',
             'properties' => [],
@@ -177,11 +180,13 @@ class WikidataRepository
                     throw new Exception('Entities not found in response.');
                 }
                 foreach ($responseData['entities'] as $entity) {
+                    // Handle redirected IDs, storing them under the original ID rather than the actual one.
+                    $entityId = $entity['redirects']['from'] ?? $entity['id'];
                     // Cache each entity for two weeks.
-                    $cacheItems[$entity['id']]->set($entity);
-                    $cacheItems[$entity['id']]->expiresAfter(new DateInterval('P14D'));
-                    $this->cache->save($cacheItems[$entity['id']]);
-                    $out[$entity['id']] = $entity;
+                    $cacheItems[$entityId]->set($entity);
+                    $cacheItems[$entityId]->expiresAfter(new DateInterval('P14D'));
+                    $this->cache->save($cacheItems[$entityId]);
+                    $out[$entityId] = $entity;
                 }
             }
             $this->cache->commit();

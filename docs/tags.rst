@@ -9,6 +9,10 @@ and on that page it has
 a title (which must be unique),
 and optional description (which uses the same syntax as Post bodies).
 
+A Tag's page has a list of Posts, which is paginated if there are more than ten posts.
+The first page has a URL of the form ``/Txx`` and subsequent pages ``/Txx/page-n`` (where ``n`` is 2 or greater).
+The layout of each post is the same as for the chronological listings of posts.
+
 Wikidata
 --------
 

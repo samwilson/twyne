@@ -18,6 +18,9 @@ abstract class ControllerBase extends AbstractController
     /** @var string */
     protected const FLASH_SUCCESS = 'success';
 
+    /** @var bool */
+    private $requireTwoFactorAuth;
+
     /**
      * @return User|null
      */
@@ -26,13 +29,18 @@ abstract class ControllerBase extends AbstractController
         return parent::getUser();
     }
 
+    public function __construct($requireTwoFactorAuth)
+    {
+        $this->requireTwoFactorAuth = $requireTwoFactorAuth;
+    }
+
     /**
      * Get authorization response (e.g. 403, redirect, etc.).
      * This is used in \App\EventListener\ControllerListener (which is why it's public).
      */
     public function getAuthResponse(): ?Response
     {
-        if (!$this->getUser() || $this->getUser()->getTwoFASecret()) {
+        if (!$this->requireTwoFactorAuth || !$this->getUser() || $this->getUser()->getTwoFASecret()) {
             return null;
         }
         $this->addFlash(self::FLASH_NOTICE, 'Please set up 2FA.');

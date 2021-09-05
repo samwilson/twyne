@@ -40,7 +40,7 @@ class TagController extends ControllerBase
         }
         $postCount = $tagRepository->countPosts($tag, $this->getUser());
         $pageCount = ceil($postCount / 10);
-        if ($pageNum > $pageCount) {
+        if ($pageCount > 0 && $pageNum > $pageCount) {
             // Redirect to last page.
             return $this->redirectToRoute('tag_view_page', ['id' => $tag->getId(), 'pageNum' => $pageCount]);
         }

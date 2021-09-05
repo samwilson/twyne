@@ -1,20 +1,25 @@
 {% macro pagination(page_count, page_num, post_count, href_prev, href_next) %}
-    <nav class="pagination">
 
-        {% if page_num > 1 %}
-            <a href="{{ href_prev }}">&larr; Prev</a>
-        {% else %}
-            <span class="disabled">&larr; Prev</span>
-        {% endif %}
+    {% if page_count > 0 %}
 
-        | Page {{ page_num }} of {{ page_count }} ({{ post_count }} posts) |
+        <nav class="pagination">
 
-        {% if page_num < page_count %}
-            <a href="{{ href_next }}">Next &rarr;</a>
-        {% else %}
-            <span class="disabled">Next &rarr;</span>
-        {% endif %}
+            {% if page_num > 1 %}
+                <a href="{{ href_prev }}">&larr; Prev</a>
+            {% else %}
+                <span class="disabled">&larr; Prev</span>
+            {% endif %}
 
-    </nav>
+            | Page {{ page_num }} of {{ page_count }} ({{ post_count }} posts) |
+
+            {% if page_num < page_count %}
+                <a href="{{ href_next }}">Next &rarr;</a>
+            {% else %}
+                <span class="disabled">Next &rarr;</span>
+            {% endif %}
+
+        </nav>
+
+    {% endif %}
 
 {% endmacro %}

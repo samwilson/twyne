@@ -20,7 +20,7 @@ class ControllerListener
         /** @var ControllerBase $controller */
         $controller = $event->getController()[0];
 
-        // Some controllers are special and don't need interferring with.
+        // Some controllers are special and don't need interfering with.
         if (
             $controller instanceof SecurityController
             || $controller instanceof ResetPasswordController

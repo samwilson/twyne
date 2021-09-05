@@ -23,8 +23,9 @@ class ResetPasswordController extends ControllerBase
 
     private $resetPasswordHelper;
 
-    public function __construct(ResetPasswordHelperInterface $resetPasswordHelper)
+    public function __construct(bool $requireTwoFactorAuth, ResetPasswordHelperInterface $resetPasswordHelper)
     {
+        parent::__construct($requireTwoFactorAuth);
         $this->resetPasswordHelper = $resetPasswordHelper;
     }
 

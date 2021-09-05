@@ -13,12 +13,49 @@ use Symfony\Component\Process\Process;
 class Filesystems
 {
 
-    /** @var Settings */
-    private $settings;
+    /** @var string */
+    private $dataStore;
 
-    public function __construct(Settings $settings)
-    {
-        $this->settings = $settings;
+    /** @var string */
+    private $dataDir;
+
+    /** @var string */
+    private $tempDir;
+
+    /** @var string */
+    private $awsRegion;
+
+    /** @var string */
+    private $awsEndpoint;
+
+    /** @var string */
+    private $awsBucket;
+
+    /** @var string */
+    private $awsKey;
+
+    /** @var string */
+    private $awsSecret;
+
+    public function __construct(
+        string $projectDir,
+        string $dataStore,
+        string $dataDir,
+        string $tempDir,
+        string $awsRegion,
+        string $awsEndpoint,
+        string $awsBucket,
+        string $awsKey,
+        string $awsSecret
+    ) {
+        $this->dataStore = $dataStore;
+        $this->dataDir = rtrim(!empty($dataDir) ? $dataDir : $projectDir . '/var/app_data', '/') . '/';
+        $this->tempDir = rtrim(!empty($tempDir) ? $tempDir : $projectDir . '/var/app_tmp/', '/') . '/';
+        $this->awsRegion = $awsRegion;
+        $this->awsEndpoint = $awsEndpoint;
+        $this->awsBucket = $awsBucket;
+        $this->awsKey = $awsKey;
+        $this->awsSecret = $awsSecret;
     }
 
     private function getDataStoragePath(File $file): string
@@ -109,31 +146,31 @@ class Filesystems
 
     public function tempRoot(): string
     {
-        return $this->settings->tempDir();
+        return $this->tempDir;
     }
 
     public function temp(): Filesystem
     {
-        $adapter = new Local($this->settings->tempDir());
+        $adapter = new Local($this->tempRoot());
         return new Filesystem($adapter);
     }
 
     public function data(): Filesystem
     {
-        if ($this->settings->dataStore() === 'aws') {
+        if ($this->dataStore === 'aws') {
             $options = [
                 'version' => '2006-03-01',
                 'credentials' => [
-                    'key' => $this->settings->awsKey(),
-                    'secret' => $this->settings->awsSecret(),
+                    'key' => $this->awsKey,
+                    'secret' => $this->awsSecret,
                 ],
-                'endpoint' => $this->settings->awsEndpoint(),
-                'region' => $this->settings->awsRegion(),
+                'endpoint' => $this->awsEndpoint,
+                'region' => $this->awsRegion,
             ];
             $client = new S3Client($options);
-            $adapter = new AwsS3Adapter($client, $this->settings->awsBucketName());
+            $adapter = new AwsS3Adapter($client, $this->awsBucket);
         } else {
-            $adapter = new Local($this->settings->dataDir());
+            $adapter = new Local($this->dataDir);
         }
         return new Filesystem($adapter);
     }

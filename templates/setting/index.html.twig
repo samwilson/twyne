@@ -26,50 +26,6 @@
         </p>
 
         <fieldset>
-            <legend>File storage</legend>
-            <p class="fields">
-                <label><input type="radio" name="settings[data_store]" value="local" {% if settings.dataStore == 'local' %}checked{% endif %} /> Local</label>
-                <label><input type="radio" name="settings[data_store]" value="aws" {% if settings.dataStore == 'aws' %}checked{% endif %} /> AWS</label>
-            </p>
-            <p class="fields">
-                <span class="field size-1">
-                    <label for="data_dir">Data directory:</label>
-                    <input id="data_dir" type="text" value="{{ settings.dataDir }}" name="settings[data_dir]" />
-                </span>
-            </p>
-            <p class="fields">
-                <span class="field size-1">
-                    <label for="temp_dir">Temporary directory:</label>
-                    <input id="temp_dir" type="text" value="{{ settings.tempDir }}" name="settings[temp_dir]" />
-                </span>
-            </p>
-            <p class="fields">
-                <span class="field size-1">
-                    <label for="aws_key">AWS Key:</label>
-                    <input id="aws_key" type="text" value="{{ settings.awsKey }}" name="settings[aws_key]" />
-                </span>
-                <span class="field size-1">
-                    <label for="aws_secret">AWS Secret:</label>
-                    <input id="aws_secret" type="text" value="{{ settings.awsSecret }}" name="settings[aws_secret]" />
-                </span>
-            </p>
-            <p class="fields">
-                <span class="field size-1">
-                    <label for="aws_endpoint">AWS Endpoint:</label>
-                    <input id="aws_endpoint" type="text" value="{{ settings.awsEndpoint }}" name="settings[aws_endpoint]" />
-                </span>
-                <span class="field size-1">
-                    <label for="aws_region">AWS Region:</label>
-                    <input id="aws_region" type="text" value="{{ settings.awsRegion }}" name="settings[aws_region]" />
-                </span>
-                <span class="field size-1">
-                    <label for="aws_bucket_name">AWS Bucket Name:</label>
-                    <input id="aws_bucket_name" type="text" value="{{ settings.awsBucketName }}" name="settings[aws_bucket_name]" />
-                </span>
-            </p>
-        </fieldset>
-
-        <fieldset>
             <legend>Flickr</legend>
             <p class="fields">
                 <span class="field size-1">

@@ -29,9 +29,20 @@ services:
 
     App\Settings:
         arguments:
-            $projectDir: '%kernel.project_dir%'
             $mailFrom: '%env(APP_MAIL_SENDER)%'
             $mainContactId: '%env(APP_MAIN_CONTACT)%'
+
+    App\Filesystems:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+            $dataStore: '%env(APP_FS_DATA_STORE)%'
+            $dataDir: '%env(APP_FS_DATA_DIR)%'
+            $tempDir: '%env(APP_FS_TEMP_DIR)%'
+            $awsRegion: '%env(APP_FS_AWS_REGION)%'
+            $awsEndpoint: '%env(APP_FS_AWS_ENDPOINT)%'
+            $awsBucket: '%env(APP_FS_AWS_BUCKET)%'
+            $awsKey: '%env(APP_FS_AWS_KEY)%'
+            $awsSecret: '%env(APP_FS_AWS_SECRET)%'
 
     App\WebRequestProcessor:
       tags: { name: monolog.processor }

@@ -27,9 +27,6 @@ class Settings
     private $entityManager;
 
     /** @var string */
-    private $projectDir;
-
-    /** @var string */
     private $mailFrom;
 
     /** @var mixed[] Keys are settings' names, values are their values. */
@@ -40,14 +37,12 @@ class Settings
         ContactRepository $contactRepository,
         int $mainContactId,
         EntityManagerInterface $entityManager,
-        string $projectDir,
         string $mailFrom
     ) {
         $this->settingRepository = $settingRepository;
         $this->contactRepository = $contactRepository;
         $this->mainContactId = $mainContactId;
         $this->entityManager = $entityManager;
-        $this->projectDir = $projectDir;
         $this->mailFrom = $mailFrom;
     }
 
@@ -99,49 +94,9 @@ class Settings
         return $this->mailFrom;
     }
 
-    public function dataStore(): string
-    {
-        return $this->getData()['data_store'] ?? 'local';
-    }
-
-    public function dataDir(): string
-    {
-        return rtrim($this->getData()['data_dir'] ?? $this->projectDir . '/var/app_data', '/') . '/';
-    }
-
-    public function tempDir(): string
-    {
-        return rtrim($this->getData()['temp_dir'] ?? $this->projectDir . '/var/app_tmp/', '/') . '/';
-    }
-
     public function apiKey(): string
     {
         return $this->getData()['api_key'] ?? '';
-    }
-
-    public function awsKey(): string
-    {
-        return $this->getData()['aws_key'] ?? '';
-    }
-
-    public function awsSecret(): string
-    {
-        return $this->getData()['aws_secret'] ?? '';
-    }
-
-    public function awsRegion(): string
-    {
-        return $this->getData()['aws_region'] ?? '';
-    }
-
-    public function awsEndpoint(): string
-    {
-        return $this->getData()['aws_endpoint'] ?? '';
-    }
-
-    public function awsBucketName(): string
-    {
-        return $this->getData()['aws_bucket_name'] ?? '';
     }
 
     public function flickrApiKey(): string

@@ -134,7 +134,7 @@
                     <td><input id="syn-new-label" type="text" name="new_syndication[label]" /></td>
                     <td></td>
                 </tr>
-                {% if post.id %}
+                {% if commons_is_configured and post.id %}
                     <tr>
                         <td colspan="3">
                             <a href="{{ path('commons', {id:post.id}) }}">Copy to Wikimedia Commons</a>

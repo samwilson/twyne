@@ -53,6 +53,11 @@ class CommonsRepository
         $this->commonsPassword = $commonsPassword;
     }
 
+    public function isConfigured(): bool
+    {
+        return $this->commonsUsername && $this->commonsPassword;
+    }
+
     public function getCommonsUrl(): string
     {
         return $this->commonsUrl;

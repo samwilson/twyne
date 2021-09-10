@@ -7,6 +7,7 @@ use App\Entity\Post;
 use App\Entity\Syndication;
 use App\Entity\User;
 use App\Filesystems;
+use App\Repository\CommonsRepository;
 use App\Repository\ContactRepository;
 use App\Repository\FileRepository;
 use App\Repository\PostRepository;
@@ -59,6 +60,7 @@ class PostController extends ControllerBase
         PostRepository $postRepository,
         ContactRepository $contactRepository,
         UserGroupRepository $userGroupRepository,
+        CommonsRepository $commonsRepository,
         $id = null
     ) {
         $post = $id ? $postRepository->find($id) : new Post();
@@ -75,6 +77,7 @@ class PostController extends ControllerBase
             'user_groups' => $userGroupRepository->findAll(),
             'prev_post' => $postRepository->findPrevByDate($post, $this->getUser()),
             'next_post' => $postRepository->findNextByDate($post, $this->getUser()),
+            'commons_is_configured' => $commonsRepository->isConfigured(),
         ]);
     }
 

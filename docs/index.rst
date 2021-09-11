@@ -27,5 +27,6 @@ we will endevour to fix up the manual to make it clearer about that topic.
 
    install
    config
+   posts
    tags
    syndications

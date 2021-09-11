@@ -88,6 +88,18 @@ class PostRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * Find all posts that have no location recorded.
+     */
+    public function findWithoutLocation()
+    {
+        return $this->createQueryBuilder('p')
+            ->where("p.location IS NULL")
+            ->orderBy('p.date', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findByBoundingBox(string $neLat, string $neLng, string $swLat, string $swLng, ?User $user = null)
     {
         $ne = "$neLng $neLat";
@@ -262,15 +274,21 @@ class PostRepository extends ServiceEntityRepository
         // Body.
         $post->setBody($request->get('body'));
 
-        // Date.
-        if ($request->get('date')) {
-            $post->setDate(new DateTime($request->get('date', '@' . time()), new DateTimeZone('Z')));
-        } elseif ($uploadedFile) {
-            $cmd = new Process(['exiftool', '-json', $uploadedFile->getPathname()]);
+        // Get Exif data for the date and location (below).
+        $exif = [];
+        if ($uploadedFile) {
+            $cmd = new Process(['exiftool', '-json', '-n', $uploadedFile->getPathname()]);
             $cmd->mustRun();
             $data = json_decode($cmd->getOutput(), true);
             // We only request one file's metadata, so it's always going to be the first one.
             $exif = isset($data[0]) ? $data[0] : [];
+        }
+        //dump($exif);
+
+        // Date.
+        if ($request->get('date')) {
+            $post->setDate(new DateTime($request->get('date', '@' . time()), new DateTimeZone('Z')));
+        } elseif ($uploadedFile) {
             if (isset($exif['DateTimeOriginal'])) {
                 // Format is YYYY:mm:dd HH:MM:SS[.ss][+/-HH:MM|Z]) in ExifIFD:DateTimeOriginal
                 $tz = $request->get('timezone');
@@ -305,7 +323,11 @@ class PostRepository extends ServiceEntityRepository
         // Location.
         $longitude = $request->get('longitude');
         $latitude = $request->get('latitude');
-        if ($longitude && $latitude) {
+        if (!($longitude || $latitude) && isset($exif['GPSLongitude']) && isset($exif['GPSLatitude'])) {
+            $longitude = $exif['GPSLongitude'];
+            $latitude = $exif['GPSLatitude'];
+        }
+        if ($longitude || $latitude) {
             $post->setLocation(new Point($longitude, $latitude));
         } else {
             $post->setLocation(null);

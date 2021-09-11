@@ -93,6 +93,13 @@ class PostRepositoryTest extends RepositoryTestBase
     {
         return [
             [
+                'postParams' => ['title' => 'Test title', 'author' => 'Bob'],
+                'filepath' => dirname(__DIR__) . '/data/photo.jpg',
+                'title' => 'Test title',
+                'date' => '2021-09-07 06:15:18',
+                'location' => new Point(115.47340115, -32.016621916667),
+            ],
+            [
                 'postParams' => ['title' => 'Test title', 'author' => 'Bob', 'latitude' => '10', 'longitude' => '-20'],
                 'filepath' => dirname(__DIR__) . '/data/has_metadata.jpg',
                 'title' => 'Test title',

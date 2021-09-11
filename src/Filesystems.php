@@ -144,6 +144,45 @@ class Filesystems
         return $outStream;
     }
 
+    public function readExif(File $file): array
+    {
+        if (substr($file->getMimeType(), 0, strlen('image')) !== 'image') {
+            // Not an image.
+            return [];
+        }
+
+        $dataFs = $this->data();
+        $tempFs = $this->temp();
+        $dataName = $this->getDataStoragePath($file);
+        $tmpName = 'exif_file_temp.' . $file->getExtension();
+
+        if (!$dataFs->has($dataName)) {
+            // Should never happen, but isn't uncommon in dev environments.
+            return [];
+        }
+
+        // Write original file to the temp directory.
+        if (!$tempFs->has($tmpName)) {
+            $tempFs->writeStream($tmpName, $dataFs->readStream($dataName));
+        }
+
+        // Extract Exif data.
+        $cmd = new Process(['exiftool', '-json', '-n', $this->tempRoot() . $tmpName]);
+        $cmd->mustRun();
+        $data = json_decode($cmd->getOutput(), true);
+        // We only request one file's metadata, so it's always going to be the first one.
+        $exif = isset($data[0]) ? $data[0] : [];
+
+        // Clean up and return;
+        $tempFs->delete($tmpName);
+        return $exif;
+    }
+
+    /**
+     * Filesystem path of the root of the temporary directory.
+     * Always has a trailing slash.
+     * @return string
+     */
     public function tempRoot(): string
     {
         return $this->tempDir;

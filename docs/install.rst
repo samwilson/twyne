@@ -4,17 +4,21 @@ Installing and upgrading
 Prerequesites
 -------------
 
-To install Twyne, you need the following:
+To install and use Twyne,
+you need the following software on your web server:
 
 1. a web server with PHP 7.3 or above;
 2. MariaDB (10.3 or above) or MySQL (5.7 or above)
 3. command-line access to that server;
-4. the `Git`_ version control system; 
-5. ``exiftool`` and ``imagemagick`` package; and
-6. the PHP package manager, `Composer`_.
+4. the Git_ version control system;
+5. the PHP package manager, `Composer`_;
+6. ExifTool_ for working with embedded photo metadata; and
+7. ImageMagick_ for creating multiple sizes of images.
 
-.. _`Git`: https://git-scm.com/
-.. _`Composer`: https://getcomposer.org/
+.. _Git: https://git-scm.com/
+.. _Composer: https://getcomposer.org/
+.. _ExifTool: https://exiftool.org/
+.. _ImageMagick: https://imagemagick.org/index.php
 
 Downloading
 -----------

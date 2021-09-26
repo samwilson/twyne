@@ -16,7 +16,7 @@ The minimum that should be set are as follows:
 
 Other configuration
 (that is likely to be changed occasionally during the normal operation of the site)
-happens on the Settings page,
+happens on the :ref:`settings` page,
 accessible via the main menu.
 
 Uploaded files

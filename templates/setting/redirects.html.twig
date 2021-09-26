@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{'redirects.title'|trans}}{% endblock %}
+
+{% block body %}
+
+    <h1>{{'redirects.title'|trans}}</h1>
+
+    <nav>
+        <ul>
+            <li><a href="{{path('settings')}}">{{'redirects.return_to_settings'|trans}}</a></li>
+            <li><a href="{{path('redirect_new')}}">{{'redirects.add_new'|trans}}</a></li>
+        </ul>
+    </nav>
+
+    <table class="redirects">
+        <thead>
+            <tr>
+                <th>{{'redirects.path'|trans}}</th>
+                <th>{{'redirects.destination'|trans}}</th>
+                <th>{{'redirects.status'|trans}}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for redirect in redirects %}
+                <tr>
+                    <td><a href="{{absolute_url(redirect.path)}}">{{redirect.path}}</td>
+                    <td>
+                        {% if redirect.isRedirect %}
+                            <a href="{{redirect.destination}}">{{redirect.destination}}</a>
+                        {% else %}
+                            <del>{{redirect.destination}}</del>
+                        {% endif %}
+                    </td>
+                    <td>{{('redirects.statuses.'~statuses[redirect.status])|trans}}</td>
+                    <td><a href="{{path('redirect_edit',{id:redirect.id})}}">{{'forms.edit'|trans}}</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

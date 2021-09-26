@@ -11,6 +11,7 @@ use App\Repository\CommonsRepository;
 use App\Repository\ContactRepository;
 use App\Repository\FileRepository;
 use App\Repository\PostRepository;
+use App\Repository\RedirectRepository;
 use App\Repository\UserGroupRepository;
 use App\Rss;
 use App\Settings;
@@ -89,16 +90,32 @@ class PostController extends ControllerBase
         Request $request,
         EntityManagerInterface $entityManager,
         PostRepository $postRepository,
+        RedirectRepository $redirectRepository,
         Filesystems $filesystems,
         string $id
     ) {
         $post = $postRepository->find($id);
         $submittedToken = $request->request->get('token');
         if ($request->isMethod('post') && $this->isCsrfTokenValid('delete-post', $submittedToken)) {
-            $filesystems->remove($post->getFile());
+            // Remove files.
+            if ($post->getFile()) {
+                $filesystems->remove($post->getFile());
+            }
+            // Remove syndications.
             foreach ($post->getSyndications() as $syndication) {
                 $entityManager->remove($syndication);
             }
+            // Add 410 Gone records for the post and file's versions (only F and D are in public use).
+            $postUrl = $this->generateUrl('post_view', ['id' => $post->getId()]);
+            $redirectRepository->addRedirect($postUrl, null, 410);
+            if ($post->getFile()) {
+                $fileUrlFullParams = ['id' => $post->getId(), 'size' => 'F', 'ext' => $post->getFile()->getExtension()];
+                $fileUrlFull = $this->generateUrl('file', $fileUrlFullParams);
+                $redirectRepository->addRedirect($fileUrlFull, null, 410);
+                $fileurlDisplay = $this->generateUrl('file', ['id' => $post->getId(), 'size' => 'D', 'ext' => 'jpg']);
+                $redirectRepository->addRedirect($fileurlDisplay, null, 410);
+            }
+            // Remove post.
             $entityManager->remove($post);
             $entityManager->flush();
             $this->addFlash(self::FLASH_SUCCESS, 'Post deleted.');

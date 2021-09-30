@@ -31,6 +31,7 @@
         "symfony/monolog-bundle": "^3.6",
         "symfony/process": "5.2.*",
         "symfony/security-bundle": "5.2.*",
+        "symfony/translation": "5.2.*",
         "symfony/twig-bundle": "5.2.*",
         "symfony/webpack-encore-bundle": "^1.7",
         "symfony/yaml": "5.2.*",
@@ -107,6 +108,7 @@
             "composer normalize --dry-run",
             "./bin/console lint:twig ./templates",
             "./bin/console lint:yaml ./config",
+            "./bin/console lint:yaml ./translations",
             "phpcs",
             "minus-x check .",
             "./bin/phpunit"

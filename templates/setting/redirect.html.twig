@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{'redirects.title'|trans}}{% endblock %}
+
+{% block body %}
+
+    <h1>
+        {% if redirect.id %}
+            {{'redirects.edit'|trans}}
+        {% else %}
+            {{'redirects.add_new'|trans}}
+        {% endif %}
+    </h1>
+
+    <form action="{{path('redirect_save')}}" method="post">
+
+        <p class="fields">
+            <span class="field">
+                <label for="path">{{'redirects.path'|trans}}</label>
+                <input type="path" name="path" id="path" value="{{ redirect.path }}" tabindex="10" required autofocus size="80" />
+            </span>
+        </p>
+
+        <p class="fields">
+            <span class="field">
+                <label for="destination">{{'redirects.destination'|trans}}</label>
+                <input type="destination" name="destination" id="destination" value="{{ redirect.destination }}" tabindex="20" size="80" />
+            </span>
+        </p>
+
+        <p class="fields">
+            <span class="field">
+                <label for="destination">{{'redirects.status'|trans}}</label>
+                <select name="status" tabindex="30">
+                    {% for status_label, status_code in statuses %}
+                        <option value="{{status_code}}" {% if redirect.status == status_code %}selected{% endif %}>
+                            {{('redirects.statuses.'~status_label)|trans}}
+                        </option>
+                    {% endfor %}
+                </select>
+            </span>
+        </p>
+
+        <p>
+            <input type="hidden" name="token" value="{{ csrf_token('save-redirect') }}"/>
+            <input type="submit" name="save" value="{{'forms.save'|trans}}" tabindex="90" />
+            <a class="button" href="{{ path('redirects') }}" tabindex="100">{{'forms.cancel'|trans}}</a>
+            {% if redirect.id %}
+                <input type="hidden" name="id" value="{{ redirect.id }}" />
+            {% endif %}
+        </p>
+
+    </form>
+
+{% endblock %}

@@ -62,3 +62,4 @@ services:
     App\EventListener\ControllerListener:
         tags:
             - { name: kernel.event_listener, event: kernel.controller }
+            - { name: kernel.event_listener, event: kernel.exception }

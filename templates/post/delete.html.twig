@@ -23,4 +23,9 @@
         <input type="submit" value="Yes, delete it now" />
     </form>
 
+    {% set redirects_link %}
+        <a href="{{path('redirects')}}">{{'redirects.title'|trans}}</a>
+    {% endset %}
+    <p>{{'posts.delete.gone-will-be-added'|trans({'%redirects_link%': redirects_link})|raw}}</p>
+
 {% endblock %}

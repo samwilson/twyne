@@ -8,39 +8,8 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Form;
 
-class TagControllerTest extends WebTestCase
+class TagControllerTest extends ControllerTestBase
 {
-
-    public function setUp()
-    {
-        // Set a fake clock time of 2020-11-15 07:36:41 and register all our classes that use the time() function.
-        ClockMock::withClockMock(1605425801);
-        ClockMock::register(Post::class);
-    }
-
-    protected function createAccountAndLogIn(KernelBrowser $client)
-    {
-        $username = 'testuser-' . time();
-        $password = 'test123';
-        $client->request('GET', '/register');
-        $client->submitForm('Create account', [
-            'username' => $username,
-            'email' => 'test@example.org',
-            'password' => $password,
-            '_csrf_token' => '123',
-        ], 'POST');
-        $client->request('GET', '/login');
-        $client->submitForm('Log in', [
-            'username' => $username,
-            'password' => $password,
-        ]);
-        $client->request('GET', '/contacts');
-        // There will only be one edit link.
-        $client->clickLink('Edit');
-        //dump($client->getCrawler());
-        $client->submitForm('Save', ['new_group' => 'Private'], 'POST');
-        //dump($client->getCrawler());
-    }
 
     public function testTagPage()
     {

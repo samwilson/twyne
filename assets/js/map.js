@@ -46,11 +46,29 @@ if (mapData && mapData.latitude && mapData.longitude) {
 }
 map.setView(defaultView, 12);
 
-// Base map.
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
-}).addTo(map);
+// Base map layers.
+const configRequest = new XMLHttpRequest();
+configRequest.addEventListener('load', function () {
+    const config = JSON.parse(this.responseText);
+    // Add empty layer-control to the map.
+    const layers = L.control.layers().addTo(map);
+    // Add the 'Edit' layer (only add to layer-control).
+    if (config.edit_config !== undefined) {
+        layers.addBaseLayer(
+            L.tileLayer(config.edit_url, config.edit_config),
+            config.edit_config.label === undefined ? 'edit' : config.edit_config.label
+        );
+    }
+    // Add the 'View' layer (add to layer-control as well as the map).
+    // Added last to make it the default layer.
+    layers.addBaseLayer(
+        L.tileLayer(config.view_url, config.view_config).addTo(map),
+        config.view_config.label === undefined ? 'view' : config.view_config.label
+    );
+});
+// eslint-disable-next-line no-undef
+configRequest.open('GET', appBaseUrl + 'map-config.json');
+configRequest.send();
 
 // Pointer interaction.
 map.on('click', clickEvent => {

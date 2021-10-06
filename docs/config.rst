@@ -56,3 +56,35 @@ This directory can be changed in ``.env.local``:
 The temporary directory contains only files that will be regenerated as required
 (hence the name 'temporary'; these are however long-lived files).
 There is no need to back up this directory.
+
+Maps
+----
+
+Maps are shown for individual Posts (both when viewing and editing),
+and for all posts on the ``/map`` page.
+The tiles used for these maps can be configured via the following four environment variables:
+
+.. code-block:: shell
+
+   APP_MAP_TILES_VIEW_URL="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+   APP_MAP_TILES_VIEW_CONFIG="{\"label\": \"OSM\", \"attribution\": \"&copy; <a href='https://openstreetmap.org/copyright'>OpenStreetMap contributors</a>\", \"maxZoom\": \"19\"}"
+   APP_MAP_TILES_EDIT_URL="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+   APP_MAP_TILES_EDIT_CONFIG="{\"label\": \"Esri\", \"attribution\": \"&copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community\", \"maxZoom\": \"19\"}"
+
+The values shown here are the defaults as given in ``.env``,
+and they use the OpenStreetMap rendered map, and Esri satellite imagery.
+
+The ``*_CONFIG`` variables are JSON, and must be well-formed and correctly escaped.
+To check that you have set their values correctly, browse to ``/map-config.json``
+and confirm that you see the desired structured output.
+
+Logged-in users can switch between the two sets of tiles via a layer selector in the top right of the map.
+The ``label`` value for each ``*_CONFIG`` variable is what sets the user-visible label that's shown in the selector.
+
+The 'EDIT' tiles (by default, the satellite imagery) are only shown to logged-in users,
+because it can be useful to use a restricted or expensive source for these tiles.
+
+The `Leaflet Providers`_ tool can be useful for finding compatible tiles and their required configuration
+(as well as things such as whether they require registration).
+
+.. _`Leaflet Providers`: https://leaflet-extras.github.io/leaflet-providers/preview/index.html

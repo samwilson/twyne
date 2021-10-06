@@ -27,6 +27,14 @@ services:
         arguments:
             $requireTwoFactorAuth: '%env(bool:APP_REQUIRE_2FA)%'
 
+    App\Controller\MapController:
+        arguments:
+            $requireTwoFactorAuth: '%env(bool:APP_REQUIRE_2FA)%'
+            $mapTilesViewUrl: '%env(APP_MAP_TILES_VIEW_URL)%'
+            $mapTilesViewConfig: '%env(json:APP_MAP_TILES_VIEW_CONFIG)%'
+            $mapTilesEditUrl: '%env(APP_MAP_TILES_EDIT_URL)%'
+            $mapTilesEditConfig: '%env(json:APP_MAP_TILES_EDIT_CONFIG)%'
+
     App\Settings:
         arguments:
             $mailFrom: '%env(APP_MAIL_SENDER)%'

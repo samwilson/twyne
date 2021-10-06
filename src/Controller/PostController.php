@@ -366,31 +366,4 @@ class PostController extends ControllerBase
             'page_num' => $pageNum,
         ]);
     }
-
-    /**
-     * @Route("/map/{ne_lat}_{ne_lng}_{sw_lat}_{sw_lng}.json", name="mapdata", requirements={
-     *     "ne_lat"="[0-9.-]+",
-     *     "ne_lng"="[0-9.-]+",
-     *     "sw_lat"="[0-9.-]+",
-     *     "sw_lng"="[0-9.-]+"
-     * })
-     */
-    public function mapData(Request $request, PostRepository $postRepository)
-    {
-        return new JsonResponse($postRepository->findByBoundingBox(
-            $request->get('ne_lat'),
-            $request->get('ne_lng'),
-            $request->get('sw_lat'),
-            $request->get('sw_lng'),
-            $this->getUser()
-        ));
-    }
-
-    /**
-     * @Route("/map", name="map")
-     */
-    public function map()
-    {
-        return $this->render('post/map.html.twig');
-    }
 }

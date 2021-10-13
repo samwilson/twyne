@@ -307,6 +307,7 @@ class PostController extends ControllerBase
         }
         return $this->render('post/view.html.twig', [
             'post' => $post,
+            'replies' => $postRepository->findReplies($post, $this->getUser()),
             'prev_post' => $postRepository->findPrevByDate($post, $this->getUser()),
             'next_post' => $postRepository->findNextByDate($post, $this->getUser()),
         ]);

@@ -41,7 +41,13 @@
                         {{ post.url }}
                     {% else %}
                         {{ path('post_view', {id:post.inReplyTo.id}) }}
-                    {% endif %}" class="u-in-reply-to">{{ post.inReplyTo.title }}</a>
+                    {% endif %}" class="u-in-reply-to">
+                        {%- if post.inReplyTo.title -%}
+                            {{ post.inReplyTo.title }}
+                        {%- else -%}
+                            P{{ post.inReplyTo.id }}
+                        {%- endif -%}
+                    </a>
                 by {{ post.inReplyTo.author.name }}.
             </p>
         {% endif %}
@@ -138,10 +144,10 @@
             <div id="map" data-latitude="{{ post.location.latitude }}" data-longitude="{{ post.location.longitude }}"></div>
         {% endif %}
 
-        {% if post.replies|length %}
+        {% if replies %}
             <section id="replies">
-                <h2>Replies</h2>
-                {% include 'post/_post_list.html.twig' with {posts: post.replies} %}
+                <h2>{{'posts.replies'|trans}}</h2>
+                {% include 'post/_post_list.html.twig' with {posts: replies} %}
             </section>
         {% endif %}
 

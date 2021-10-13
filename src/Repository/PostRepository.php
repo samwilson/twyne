@@ -60,6 +60,16 @@ class PostRepository extends ServiceEntityRepository
         $this->userGroupRepository = $userGroupRepository;
     }
 
+    private function createQueryBuilderForPosts(?User $user = null): QueryBuilder
+    {
+        $groupList = $user ? $user->getGroupIdList() : false;
+        if (!$groupList) {
+            $groupList = UserGroup::PUBLIC;
+        }
+        return $this->createQueryBuilder('p')
+            ->andWhere("p.view_group IN ($groupList)");
+    }
+
     /**
      * @inheritDoc
      */
@@ -71,17 +81,22 @@ class PostRepository extends ServiceEntityRepository
         return parent::find($id, $lockMode, $lockVersion);
     }
 
+    public function findReplies(Post $post, ?User $user = null)
+    {
+        return $this->createQueryBuilderForPosts($user)
+            ->andWhere('p.in_reply_to = :in_reply_to')
+            ->setParameter('in_reply_to', $post)
+            ->orderBy('p.date', 'asc')
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * @return Post[]
      */
     public function recent(int $limit = 10, ?User $user = null): array
     {
-        $groupList = $user ? $user->getGroupIdList() : false;
-        if (!$groupList) {
-            $groupList = UserGroup::PUBLIC;
-        }
-        return $this->createQueryBuilder('p')
-            ->where("p.view_group IN ($groupList)")
+        return $this->createQueryBuilderForPosts($user)
             ->orderBy('p.date', 'DESC')
             ->setMaxResults($limit)
             ->getQuery()
@@ -178,16 +193,11 @@ class PostRepository extends ServiceEntityRepository
 
     public function findPrevByDate(Post $post, ?User $user = null): ?Post
     {
-        $groupList = $user ? $user->getGroupIdList() : false;
-        if (!$groupList) {
-            $groupList = UserGroup::PUBLIC;
-        }
-        $qb = $this->createQueryBuilder('p');
+        $qb = $this->createQueryBuilderForPosts($user);
         $orderBy = new OrderBy();
         $orderBy->add('p.date', 'DESC');
         $orderBy->add('p.id', 'DESC');
         $out = $qb
-            ->andWhere('p.view_group IN (' . $groupList . ')')
             ->andWhere($qb->expr()->orX('p.date < :date', 'p.date = :date AND p.id < :id'))
             ->setParameter('date', $post->getDate())
             ->setParameter('id', $post->getId())
@@ -200,16 +210,11 @@ class PostRepository extends ServiceEntityRepository
 
     public function findNextByDate(Post $post, ?User $user = null): ?Post
     {
-        $groupList = $user ? $user->getGroupIdList() : false;
-        if (!$groupList) {
-            $groupList = UserGroup::PUBLIC;
-        }
-        $qb = $this->createQueryBuilder('p');
+        $qb = $this->createQueryBuilderForPosts($user);
         $orderBy = new OrderBy();
         $orderBy->add('p.date', 'ASC');
         $orderBy->add('p.id', 'ASC');
         $out = $qb
-            ->andWhere('p.view_group IN (' . $groupList . ')')
             ->andWhere($qb->expr()->orX('p.date > :date', 'p.date = :date AND p.id > :id'))
             ->setParameter('date', $post->getDate())
             ->setParameter('id', $post->getId())
@@ -240,15 +245,10 @@ class PostRepository extends ServiceEntityRepository
 
     private function getDateQueryBuilder($year, $month, $user): QueryBuilder
     {
-        $groupList = $user ? $user->getGroupIdList() : false;
-        if (!$groupList) {
-            $groupList = UserGroup::PUBLIC;
-        }
-        return $this->createQueryBuilder('p')
+        return $this->createQueryBuilderForPosts($user)
             ->andWhere('YEAR(p.date) = :year')
             ->setParameter('year', $year)
             ->andWhere('MONTH(p.date) = :month')
-            ->andWhere('p.view_group IN (' . $groupList . ')')
             ->setParameter('month', $month)
             ->orderBy('p.date', 'DESC');
     }

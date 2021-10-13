@@ -4,6 +4,7 @@ forms:
     cancel: Cancel
     delete: Delete
 posts:
+    replies: 'Replies'
     delete:
         gone-will-be-added: 'An HTTP status of "410 Gone" will be added for this post. See %redirects_link% for more information.'
 redirects:

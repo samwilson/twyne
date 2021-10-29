@@ -21,26 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
 class PostRepositoryTest extends RepositoryTestBase
 {
 
-    /** @var PostRepository */
-    protected $postRepo;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->postRepo = self::$container->get(PostRepository::class);
-    }
-
-    private function getTestPost(): Post
-    {
-        $post = $this->postRepo->createNew();
-        $this->entityManager->persist($post);
-        $author = new Contact();
-        $author->setName('Bob');
-        $this->entityManager->persist($author);
-        $post->setAuthor($author);
-        return $post;
-    }
-
     public function testAuthor()
     {
         // Test author.

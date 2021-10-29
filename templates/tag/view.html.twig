@@ -11,6 +11,7 @@
         {% if is_granted('ROLE_ADMIN') %}
             <p>
                 <a href="{{ path('tag_edit', {id:tag.id}) }}" class="button">Edit</a>
+                &middot; <a href="{{ path('tag_merge', {id:tag.id}) }}" class="button">Merge</a>
             </p>
         {% endif %}
 

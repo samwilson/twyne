@@ -2,12 +2,13 @@
 
 namespace App\Tests\Repository;
 
-use App\Entity\Post;
 use App\Kernel;
-use App\Repository\PostRepository;
+use App\Entity\Post;
+use App\Entity\Contact;
 use App\Repository\TagRepository;
-use App\Test\Repository\PostRepositoryTest;
+use App\Repository\PostRepository;
 use Symfony\Bridge\PhpUnit\ClockMock;
+use App\Test\Repository\PostRepositoryTest;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 abstract class RepositoryTestBase extends KernelTestCase
@@ -17,6 +18,9 @@ abstract class RepositoryTestBase extends KernelTestCase
      * @var \Doctrine\ORM\EntityManager
      */
     protected $entityManager;
+
+    /** @var PostRepository */
+    protected $postRepo;
 
     protected static function getKernelClass()
     {
@@ -37,6 +41,19 @@ abstract class RepositoryTestBase extends KernelTestCase
         $this->entityManager = $kernel->getContainer()
             ->get('doctrine')
             ->getManager();
+
+        $this->postRepo = self::$container->get(PostRepository::class);
+    }
+
+    protected function getTestPost(): Post
+    {
+        $post = $this->postRepo->createNew();
+        $this->entityManager->persist($post);
+        $author = new Contact();
+        $author->setName('Bob');
+        $this->entityManager->persist($author);
+        $post->setAuthor($author);
+        return $post;
     }
 
     protected function tearDown(): void

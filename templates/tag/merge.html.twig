@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'tags.merge_title'|trans }}{% endblock %}
+
+{% block body %}
+
+    <article>
+
+        <h1>
+            {% set backlink %}
+                <a href="{{ path('tag_view', {id:tag1.id}) }}">T{{tag1.id}}</a>
+            {% endset %}
+            {{ 'tags.merge_backlink'|trans({'%tag%':backlink})|raw }}
+        </h1>
+
+        {% if not tag2 %}
+
+            <form action="{{ path('tag_merge', {id:tag1.id}) }}" method="get">
+                <p>
+                    <label for="tag2">{{ 'tags.merge_with'|trans }}</label>
+                    <input type="text" id="tag2" name="tag2" value="{% if tag2 %}{{ tag2.id }}{% endif %}" required autofocus />
+                </p>
+                <p>
+                    <a href="{{ path('tag_view', {id:tag1.id}) }}" class="button">{{'tags.go_back'|trans}}</a>
+                    <input type="submit" value="{{ 'tags.start_merge'|trans }}" />
+                </p>
+            </form>
+
+        {% else %}
+
+            <form action="{{ path('tag_merge', {id:tag1.id}) }}" method="post">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>{{ 'tags.from'|trans }}</th>
+                            <th>{{ 'tags.to'|trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>{{ 'tags.label_id'|trans }}</th>
+                            <td><a href="{{ path('tag_view', {id:tag1.id}) }}">T{{ tag1.id }}</a></td>
+                            <td><a href="{{ path('tag_view', {id:tag2.id}) }}">T{{ tag2.id }}</a></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th>{{ 'tags.label_title'|trans }}</th>
+                            <td>{{ tag1.title }}</td>
+                            <td>{{ tag2.title }}</td>
+                            <td><input type="text" name="title" value="{{ tag2.title }}" /></td>
+                        </tr>
+                        <tr>
+                            <th>{{ 'tags.label_wikidata'|trans }}</th>
+                            <td>{{ tag1.wikidata }}</td>
+                            <td>{{ tag2.wikidata }}</td>
+                            <td><input type="text" name="wikidata" value="{{ wikidata }}" /></td>
+                        </tr>
+                        <tr>
+                            <th>{{ 'tags.merge_post_count'|trans }}</th>
+                            <td>{{ count_tag1 }}</td>
+                            <td>{{ 'tags.merge_with_count'|trans({'%this%':count_tag2, '%both%':count_both, '%tag%':tag1.id}) }}</td>
+                            <td>{{ count_any }}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ 'tags.label_description'|trans }}</th>
+                            <td>{{ tag1.description }}</td>
+                            <td>{{ tag2.description }}</td>
+                            <td><textarea name="description">{{ description }}</textarea></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3">
+                            </td>
+                            <td>
+                                <input type="hidden" name="token" value="{{ csrf_token('tags-merge') }}" />
+                                <input type="hidden" name="tag2" value="{{ tag2.id }}" />
+                                <a href="{{ path('tag_merge', {id:tag1.id}) }}" class="button">{{'tags.go_back'|trans}}</a>
+                                <input type="submit" value="{{ 'tags.merge_action'|trans }}" />
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </form>
+        {% endif %}
+
+    </article>
+
+{% endblock %}

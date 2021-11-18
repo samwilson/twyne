@@ -8,12 +8,12 @@
 
     <form action="{{ path('tag_save') }}" method="post">
         <p>
-            <label for="title">Title:</label>
+            <label for="title">{{ 'tags.label_title'|trans }}</label>
             <input type="text" id="title" name="title" value="{{ tag.title }}" />
         </p>
         <div class="fields">
             <span class="field size-1">
-                <label for="wikidata">Wikidata item:</label>
+                <label for="wikidata">{{ 'tags.label_wikidata'|trans }}</label>
                 <select id="wikidata" name="wikidata">
                     {% if tag.wikidata %}
                         <option value="{{ tag.wikidata }}" selected>{{ entity.label }}</option>
@@ -22,7 +22,7 @@
             </span>
         </div>
         <p>
-            <label for="description">Description:</label>
+            <label for="description">{{ 'tags.label_description'|trans }}</label>
             <textarea name="description" id="description" rows="12">{{ tag.description }}</textarea>
         </p>
         <p>

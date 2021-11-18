@@ -9,14 +9,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 
 class TagController extends ControllerBase
 {
 
     /**
-     * @Route("/tags/{ids}", name="tags")
+     * @Route("/tags", name="tags")
      */
-    public function tags(TagRepository $tagRepository, string $ids = '')
+    public function tags(TagRepository $tagRepository)
     {
         return $this->render('tag/index.html.twig', [
             'tags' => $tagRepository->findAllOrderedByCount($this->getUser()),
@@ -63,14 +64,6 @@ class TagController extends ControllerBase
             'page_num' => $pageNum,
             'entity' => $entity,
         ]);
-    }
-
-    /**
-     * @Route("/tags/search", name="tag_search")
-     */
-    public function search(TagRepository $tagRepository, Request $request)
-    {
-        return $tagRepository->findBy(['title' => $request->get('q')]);
     }
 
     /**
@@ -138,7 +131,7 @@ class TagController extends ControllerBase
     }
 
     /**
-     * @Route("/tag-save", name="tag_save")
+     * @Route("/tags/save", name="tag_save")
      * @IsGranted("ROLE_ADMIN")
      */
     public function save(Request $request, TagRepository $tagRepository)
@@ -149,5 +142,44 @@ class TagController extends ControllerBase
         }
         $tagRepository->saveFromRequest($tag, $request);
         return $this->redirectToRoute('tag_view', ['id' => $tag->getId()]);
+    }
+
+    /**
+     * @Route("/T{id}/merge", name="tag_merge", requirements={"id"="\d+"})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function merge(Request $request, TagRepository $tagRepository, $id)
+    {
+        $tag1 = $tagRepository->find($id);
+        $tag2Id = $request->get('tag2');
+        $tag2 = null;
+        if ($tag2Id) {
+            $tag2 = $tagRepository->find($tag2Id);
+        }
+        $submittedToken = $request->request->get('token');
+        if ($request->isMethod('POST') && !$this->isCsrfTokenValid('tags-merge', $submittedToken)) {
+            throw new InvalidCsrfTokenException();
+        }
+        if ($tag2 && $request->isMethod('POST')) {
+            $tagRepository->merge(
+                $tag1,
+                $tag2,
+                $request->get('title'),
+                $request->get('wikidata'),
+                $request->get('description')
+            );
+            $this->addFlash(self::FLASH_SUCCESS, 'Tags merged.');
+            return $this->redirectToRoute('tag_view', ['id' => $tag2->getId()]);
+        }
+        return $this->render('tag/merge.html.twig', [
+            'tag1' => $tag1,
+            'tag2' => $tag2,
+            'wikidata' => $tag2 && $tag2->getWikidata() ? $tag2->getWikidata() : $tag1->getWikidata(),
+            'description' => $tag2 && $tag2->getDescription() ? $tag2->getDescription() : $tag1->getDescription(),
+            'count_tag1' => $tag2 ? $tagRepository->countPosts($tag1, $this->getUser()) : null,
+            'count_tag2' => $tag2 ? $tagRepository->countPosts($tag2, $this->getUser()) : null,
+            'count_any' => $tag2 ? $tagRepository->countAllPostsInAny([$tag1, $tag2]) : null,
+            'count_both' => $tag2 ? $tagRepository->countAllPostsInBoth($tag1, $tag2) : null,
+        ]);
     }
 }

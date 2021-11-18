@@ -6,7 +6,7 @@ Tags
 Tags are the primary way of grouping Posts together by topic; each Post can have any number of Tags.
 Each Tag has its own page (with a URL of the form ``/Txx``, where ``xx`` is the Tag's ID)
 and on that page it has
-a title (which must be unique),
+a title (which must be unique, and which can be changed whenever required),
 and optional description (which uses the same syntax as Post bodies).
 
 A Tag's page has a list of Posts, which is paginated if there are more than ten posts.
@@ -38,3 +38,19 @@ The cache can be cleared (forcing it to fetch the latest data) by running the fo
 .. _Wikidata: https://www.wikidata.org/
 .. _Q42: https://www.wikidata.org/wiki/Q42
 .. _merged: https://www.wikidata.org/wiki/Help:Merge
+
+Merging
+-------
+
+Sometimes, multiple tags might be created that cover the same topic or concept.
+In this case, they can be merged.
+Merging tags moves all of a tag's posts to another tag,
+and then deletes the first tag (leaving behind a redirect, to ensure existing URLs do not break).
+
+To merge a tag, first go to the tag that you want to merge and follow the 'Merge' link.
+Then, enter the ID of the tag into which you want to merge.
+The next step presents you with both tags and their details,
+as well as a form with which to modify the details of the destination tag
+(for example, to add to the existing description, or update the Wikidata ID).
+
+Be warned that there is *no way* to undo a tag merge!

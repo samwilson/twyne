@@ -239,11 +239,12 @@ class TagRepository extends ServiceEntityRepository
         string $wikidata = null,
         string $description = null
     ): void {
-        $this->getEntityManager()->transactional(function () use ($tag1, $tag2, $title, $wikidata, $description) {
+        $conn = $this->getEntityManager()->getConnection();
+        $conn->transactional(function ($conn) use ($tag1, $tag2, $title, $wikidata, $description) {
             // Move all posts.
             $sql = 'INSERT IGNORE INTO post_tag (post_id, tag_id)'
                 . ' SELECT post_id, :tag2_id FROM post_tag WHERE tag_id = :tag1_id';
-            $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+            $stmt = $conn->prepare($sql);
             $tag1Id = $tag1->getId();
             $tag2Id = $tag2->getId();
             $stmt->bindParam('tag1_id', $tag1Id);
@@ -258,18 +259,15 @@ class TagRepository extends ServiceEntityRepository
             );
 
             // Remove Tag 1.
-            $this->getEntityManager()->remove($tag1);
+            $conn->delete('tag', ['id' => $tag1->getId()]);
 
             // Update tag's metadata.
-            if ($title) {
-                $tag2->setTitle($title);
-            }
-            if ($wikidata) {
-                $tag2->setWikidata($wikidata);
-            }
-            if ($description) {
-                $tag2->setDescription($description);
-            }
+            $tagData = [
+                'title' => $title ?? $tag2->getTitle(),
+                'wikidata' => $wikidata ?? $tag2->getWikidata(),
+                'description' => $description ?? $tag2->getDescription(),
+            ];
+            $conn->update('tag', $tagData, ['id' => $tag2->getId()]);
         });
     }
 

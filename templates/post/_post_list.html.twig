@@ -66,6 +66,10 @@
                         <a href="{{ geo_hack(post.location) }}" title="This post has a geographic location of: {{ post.location }}">📍</a>
                         &middot;
                     {% endif %}
+                    {% if post.file %}
+                        <a href="{{ url('file', {id:post.id, size:'F', ext:post.file.extension}) }}" title="{{'posts.save_tooltip'|trans}}" target="_base">💾</a>
+                        &middot;
+                    {% endif %}
                     <a href="{{ path('post_view', {id:post.id}) }}">P{{ post.id }}</a>
                     {% if is_granted('ROLE_ADMIN') %}
                         &middot;

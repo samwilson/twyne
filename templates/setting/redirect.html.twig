@@ -12,6 +12,8 @@
         {% endif %}
     </h1>
 
+    {% include('setting/_tabs.html.twig') %}
+
     <form action="{{path('redirect_save')}}" method="post">
 
         <p class="fields">

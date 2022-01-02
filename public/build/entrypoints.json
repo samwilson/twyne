@@ -3,22 +3,32 @@
     "app": {
       "js": [
         "/build/runtime.f3575a88.js",
-        "/build/538.b752a06d.js",
-        "/build/app.46283c14.js"
+        "/build/315.f8c60a7e.js",
+        "/build/app.ee0699d7.js"
       ],
       "css": [
-        "/build/app.cfee2ac6.css"
+        "/build/app.7bb2ef9a.css"
       ]
     },
     "map": {
       "js": [
         "/build/runtime.f3575a88.js",
-        "/build/538.b752a06d.js",
-        "/build/805.3a7ec68f.js",
-        "/build/map.92f5a6cc.js"
+        "/build/315.f8c60a7e.js",
+        "/build/805.93aa7c75.js",
+        "/build/map.b2925b8a.js"
       ],
       "css": [
-        "/build/map.c35b4fec.css"
+        "/build/map.194bb611.css"
+      ]
+    },
+    "frontend": {
+      "js": [
+        "/build/runtime.f3575a88.js",
+        "/build/53.ef753eab.js",
+        "/build/frontend.a6e25d71.js"
+      ],
+      "css": [
+        "/build/frontend.200302e3.css"
       ]
     }
   }

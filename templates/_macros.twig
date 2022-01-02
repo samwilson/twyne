@@ -23,3 +23,16 @@
     {% endif %}
 
 {% endmacro %}
+
+
+{% macro tabs(links) %}
+
+    <ol class="tabs">
+        {% for link in links %}
+            <li {% if app.request.attributes.get('_route') == link.route %}class="active"{% endif %}>
+                <a href="{{path(link.route)}}">{{link.text|trans}}</a>
+            </li>
+        {% endfor %}
+    </ol>
+
+{% endmacro %}

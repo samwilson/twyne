@@ -6,12 +6,7 @@
 
     <h1>{{'redirects.title'|trans}}</h1>
 
-    <nav>
-        <ul>
-            <li><a href="{{path('settings')}}">{{'redirects.return_to_settings'|trans}}</a></li>
-            <li><a href="{{path('redirect_new')}}">{{'redirects.add_new'|trans}}</a></li>
-        </ul>
-    </nav>
+    {% include('setting/_tabs.html.twig') %}
 
     <table class="redirects">
         <thead>

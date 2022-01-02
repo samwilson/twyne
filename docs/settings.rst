@@ -52,3 +52,27 @@ No destination is required for those redirects (which aren't really redirects!).
 
 .. _`URL shortening`: https://en.wikipedia.org/wiki/URL_shortening
 .. _`HTTP status code`: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+
+Custom CSS and Scripts
+----------------------
+
+It is possible to add custom CSS and Javascript
+that is loaded on every page.
+This can be useful for things such as modifying the appearance of your site or
+adding statistics-logging Javascript.
+It is not a fully-fledged theming or plugin system,
+but can certainly be used for many common tweaks.
+
+To add or edit the custom CSS or Javascript,
+navigate to the *Settings* page, and go to the *Styles* or *Scripts* tab.
+Each of these is a single text box,
+the contents of which will be loaded verbatim on almost every page on the site.
+The only pages on which it is not loaded are the two pages on which the code is edited,
+in order to avoid errors in the custom code making it harder to modify that same code.
+
+There is no linting or error-checking of any sort done to the text that you enter, so be careful —
+this feature gives you the power to break the site!
+If for whatever reason you are not able to using the main navigation links,
+the two pages can be found at ``https://example.com/settings/css`` and ``https://example.com/settings/js``.
+
+Both code-editing text boxes have syntax-highlighting enabled.

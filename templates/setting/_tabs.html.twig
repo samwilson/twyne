@@ -1,0 +1,8 @@
+{% import "_macros.twig" as macros %}
+{{ macros.tabs([
+    {route: 'settings', text: 'settings.title'},
+    {route: 'redirects', text: 'redirects.title'},
+    {route: 'redirect_new', text: 'redirects.add_new'},
+    {route: 'settings_css', text: 'settings.styles'},
+    {route: 'settings_js', text: 'settings.scripts'}
+]) }}

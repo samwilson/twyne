@@ -9,6 +9,9 @@
         <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ path('rss') }}"/>
         <meta property="og:site_name" content="{{ settings.siteName }}" />
         {% block head %}{% endblock %}
+        {% if not ( no_frontend is defined ) %}
+            <link rel="stylesheet" href="{{ path('frontend_file', {ext:'css'}) }}" />
+        {% endif %}
     </head>
     <body>
         <header>
@@ -70,5 +73,8 @@
         </script>
         {{ encore_entry_script_tags('app') }}
         {% block javascripts %}{% endblock %}
+        {% if not ( no_frontend is defined ) %}
+            <script src="{{ path('frontend_file', {ext:'js'}) }}"></script>
+        {% endif %}
     </body>
 </html>

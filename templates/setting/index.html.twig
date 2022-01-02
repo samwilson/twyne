@@ -6,13 +6,9 @@
 
     <h1>Site Settings</h1>
 
-    <nav>
-        <ul>
-            <li><a href="{{path('redirects')}}">{{'redirects.title'|trans}}</a></li>
-        </ul>
-    </nav>
+    {% include('setting/_tabs.html.twig') %}
 
-    <form action="" method="post">
+    <form action="{{ path('settings_save') }}" method="post">
 
         <p class="fields">
             <span class="field size-1">
@@ -50,7 +46,9 @@
         </fieldset>
 
         <p>
-            <input type="submit" value="Save all" />
+            <input type="hidden" name="token" value="{{ csrf_token('settings-save') }}" />
+            <input type="hidden" name="returnroute" value="settings" />
+            <input type="submit" value="{{ 'forms.save'|trans }}" />
         </p>
 
     </form>

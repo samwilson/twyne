@@ -126,4 +126,14 @@ class Settings
         }
         return $this->mainContact;
     }
+
+    public function getSiteJs(): string
+    {
+        return $this->getData()['site_js'] ?? '';
+    }
+
+    public function getSiteCss(): string
+    {
+        return $this->getData()['site_css'] ?? '';
+    }
 }

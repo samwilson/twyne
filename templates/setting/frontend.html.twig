@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('frontend') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('frontend') }}
+{% endblock %}
+
+{% block title %}
+    {{'settings.custom_code'|trans}}
+{% endblock %}
+
+{% block body %}
+
+    <h1>{{'settings.custom_code'|trans}}</h1>
+
+    {% include('setting/_tabs.html.twig') %}
+
+    <form action="{{path('settings_save')}}" method="post">
+        <p class="fields">
+            <span class="field size-1">
+                <label for="{{ setting_name }}">{{ setting_label|trans }}</label>
+                <textarea id="{{ setting_name }}" data-codemirror="{{ codemirror_mode }}" name="settings[{{ setting_name }}]">{{ setting_value }}</textarea>
+            </span>
+        </p>
+        <p>
+            <input type="hidden" name="token" value="{{ csrf_token('settings-save') }}" />
+            <input type="hidden" name="returnroute" value="{{ app.request.attributes.get('_route') }}" />
+            <input type="submit" value="{{'forms.save'|trans}}" />
+        </p>
+    </form>
+
+{% endblock %}

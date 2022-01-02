@@ -8,6 +8,15 @@ posts:
     save_tooltip: 'Save the full version of this file'
     delete:
         gone-will-be-added: 'An HTTP status of "410 Gone" will be added for this post. See %redirects_link% for more information.'
+settings:
+    title: 'Site Settings'
+    custom_code: 'Custom code'
+    scripts: 'Scripts'
+    scripts_title: 'Site scripts'
+    scripts_desc: 'Javascript that is loaded on every page (other than these style and script editing pages).'
+    styles: 'Styles'
+    styles_title: 'Site styles'
+    styles_desc: 'CSS that is loaded on every page (other than these style and script editing pages).'
 redirects:
     title: 'Redirects'
     add_new: 'Add a new redirect'

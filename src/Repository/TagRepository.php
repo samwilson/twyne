@@ -263,9 +263,9 @@ class TagRepository extends ServiceEntityRepository
 
             // Update tag's metadata.
             $tagData = [
-                'title' => $title ?? $tag2->getTitle(),
-                'wikidata' => $wikidata ?? $tag2->getWikidata(),
-                'description' => $description ?? $tag2->getDescription(),
+                'title' => !empty($title) ? $title : $tag2->getTitle(),
+                'wikidata' => !empty($wikidata) ? $wikidata : $tag2->getWikidata(),
+                'description' => !empty($description) ? $description : $tag2->getDescription(),
             ];
             $conn->update('tag', $tagData, ['id' => $tag2->getId()]);
         });

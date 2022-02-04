@@ -24,6 +24,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends ControllerBase
 {
+
     /** @var string */
     private $twoFASessionKey = 'twyne-2fa-secret';
 

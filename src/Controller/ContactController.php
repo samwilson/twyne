@@ -16,6 +16,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class ContactController extends ControllerBase
 {
+
     /**
      * @Route("/contacts", name="contacts")
      * @IsGranted("ROLE_ADMIN")

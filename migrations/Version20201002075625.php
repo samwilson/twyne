@@ -9,6 +9,7 @@ use Doctrine\Migrations\AbstractMigration;
 
 final class Version20201002075625 extends AbstractMigration
 {
+
     public function getDescription(): string
     {
         return 'Add files.';

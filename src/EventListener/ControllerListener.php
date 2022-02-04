@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ControllerListener
 {
+
     private $redirectRepository;
 
     public function __construct(RedirectRepository $redirectRepository)

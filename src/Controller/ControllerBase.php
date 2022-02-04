@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 abstract class ControllerBase extends AbstractController
 {
+
     /** @var string */
     protected const FLASH_ERROR = 'error';
 

@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class Settings
 {
+
     /** @var SettingRepository */
     private $settingRepository;
 
@@ -136,8 +137,8 @@ class Settings
         return $this->getData()['site_css'] ?? '';
     }
 
-    public function overlandDeviceId(): string
+    public function overlandKey(): string
     {
-        return $this->getData()['overland_device_id'] ?? '';
+        return $this->getData()['overland_key'] ?? '';
     }
 }

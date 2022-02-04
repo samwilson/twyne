@@ -13,6 +13,7 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20210127102730 extends AbstractMigration
 {
+
     public function getDescription(): string
     {
         return 'Add user groups.';

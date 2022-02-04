@@ -28,8 +28,8 @@ class LocationPointController extends ControllerBase
         $json = $request->getContent();
         $logger->debug($json);
         if (
-            $settings->overlandDeviceId()
-            && $request->get('key') !== $settings->overlandDeviceId()
+            $settings->overlandKey()
+            && $request->get('key') !== $settings->overlandKey()
         ) {
             return new JsonResponse(['result' => 'error', 'error' => 'unauthorized']);
         }

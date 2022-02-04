@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class TagRepositoryTest extends RepositoryTestBase
 {
+
     /** @var TagRepository */
     private $tagRepo;
 

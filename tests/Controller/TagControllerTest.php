@@ -10,6 +10,7 @@ use Symfony\Component\DomCrawler\Form;
 
 class TagControllerTest extends ControllerTestBase
 {
+
     public function testTagPage()
     {
         $client = static::createClient();

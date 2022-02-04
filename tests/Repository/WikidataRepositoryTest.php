@@ -7,6 +7,7 @@ use App\Tests\Repository\RepositoryTestBase;
 
 class WikidataRepositoryTest extends RepositoryTestBase
 {
+
     public function testGetData()
     {
         /** @var WikidataRepository $wikidataRepo */

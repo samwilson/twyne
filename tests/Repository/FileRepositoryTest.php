@@ -10,6 +10,7 @@ use App\Repository\PostRepository;
 
 class FileRepositoryTest extends RepositoryTestBase
 {
+
     public function testFindByChecksums()
     {
         /** @var FileRepository $fileRepo */

@@ -4,6 +4,7 @@ namespace App\Tests\Controller;
 
 class RedirectControllerTest extends ControllerTestBase
 {
+
     public function testRedirects()
     {
         $client = static::createClient();

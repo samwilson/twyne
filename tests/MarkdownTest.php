@@ -7,6 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class MarkdownTest extends TestCase
 {
+
     /**
      * @dataProvider provideToHtml()
      * @param $markdown

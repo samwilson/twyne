@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RedirectRepositoryTest extends RepositoryTestBase
 {
+
     /** @var RedirectRepository */
     private $redirectRepo;
 

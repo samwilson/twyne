@@ -9,6 +9,7 @@ use Doctrine\Migrations\AbstractMigration;
 
 final class Version20210308102817 extends AbstractMigration
 {
+
     public function getDescription(): string
     {
         return 'Add password reset requests.';

@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class LocationPoint
 {
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

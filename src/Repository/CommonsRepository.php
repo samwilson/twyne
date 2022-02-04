@@ -15,6 +15,7 @@ use Mediawiki\Api\SimpleRequest;
 
 class CommonsRepository
 {
+
     /** @var SyndicationRepository */
     private $syndicationRepository;
 

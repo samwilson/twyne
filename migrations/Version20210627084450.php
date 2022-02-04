@@ -9,6 +9,7 @@ use Doctrine\Migrations\AbstractMigration;
 
 final class Version20210627084450 extends AbstractMigration
 {
+
     public function getDescription(): string
     {
         return 'Add 2fa secret to users.';

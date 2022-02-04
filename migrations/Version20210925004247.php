@@ -9,6 +9,7 @@ use Doctrine\Migrations\AbstractMigration;
 
 final class Version20210925004247 extends AbstractMigration
 {
+
     public function getDescription(): string
     {
         return 'Add redirects.';

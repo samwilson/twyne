@@ -15,6 +15,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class CommonsController extends ControllerBase
 {
+
     /**
      * @Route("/P{id}/commons", name="commons", methods={"GET"})
      * @IsGranted("ROLE_ADMIN")

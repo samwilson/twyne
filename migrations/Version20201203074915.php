@@ -9,6 +9,7 @@ use Doctrine\Migrations\AbstractMigration;
 
 final class Version20201203074915 extends AbstractMigration
 {
+
     public function getDescription(): string
     {
         return 'Add in-reply-to to posts.';

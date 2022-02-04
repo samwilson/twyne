@@ -46,10 +46,13 @@
         </fieldset>
 
         <fieldset>
-            <legend>Overland</legend>
+            <legend>{{'settings.location_legend'|trans}}</legend>
             <p>
-                <label for="overland_device_id">Device ID:</label>
-                <input type="text" name="settings[overland_device_id]" id="overland_device_id" value="{{ settings.overlandDeviceId }}" />
+                <label for="overland_key">{{'settings.overland_key'|trans}}</label>
+                <input type="password" name="settings[overland_key]" id="overland_key" value="{{ settings.overlandKey }}" />
+            </p>
+            <p>
+            {{ 'settings.overland_help'|trans({'%overland_link%': '<a href="https://indieweb.org/Overland">Overland</a>'})|raw }} <code>{{ url('overland') }}?key=xxxx</code>
             </p>
         </fieldset>
 

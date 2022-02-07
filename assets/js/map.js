@@ -70,6 +70,10 @@ configRequest.addEventListener('load', function () {
 configRequest.open('GET', appBaseUrl + 'map-config.json');
 configRequest.send();
 
+L.geoJSON(geojsonFeature, {
+    onEachFeature: onEachFeature
+}).addTo(map);
+
 // Pointer interaction.
 map.on('click', clickEvent => {
     if (!mapData.edit) {

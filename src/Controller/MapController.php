@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Controller\ControllerBase;
+use App\Repository\LocationPointRepository;
 use App\Repository\PostRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -38,15 +39,46 @@ class MapController extends ControllerBase
      *     "sw_lng"="[0-9.-]+"
      * })
      */
-    public function mapData(Request $request, PostRepository $postRepository)
+    public function mapData(Request $request, PostRepository $postRepository, LocationPointRepository $locationPointRepository)
     {
-        return new JsonResponse($postRepository->findByBoundingBox(
+        $geojson = [
+            'type' => 'FeatureCollection',
+            'features' => [],
+        ];
+        $postData = $postRepository->findByBoundingBox(
             $request->get('ne_lat'),
             $request->get('ne_lng'),
             $request->get('sw_lat'),
             $request->get('sw_lng'),
             $this->getUser()
-        ));
+        );
+        foreach ($postData as $post) {
+            $geojson['features'][] = [
+                'type' => 'Feature',
+                'properties' => [],
+                'geometry' => [
+                    'type' => 'Point',
+                    'coordinates' => [$post['lng'], $post['lat']]
+                ],
+            ];
+        }
+        $trackpoints = $locationPointRepository->findByBoundingBox(
+            $request->get('ne_lat'),
+            $request->get('ne_lng'),
+            $request->get('sw_lat'),
+            $request->get('sw_lng')
+        );
+        foreach ($trackpoints as $point) {
+            $geojson['features'][] = [
+                'type' => 'Feature',
+                'properties' => [],
+                'geometry' => [
+                    'type' => 'Point',
+                    'coordinates' => [$point['lng'], $point['lat']]
+                ],
+            ];
+        }
+        return new JsonResponse($geojson);
     }
 
     /**
@@ -61,6 +93,9 @@ class MapController extends ControllerBase
         if ($this->getUser()) {
             $config['edit_url'] = $this->mapTilesEditUrl;
             $config['edit_config'] = $this->mapTilesEditConfig;
+        }
+        if ($this->getUser()->isAdmin()) {
+        //    $config['location_points'] = 
         }
         return new JsonResponse($config);
     }

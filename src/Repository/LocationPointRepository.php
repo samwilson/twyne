@@ -5,8 +5,6 @@ namespace App\Repository;
 use App\Entity\LocationPoint;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Entity\User;
-use App\Entity\UserGroup;
 
 /**
  * @method LocationPoint|null find($id, $lockMode = null, $lockVersion = null)

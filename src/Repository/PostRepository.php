@@ -124,13 +124,14 @@ class PostRepository extends ServiceEntityRepository
         // Note start and end points are the same.
         $wkt = "Polygon(($ne, $se, $sw, $nw, $ne))";
         $groupList = $user ? $user->getGroupIdList() : UserGroup::PUBLIC;
-        $sql = "SELECT ST_X(location) AS lng, ST_Y(location) AS lat"
+        $sql = "SELECT id, title, ST_X(location) AS lng, ST_Y(location) AS lat"
             . " FROM post"
             . " WHERE"
             . "   location IS NOT NULL"
             . "   AND ST_Contains(GeomFromText(:wkt), location)"
             . "   AND view_group_id IN ($groupList)"
-            . " LIMIT 5000";
+            . " ORDER BY RAND()"
+            . " LIMIT 1000";
         $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
         $stmt->bindParam('wkt', $wkt);
         $stmt->execute();

@@ -11,7 +11,7 @@ map.on('moveend', moveMap);
 map.on('zoomend', moveMap);
 function moveMap () {
     // eslint-disable-next-line no-undef
-    const url = appBaseUrl + 'map/' +
+    const geojsonUrl = appBaseUrl + 'map/' +
         map.getBounds().getNorthEast().lat.toFixed(5) +
         '_' + map.getBounds().getNorthEast().lng.toFixed(5) +
         '_' + map.getBounds().getSouthWest().lat.toFixed(5) +
@@ -20,19 +20,29 @@ function moveMap () {
     const dataRequest = new XMLHttpRequest();
     dataRequest.addEventListener('load', function () {
         const data = JSON.parse(this.responseText);
-        data.forEach(function (e) {
-            // eslint-disable-next-line no-undef
-            const marker = L.circleMarker(new LatLng(e.lat, e.lng), {
-                radius: 2,
-                fillOpacity: 1.0,
-                stroke: false,
-                weight: 0,
-                color: '#ff2222'
-            });
-            marker.addTo(map);
-        });
+        const geojsonMarkerOptions = {
+            fillOpacity: 1.0,
+            stroke: false,
+            weight: 0
+        };
+        L.geoJSON(data, {
+            style: function (feature) {
+                switch (feature.properties && feature.properties.type) {
+                    case 'post': return {color: '#ff0000', radius: 4};
+                    case 'trackpoint': return {color: '#0000ff', radius: 1, fillOpacity: 0.4};
+                }
+            },
+            pointToLayer: function (feature, latlng) {
+                return L.circleMarker(latlng, geojsonMarkerOptions);
+            },
+            onEachFeature: function (feature, layer) {
+                if (feature.properties && feature.properties.popupContent) {
+                    layer.bindPopup(feature.properties.popupContent);
+                }
+            }
+        }).addTo(map);
     });
-    dataRequest.open('GET', url);
+    dataRequest.open('GET', geojsonUrl);
     dataRequest.send();
 }
 
@@ -69,10 +79,6 @@ configRequest.addEventListener('load', function () {
 // eslint-disable-next-line no-undef
 configRequest.open('GET', appBaseUrl + 'map-config.json');
 configRequest.send();
-
-L.geoJSON(geojsonFeature, {
-    onEachFeature: onEachFeature
-}).addTo(map);
 
 // Pointer interaction.
 map.on('click', clickEvent => {

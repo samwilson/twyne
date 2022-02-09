@@ -32,7 +32,8 @@ class LocationPointRepository extends ServiceEntityRepository
         $sql = "SELECT ST_X(location) AS lng, ST_Y(location) AS lat, timestamp"
             . " FROM location_point"
             . " WHERE ST_Contains(GeomFromText(:wkt), location)"
-            . " LIMIT 3000";
+            . " ORDER BY RAND()"
+            . " LIMIT 500";
         $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
         $stmt->bindParam('wkt', $wkt);
         return $stmt->executeQuery()->fetchAllAssociative();

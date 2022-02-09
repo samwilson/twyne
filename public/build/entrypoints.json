@@ -2,36 +2,33 @@
   "entrypoints": {
     "app": {
       "js": [
-        "/build/runtime.js",
-        "/build/vendors-node_modules_core-js_internals_array-method-has-species-support_js-node_modules_core--1227ea.js",
-        "/build/vendors-node_modules_core-js_modules_es_array_concat_js-node_modules_core-js_modules_es_date_-eb7d60.js",
-        "/build/app.js"
+        "/build/runtime.f3575a88.js",
+        "/build/98.5d084e7d.js",
+        "/build/app.103342a2.js"
       ],
       "css": [
-        "/build/vendors-node_modules_core-js_modules_es_array_concat_js-node_modules_core-js_modules_es_date_-eb7d60.css",
-        "/build/app.css"
+        "/build/app.7bb2ef9a.css"
       ]
     },
     "map": {
       "js": [
-        "/build/runtime.js",
-        "/build/vendors-node_modules_core-js_internals_array-method-has-species-support_js-node_modules_core--1227ea.js",
-        "/build/vendors-node_modules_core-js_modules_es_array_map_js-node_modules_core-js_modules_es_number_t-b7200d.js",
-        "/build/map.js"
+        "/build/runtime.f3575a88.js",
+        "/build/98.5d084e7d.js",
+        "/build/805.93aa7c75.js",
+        "/build/map.622a570f.js"
       ],
       "css": [
-        "/build/vendors-node_modules_core-js_modules_es_array_map_js-node_modules_core-js_modules_es_number_t-b7200d.css",
-        "/build/map.css"
+        "/build/map.194bb611.css"
       ]
     },
     "frontend": {
       "js": [
-        "/build/runtime.js",
-        "/build/vendors-node_modules_codemirror_mode_css_css_js-node_modules_codemirror_mode_javascript_javas-bcfbae.js",
-        "/build/frontend.js"
+        "/build/runtime.f3575a88.js",
+        "/build/53.ef753eab.js",
+        "/build/frontend.a6e25d71.js"
       ],
       "css": [
-        "/build/frontend.css"
+        "/build/frontend.200302e3.css"
       ]
     }
   }

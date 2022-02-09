@@ -39,8 +39,11 @@ class MapController extends ControllerBase
      *     "sw_lng"="[0-9.-]+"
      * })
      */
-    public function mapData(Request $request, PostRepository $postRepository, LocationPointRepository $locationPointRepository)
-    {
+    public function mapData(
+        Request $request,
+        PostRepository $postRepository,
+        LocationPointRepository $locationPointRepository
+    ) {
         $geojson = [
             'type' => 'FeatureCollection',
             'features' => [],
@@ -53,30 +56,38 @@ class MapController extends ControllerBase
             $this->getUser()
         );
         foreach ($postData as $post) {
+            $postUrl = $this->generateUrl('post_view', ['id' => $post['id']]);
             $geojson['features'][] = [
                 'type' => 'Feature',
-                'properties' => [],
+                'properties' => [
+                    'type' => 'post',
+                    'popupContent' => '<a href="' . $postUrl . '">' . ( $post['title'] ?: 'Untitled' ) . '</a>',
+                ],
                 'geometry' => [
                     'type' => 'Point',
                     'coordinates' => [$post['lng'], $post['lat']]
                 ],
             ];
         }
-        $trackpoints = $locationPointRepository->findByBoundingBox(
-            $request->get('ne_lat'),
-            $request->get('ne_lng'),
-            $request->get('sw_lat'),
-            $request->get('sw_lng')
-        );
-        foreach ($trackpoints as $point) {
-            $geojson['features'][] = [
-                'type' => 'Feature',
-                'properties' => [],
-                'geometry' => [
-                    'type' => 'Point',
-                    'coordinates' => [$point['lng'], $point['lat']]
-                ],
-            ];
+        if ($this->getUser() && $this->getUser()->isAdmin()) {
+            $trackpoints = $locationPointRepository->findByBoundingBox(
+                $request->get('ne_lat'),
+                $request->get('ne_lng'),
+                $request->get('sw_lat'),
+                $request->get('sw_lng')
+            );
+            foreach ($trackpoints as $point) {
+                $geojson['features'][] = [
+                    'type' => 'Feature',
+                    'properties' => [
+                        'type' => 'trackpoint'
+                    ],
+                    'geometry' => [
+                        'type' => 'Point',
+                        'coordinates' => [$point['lng'], $point['lat']]
+                    ],
+                ];
+            }
         }
         return new JsonResponse($geojson);
     }
@@ -93,9 +104,6 @@ class MapController extends ControllerBase
         if ($this->getUser()) {
             $config['edit_url'] = $this->mapTilesEditUrl;
             $config['edit_config'] = $this->mapTilesEditConfig;
-        }
-        if ($this->getUser()->isAdmin()) {
-        //    $config['location_points'] = 
         }
         return new JsonResponse($config);
     }

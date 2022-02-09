@@ -1,4 +1,4 @@
-import L, { LatLng } from 'leaflet';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import '../css/map.less';
 
@@ -23,13 +23,14 @@ function moveMap () {
         const geojsonMarkerOptions = {
             fillOpacity: 1.0,
             stroke: false,
-            weight: 0
+            weight: 0,
+            color: '#ff0000',
+            radius: 4
         };
         L.geoJSON(data, {
             style: function (feature) {
-                switch (feature.properties && feature.properties.type) {
-                    case 'post': return {color: '#ff0000', radius: 4};
-                    case 'trackpoint': return {color: '#0000ff', radius: 1, fillOpacity: 0.4};
+                if (feature.properties && feature.properties.type && feature.properties.type === 'trackpoint') {
+                    return { color: '#0000ff', radius: 1, fillOpacity: 0.4 };
                 }
             },
             pointToLayer: function (feature, latlng) {

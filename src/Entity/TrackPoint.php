@@ -2,14 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\LocationPointRepository;
+use App\Repository\TrackPointRepository;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Doctrine\ORM\Mapping as ORM;
+use DateTimeInterface;
 
 /**
- * @ORM\Entity(repositoryClass=LocationPointRepository::class)
+ * @ORM\Entity(repositoryClass=TrackPointRepository::class)
  */
-class LocationPoint
+class TrackPoint
 {
 
     /**
@@ -44,15 +45,13 @@ class LocationPoint
         $this->location = $location;
     }
 
-    public function getTimestamp(): ?\DateTimeInterface
+    public function getTimestamp(): DateTimeInterface
     {
         return $this->timestamp;
     }
 
-    public function setTimestamp(\DateTimeInterface $timestamp): self
+    public function setTimestamp(DateTimeInterface $timestamp): void
     {
         $this->timestamp = $timestamp;
-
-        return $this;
     }
 }

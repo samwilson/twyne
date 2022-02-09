@@ -3,11 +3,19 @@
 namespace App\Controller;
 
 use App\Controller\ControllerBase;
-use App\Repository\LocationPointRepository;
 use App\Repository\PostRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Settings;
+use Psr\Log\LoggerInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Response;
+use DateTime;
+use DateTimeZone;
+use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use App\Entity\TrackPoint;
+use App\Repository\TrackPointRepository;
 
 class MapController extends ControllerBase
 {
@@ -42,7 +50,7 @@ class MapController extends ControllerBase
     public function mapData(
         Request $request,
         PostRepository $postRepository,
-        LocationPointRepository $locationPointRepository
+        TrackPointRepository $trackPointRepository
     ) {
         $geojson = [
             'type' => 'FeatureCollection',
@@ -70,7 +78,7 @@ class MapController extends ControllerBase
             ];
         }
         if ($this->getUser() && $this->getUser()->isAdmin()) {
-            $trackpoints = $locationPointRepository->findByBoundingBox(
+            $trackpoints = $trackPointRepository->findByBoundingBox(
                 $request->get('ne_lat'),
                 $request->get('ne_lng'),
                 $request->get('sw_lat'),
@@ -114,5 +122,46 @@ class MapController extends ControllerBase
     public function map()
     {
         return $this->render('post/map.html.twig');
+    }
+
+    /**
+     * @Route("/overland", name="overland")
+     */
+    public function overland(
+        Request $request,
+        Settings $settings,
+        EntityManagerInterface $entityManager,
+        LoggerInterface $logger
+    ): Response {
+        $json = $request->getContent();
+        $logger->debug($json);
+        if (
+            $settings->overlandKey()
+            && $request->get('key') !== $settings->overlandKey()
+        ) {
+            return new JsonResponse(['result' => 'error', 'error' => 'unauthorized']);
+        }
+        if (empty($json)) {
+            return new JsonResponse(['result' => 'ok']);
+        }
+        $data = json_decode($json);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return new JsonResponse(['result' => 'error', 'error' => json_last_error()]);
+        }
+        if (!$data || !isset($data->locations) || !is_array($data->locations)) {
+            return new JsonResponse(['result' => 'ok']);
+        }
+        $entityManager->transactional(function () use ($entityManager, $data) {
+            foreach ($data->locations as $location) {
+                $lp = new TrackPoint();
+                $timestamp = new DateTime($location->properties->timestamp);
+                $timestamp->setTimezone(new DateTimeZone('Z'));
+                $lp->setTimestamp($timestamp);
+                $lp->setLocation(new Point($location->geometry->coordinates[0], $location->geometry->coordinates[1]));
+                $entityManager->persist($lp);
+            }
+            $entityManager->flush();
+        });
+        return new JsonResponse([ 'result' => 'ok' ]);
     }
 }

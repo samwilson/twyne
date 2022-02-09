@@ -11,13 +11,13 @@ final class Version20220204000000 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Add location_point table.';
+        return 'Add trackpoint table.';
     }
 
     public function up(Schema $schema): void
     {
         $this->addSql(
-            'CREATE TABLE location_point ( '
+            'CREATE TABLE track_point ( '
             . ' id INT AUTO_INCREMENT NOT NULL,'
             . " location POINT NOT NULL COMMENT '(DC2Type:point)',"
             . ' timestamp DATETIME NOT NULL,'
@@ -25,7 +25,7 @@ final class Version20220204000000 extends AbstractMigration
             . ' ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB'
         );
         $this->addSql(
-            'ALTER TABLE `location_point`'
+            'ALTER TABLE `track_point`'
             . ' ADD SPATIAL `IDX_LP_LOCATION` (`location`),'
             . ' ADD INDEX  `IDX_LP_TIMESTAMP` (`timestamp`)'
         );
@@ -33,6 +33,6 @@ final class Version20220204000000 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        $this->addSql('DROP TABLE location_point');
+        $this->addSql('DROP TABLE track_point');
     }
 }

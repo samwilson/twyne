@@ -130,23 +130,27 @@ class MapController extends ControllerBase
     public function overland(
         Request $request,
         Settings $settings,
-        EntityManagerInterface $entityManager,
-        LoggerInterface $logger
+        EntityManagerInterface $entityManager
     ): Response {
-        $json = $request->getContent();
-        $logger->debug($json);
+        if (!$settings->overlandKey()) {
+            return new JsonResponse(['result' => 'error', 'error' => 'not configured'], Response::HTTP_NOT_IMPLEMENTED);
+        }
         if (
             $settings->overlandKey()
             && $request->get('key') !== $settings->overlandKey()
         ) {
-            return new JsonResponse(['result' => 'error', 'error' => 'unauthorized']);
+            return new JsonResponse(['result' => 'error', 'error' => 'unauthorized'], Response::HTTP_UNAUTHORIZED);
         }
+        $json = $request->getContent();
         if (empty($json)) {
             return new JsonResponse(['result' => 'ok']);
         }
         $data = json_decode($json);
         if (json_last_error() !== JSON_ERROR_NONE) {
-            return new JsonResponse(['result' => 'error', 'error' => json_last_error()]);
+            return new JsonResponse(
+                ['result' => 'error', 'error' => json_last_error()],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
         if (!$data || !isset($data->locations) || !is_array($data->locations)) {
             return new JsonResponse(['result' => 'ok']);
@@ -162,6 +166,49 @@ class MapController extends ControllerBase
             }
             $entityManager->flush();
         });
+        return new JsonResponse([ 'result' => 'ok' ]);
+    }
+
+    /**
+     * @Route("/gpslogger", name="gpslogger")
+     */
+    public function gpslogger(
+        Request $request,
+        Settings $settings,
+        EntityManagerInterface $entityManager,
+        LoggerInterface $logger
+    ) {
+        if (!$settings->overlandKey()) {
+            $logger->warning('GPSLogger key not configured');
+            return new JsonResponse(['result' => 'error', 'error' => 'not configured'], Response::HTTP_NOT_IMPLEMENTED);
+        }
+        if (
+            $settings->overlandKey()
+            && $request->headers->get('Authorization') !== 'Bearer ' . $settings->overlandKey()
+        ) {
+            $logger->warning('GPSLogger unauthorized');
+            return new JsonResponse(['result' => 'error', 'error' => 'unauthorized'], Response::HTTP_FORBIDDEN);
+        }
+
+        $lat = $request->get('lat');
+        $lon = $request->get('lon');
+        $time = $request->get('time');
+        if (!$lat || !$lon || !$time) {
+            $logger->warning('GPSLogger has not provided all fields (lat, lon, and time).');
+            return new JsonResponse(
+                ['result' => 'error', 'error' => 'Not all fields set.'],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        $lp = new TrackPoint();
+        $timestamp = new DateTime($time);
+        $timestamp->setTimezone(new DateTimeZone('Z'));
+        $lp->setTimestamp($timestamp);
+        $lp->setLocation(new Point($lat, $lon));
+        $entityManager->persist($lp);
+        $entityManager->flush();
+
         return new JsonResponse([ 'result' => 'ok' ]);
     }
 }

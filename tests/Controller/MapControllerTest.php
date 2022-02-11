@@ -4,16 +4,49 @@ namespace App\Tests;
 
 use App\Tests\Controller\ControllerTestBase;
 use App\Repository\TrackPointRepository;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class MapControllerTest extends ControllerTestBase
 {
+
+    public function testKeyNotConfigured()
+    {
+        $client = static::createClient();
+        $client->request('POST', '/overland?key=123', [], [], [], '{}');
+        $actualResult = json_decode($client->getResponse()->getContent(), true);
+        $this->assertSame('not configured', $actualResult['error']);
+    }
+
+    public function testNotAuthorized()
+    {
+        $client = static::createClient();
+        $this->setOverlandKey($client);
+        $client->request('POST', '/overland?key=wrongkey', [], [], [], '{}');
+        $actualResult = json_decode($client->getResponse()->getContent(), true);
+        $this->assertSame('unauthorized', $actualResult['error']);
+    }
+
+    private function setOverlandKey(KernelBrowser $client)
+    {
+        $key = '123abc';
+        $this->createAccountAndLogIn($client);
+        $settingsPage = $client->request('GET', '/settings');
+        $client->submitForm('Save', [
+            'settings[overland_key]' => $key,
+            'token' => $settingsPage->filter('[name="token"]')->attr('value'),
+        ], 'POST');
+        $client->request('GET', '/settings');
+        return $key;
+    }
+
     /**
      * @dataProvider provideOverlandApiSubmission()
      */
     public function testOverlandApiSubmission($input, $result)
     {
         $client = static::createClient();
-        $client->request('POST', '/overland', [], [], [], $input);
+        $key = $this->setOverlandKey($client);
+        $client->request('POST', '/overland?key=' . $key, [], [], [], $input);
         $actualResult = json_decode($client->getResponse()->getContent(), true);
         $this->assertSame($result, $actualResult);
     }
@@ -48,7 +81,8 @@ class MapControllerTest extends ControllerTestBase
     public function testOverlandPointSaving()
     {
         $client = static::createClient();
-        $client->request('POST', '/overland', [], [], [], '{
+        $key = $this->setOverlandKey($client);
+        $client->request('POST', '/overland?key=' . $key, [], [], [], '{
         "locations": [
           {"geometry": {"coordinates": [40, 50]}, "properties": {"timestamp": "2021-03-03 17:00:00 +0800"}},
           {"geometry": {"coordinates": [50, 60]}, "properties": {"timestamp": "2021-03-03 18:00:00 +0800"}}

@@ -28,7 +28,7 @@ class TrackPointRepository extends ServiceEntityRepository
         // Note start and end points are the same.
         $wkt = "Polygon(($ne, $se, $sw, $nw, $ne))";
         $sql = "SELECT ST_X(location) AS lng, ST_Y(location) AS lat"
-            . " FROM location_point"
+            . " FROM track_point"
             . " WHERE ST_Contains(GeomFromText(:wkt), location)"
             . " ORDER BY RAND()"
             . " LIMIT 500";

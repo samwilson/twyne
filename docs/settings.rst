@@ -29,6 +29,12 @@ API key
 If you use the CLI client, you'll need to set an API key.
 This should be any random alphanumeric string, and must be kept secret.
 
+Overland key
+------------
+
+Required when using Overland to log.
+For more inforamation, see: :ref:`gps`
+
 Redirects
 ---------
 

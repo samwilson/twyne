@@ -205,7 +205,7 @@ class MapController extends ControllerBase
         $timestamp = new DateTime($time);
         $timestamp->setTimezone(new DateTimeZone('Z'));
         $lp->setTimestamp($timestamp);
-        $lp->setLocation(new Point($lat, $lon));
+        $lp->setLocation(new Point($lon, $lat));
         $entityManager->persist($lp);
         $entityManager->flush();
 

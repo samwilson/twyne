@@ -45,6 +45,18 @@
             </p>
         </fieldset>
 
+        <fieldset>
+            <legend>{{'settings.location_legend'|trans}}</legend>
+            <p>
+                <label for="overland_key">{{'settings.overland_key'|trans}}</label>
+                <input type="password" name="settings[overland_key]" id="overland_key" value="{{ settings.overlandKey }}" />
+            </p>
+            <p>
+                {{ 'settings.overland_help'|trans({'%overland_link%': '<a href="https://indieweb.org/Overland">Overland</a>'})|raw }}
+                <code>{{ url('overland') }}?key=xxxx</code>
+            </p>
+        </fieldset>
+
         <p>
             <input type="hidden" name="token" value="{{ csrf_token('settings-save') }}" />
             <input type="hidden" name="returnroute" value="settings" />

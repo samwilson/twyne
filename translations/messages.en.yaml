@@ -10,6 +10,9 @@ posts:
         gone-will-be-added: 'An HTTP status of "410 Gone" will be added for this post. See %redirects_link% for more information.'
 settings:
     title: 'Site Settings'
+    location_legend: 'GPS tracking'
+    overland_key: 'Overland key:'
+    overland_help: "Enter the following URL in %overland_link% as the 'Receiver Endpoint':"
     custom_code: 'Custom code'
     scripts: 'Scripts'
     scripts_title: 'Site scripts'

@@ -136,4 +136,9 @@ class Settings
     {
         return $this->getData()['site_css'] ?? '';
     }
+
+    public function overlandKey(): string
+    {
+        return $this->getData()['overland_key'] ?? '';
+    }
 }

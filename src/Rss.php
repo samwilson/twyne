@@ -33,9 +33,10 @@ class Rss
     /**
      * @param Post[] $posts
      * @param string $channelUrl
+     * @param string $feedUrl
      * @param string $title Optional subtitle of the feed.
      */
-    public function get(array $posts, string $channelUrl, string $title = null): string
+    public function get(array $posts, string $channelUrl, string $feedUrl, string $title = null): string
     {
         $this->dom = new DOMDocument('1.0', 'UTF-8');
 
@@ -53,9 +54,8 @@ class Rss
 
         $channel->appendChild($this->dom->createElement('link', $channelUrl));
 
-        $selfUrl = $this->urlGenerator->generate('rss', [], UrlGeneratorInterface::ABSOLUTE_URL);
         $atomLink = $this->dom->createElement('atom:link');
-        $atomLink->setAttribute('href', $selfUrl);
+        $atomLink->setAttribute('href', $feedUrl);
         $atomLink->setAttribute('rel', 'self');
         $atomLink->setAttribute('type', 'application/rss+xml');
         $channel->appendChild($atomLink);

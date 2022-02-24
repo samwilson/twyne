@@ -1,5 +1,5 @@
 {
-  "build/app.css": "/build/app.7bb2ef9a.css",
+  "build/app.css": "/build/app.5d4441fa.css",
   "build/app.js": "/build/app.103342a2.js",
   "build/map.css": "/build/map.194bb611.css",
   "build/map.js": "/build/map.bc128b20.js",
@@ -12,6 +12,7 @@
   "build/images/marker-icon.png": "/build/images/marker-icon.2b3e1faf.png",
   "build/images/layers-2x.png": "/build/images/layers-2x.8f2c4d11.png",
   "build/images/map-pin-2x.png": "/build/images/map-pin-2x.png",
+  "build/images/feed-icon.png": "/build/images/feed-icon.png",
   "build/images/layers.png": "/build/images/layers.416d9136.png",
   "build/images/map-pin.png": "/build/images/map-pin.png",
   "build/images/map-pin.svg": "/build/images/map-pin.svg",

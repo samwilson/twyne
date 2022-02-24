@@ -17,19 +17,24 @@ class Rss
     /** @var UrlGeneratorInterface */
     private $urlGenerator;
 
+    /** @var Markdown */
+    private $markdown;
+
     /** @var DOMDocument */
     private $dom;
 
-    public function __construct(Settings $settings, UrlGeneratorInterface $urlGenerator)
+    public function __construct(Settings $settings, UrlGeneratorInterface $urlGenerator, Markdown $markdown)
     {
         $this->settings = $settings;
         $this->urlGenerator = $urlGenerator;
+        $this->markdown = $markdown;
     }
 
     /**
      * @param Post[] $posts
+     * @param string $title Optional subtitle of the feed.
      */
-    public function get(array $posts): string
+    public function get(array $posts, string $title = null): string
     {
         $this->dom = new DOMDocument('1.0', 'UTF-8');
 
@@ -42,7 +47,7 @@ class Rss
         $channel = $this->dom->createElement('channel');
         $channel = $root->appendChild($channel);
 
-        $title = $this->dom->createElement('title', $this->settings->siteName());
+        $title = $this->dom->createElement('title', $this->settings->siteName() . ($title ? ' :: ' . $title : ''));
         $channel->appendChild($title);
 
         $homeUrl = $this->urlGenerator->generate('home', [], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -74,7 +79,8 @@ class Rss
         $item->appendChild($title);
 
         if ($post->getBody()) {
-            $description = $this->dom->createElement('description', $post->getBody());
+            $body = $this->markdown->toHtml($post->getBody());
+            $description = $this->dom->createElement('description', $body);
             $item->appendChild($description);
         }
 

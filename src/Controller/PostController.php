@@ -12,6 +12,7 @@ use App\Repository\ContactRepository;
 use App\Repository\FileRepository;
 use App\Repository\PostRepository;
 use App\Repository\RedirectRepository;
+use App\Repository\TagRepository;
 use App\Repository\UserGroupRepository;
 use App\Rss;
 use App\Settings;
@@ -26,6 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PostController extends ControllerBase
@@ -43,10 +45,26 @@ class PostController extends ControllerBase
 
     /**
      * @Route("/rss.xml", name="rss")
+     * @Route("/T{id}/rss.xml", name="tag_rss", requirements={"id"="\d+"})
      */
-    public function rss(Rss $rss, PostRepository $postRepository): Response
-    {
-        return new Response($rss->get($postRepository->recent(20, $this->getUser())), 200, [
+    public function rss(
+        Rss $rss,
+        PostRepository $postRepository,
+        TagRepository $tagRepository,
+        $id = null
+    ): Response {
+        $title = null;
+        if ($id) {
+            $tag = $tagRepository->find($id);
+            if (!$tag) {
+                throw $this->createNotFoundException();
+            }
+            $posts = $tagRepository->findPosts($tag, $this->getUser());
+            $title = $tag->getTitle();
+        } else {
+            $posts = $postRepository->recent(20, $this->getUser());
+        }
+        return new Response($rss->get($posts, $title), 200, [
             'Content-Type' => 'text/xml',
         ]);
     }

@@ -2,6 +2,10 @@
 
 {% block title %}{{ tag.title }} :: tag{% endblock %}
 
+{% block head %}
+    <link rel="alternate" type="application/rss+xml" title="{{'general.rss_tag'|trans({'%tag%': tag.title})}}" href="{{ path('tag_rss', {id:tag.id}) }}"/>
+{% endblock %}
+
 {% block body %}
 
     <article>
@@ -69,6 +73,13 @@
         {% endif %}
 
         {{ tag.description|markdownToHtml }}
+
+        <p>
+            <a href="{{path('tag_rss',{id:tag.id})}}" class="icon-link">
+                <img src="{{ asset('build/images/feed-icon.png') }}" alt="{{'general.rss_icon_alt'|trans}}" />
+                {{'general.rss_tag'|trans({'%tag%': tag.title})}}
+            </a>
+        </p>
 
         {% if tag.wikidata and entity.authorities is defined %}
             <p class="authority-control">

@@ -1,3 +1,7 @@
+general:
+    rss: 'RSS feed for recent posts'
+    rss_tag: 'RSS feed for the "%tag%" tag'
+    rss_icon_alt: 'RSS feed icon.'
 forms:
     edit: Edit
     save: Save

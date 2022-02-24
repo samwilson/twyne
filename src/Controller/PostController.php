@@ -48,6 +48,7 @@ class PostController extends ControllerBase
      * @Route("/T{id}/rss.xml", name="tag_rss", requirements={"id"="\d+"})
      */
     public function rss(
+        Request $request,
         Rss $rss,
         PostRepository $postRepository,
         TagRepository $tagRepository,
@@ -66,7 +67,7 @@ class PostController extends ControllerBase
             $posts = $postRepository->recent(20, $this->getUser());
             $channelUrl = $this->generateUrl('home', [], UrlGeneratorInterface::ABSOLUTE_URL);
         }
-        return new Response($rss->get($posts, $channelUrl, $title), 200, [
+        return new Response($rss->get($posts, $channelUrl, $request->getUri(), $title), 200, [
             'Content-Type' => 'text/xml',
         ]);
     }

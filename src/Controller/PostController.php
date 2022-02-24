@@ -61,10 +61,12 @@ class PostController extends ControllerBase
             }
             $posts = $tagRepository->findPosts($tag, $this->getUser());
             $title = $tag->getTitle();
+            $channelUrl = $this->generateUrl('tag_view', ['id' => $id], UrlGeneratorInterface::ABSOLUTE_URL);
         } else {
             $posts = $postRepository->recent(20, $this->getUser());
+            $channelUrl = $this->generateUrl('home', [], UrlGeneratorInterface::ABSOLUTE_URL);
         }
-        return new Response($rss->get($posts, $title), 200, [
+        return new Response($rss->get($posts, $channelUrl, $title), 200, [
             'Content-Type' => 'text/xml',
         ]);
     }

@@ -19,6 +19,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "^2.7",
         "endroid/qr-code": "^4.2",
+        "league/commonmark": "^1.6",
         "league/flysystem-aws-s3-v3": "^1.0",
         "samwilson/phpflickr": "^4.14",
         "sensio/framework-extra-bundle": "^5.6",

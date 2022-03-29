@@ -65,6 +65,22 @@ class Filesystems
         return "/files/$bracket/" . $id . "." . $file->getExtension();
     }
 
+    /**
+     * Download the full-sized original of a file to local temp and return its path.
+     *
+     * @return string Full local filesystem path the to file.
+     */
+    public function getLocalTempFilepath(File $file): string
+    {
+        $outStream = $this->read($file, File::SIZE_FULL);
+        $tempFilePath = 'local_tmp/' . $file->getPost()->getId() . '.' . $file->getExtension();
+        $tempFs = $this->temp();
+        if (!$tempFs->has($tempFilePath)) {
+            $tempFs->writeStream($tempFilePath, $outStream);
+        }
+        return $this->tempRoot() . $tempFilePath;
+    }
+
     public function write(Filesystem $fs, File $file, string $filePath)
     {
         $storagePath = $this->getDataStoragePath($file);

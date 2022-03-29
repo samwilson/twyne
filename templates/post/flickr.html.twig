@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{'posts.flickr.copy_to'|trans}}
+{% endblock %}
+
+{% block body %}
+
+    <h1>{{'posts.flickr.copy_to'|trans}}</h1>
+
+    <p><a href="{{ path('post_edit', {id:post.id}) }}">&larr; Return to editing this post</a></p>
+
+    <form action="{{ path('flickr_save', {id:post.id}) }}" method="post" class="posse">
+        <div class="image">
+            <img src="{{ path('file', {id:post.id, size:'D', ext:'jpg'}) }}" alt="Image of the file attached to this post." />
+        </div>
+        <div class="form">
+            <p>
+                {% set flickr_link -%}
+                    <a href="https://flickr.com/photos/{% if flickr_user.path_alias %}{{flickr_user.path_alias}}{% else %}{{flickr_user.id}}{% endif %}">
+                        {{- flickr_user.username -}}
+                    </a>
+                {%- endset %}
+                {{ 'posts.flickr.logged_in'|trans({'%username_link%': flickr_link})|raw }}
+            </p>
+            <p>
+                <label for="title">{{'posts.flickr.title'|trans}}</label>
+                <input type="text" id="title" name="title" value="{{ post.title }}" />
+            </p>
+            <p>
+                <label for="description">{{'posts.flickr.description'|trans}}</label>
+                <textarea id="description" name="description">{{ post.body }}</textarea>
+            </p>
+            <p>
+                <label for="tags">Tags:</label>
+                <select id="tags" name="tags[]" multiple>
+                    {% for tag in post.tags %}
+                        <option value="{{ tag.title }}" selected>{{ tag.title }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+            <p>
+                <label for="is_public">
+                    <input type="checkbox" name="is_public" id="is_public" />
+                    {{'posts.flickr.is_public'|trans}}
+                </label>
+                <label for="is_friend">
+                    <input type="checkbox" name="is_friend" id="is_friend" />
+                    {{'posts.flickr.is_friend'|trans}}
+                </label>
+                <label for="is_family">
+                    <input type="checkbox" name="is_family" id="is_family" />
+                    {{'posts.flickr.is_family'|trans}}
+                </label>
+            </p>
+            <p>
+                <input type="submit" value="Upload" />
+            </p>
+        </div>
+    </form>
+
+{% endblock %}

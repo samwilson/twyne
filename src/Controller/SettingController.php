@@ -3,10 +3,13 @@
 namespace App\Controller;
 
 use App\Settings;
+use Samwilson\PhpFlickr\PhpFlickr;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
+use OAuth\Common\Storage\Session;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class SettingController extends ControllerBase
 {
@@ -34,6 +37,51 @@ class SettingController extends ControllerBase
         return $this->render('setting/index.html.twig', [
             'controller_name' => 'SettingController',
         ]);
+    }
+
+    /**
+     * @Route("/settings/flickr/connect", name="flickr_connect")
+     * @isGranted("ROLE_ADMIN")
+     */
+    public function flickrConnect(Settings $settings): Response
+    {
+        $flickr = new PhpFlickr($settings->flickrApiKey(), $settings->flickrApiSecret());
+        $flickr->setOauthStorage(new Session());
+        $callbackUrl = $this->generateUrl('flickr_callback', [], UrlGeneratorInterface::ABSOLUTE_URL);
+        return $this->redirect($flickr->getAuthUrl('write', $callbackUrl));
+    }
+
+    /**
+     * @Route("/settings/flickr/callback", name="flickr_callback")
+     * @isGranted("ROLE_ADMIN")
+     */
+    public function flickrCallback(Settings $settings, Request $request): Response
+    {
+        if (!$request->get('oauth_verifier') || !$request->get('oauth_token')) {
+            $this->addFlash(self::FLASH_NOTICE, 'No OAuth verifier params passed for Flickr callback.');
+            return $this->redirectToRoute('settings');
+        }
+        $flickr = new PhpFlickr($settings->flickrApiKey(), $settings->flickrApiSecret());
+        $flickr->setOauthStorage(new Session());
+        $accessToken = $flickr->retrieveAccessToken($request->get('oauth_verifier'), $request->get('oauth_token'));
+        $settings->saveData([
+            'flickr_token' => $accessToken->getAccessToken(),
+            'flickr_token_secret' => $accessToken->getAccessTokenSecret(),
+        ]);
+        return $this->redirectToRoute('settings');
+    }
+
+    /**
+     * @Route("/settings/flickr/disconnect", name="flickr_disconnect")
+     * @isGranted("ROLE_ADMIN")
+     */
+    public function flickrDisconnect(Settings $settings): Response
+    {
+        $settings->saveData([
+            'flickr_token' => '',
+            'flickr_token_secret' => '',
+        ]);
+        return $this->redirectToRoute('settings');
     }
 
     /**

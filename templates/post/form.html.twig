@@ -141,6 +141,13 @@
                         </td>
                     </tr>
                 {% endif %}
+                {% if post.id %}
+                    <tr>
+                        <td colspan="3">
+                            <a href="{{ path('flickr', {id:post.id}) }}">{{'posts.flickr.copy_to'|trans}}</a>
+                        </td>
+                    </tr>
+                {% endif %}
             </tfoot>
         </table>
         <p>

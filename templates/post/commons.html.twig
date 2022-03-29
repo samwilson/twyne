@@ -10,7 +10,7 @@
 
     <p><a href="{{ path('post_edit', {id:post.id}) }}">&larr; Return to editing this post</a></p>
 
-    <form action="{{ path('commons_save', {id:post.id}) }}" method="post" class="commons">
+    <form action="{{ path('commons_save', {id:post.id}) }}" method="post" class="posse">
         <div class="image">
             <img src="{{ path('file', {id:post.id, size:'D', ext:'jpg'}) }}" alt="Image of the file attached to this post." />
         </div>
@@ -26,10 +26,10 @@
             </p>
             <p>
                 <label for="depicts">Depicts:</label>
-                <select id="depicts" name="depicts[]">
+                <select id="depicts" name="depicts[]" multiple>
                     {% for tag in post.tags %}
                         {% if tag.wikidata %}
-                            <option value="{{ tag.wikidata }}">{{ tag.title }}</option>
+                            <option value="{{ tag.wikidata }}" selected>{{ tag.title }}</option>
                         {% endif %}
                     {% endfor %}
                 </select>

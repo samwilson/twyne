@@ -36,13 +36,20 @@
                 </span>
                 <span class="field size-1">
                     <label for="flickr_api_secret">API Secret:</label>
-                    <input id="flickr_api_secret" type="text" value="{{ settings.flickrApiSecret }}" name="settings[flickr_api_secret]" />
+                    <input id="flickr_api_secret" type="password" value="{{ settings.flickrApiSecret }}" name="settings[flickr_api_secret]" />
                 </span>
             </p>
             <p>
                 Access Token? {% if settings.flickrToken %}&check;{% else %}&cross;{% endif %}
                 Access Token Secret? {% if settings.flickrTokenSecret %}&check;{% else %}&cross;{% endif %}
             </p>
+            <p>
+                {% if settings.flickrToken %}
+                    <a href="{{path('flickr_disconnect')}}">Disconnect from Flickr</a>
+                {% else %}
+                    <a href="{{path('flickr_connect')}}">Connect to Flickr</a>
+                {% endif %}
+            </a>
         </fieldset>
 
         <fieldset>

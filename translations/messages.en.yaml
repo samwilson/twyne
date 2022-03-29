@@ -12,6 +12,14 @@ posts:
     save_tooltip: 'Save the full version of this file'
     delete:
         gone-will-be-added: 'An HTTP status of "410 Gone" will be added for this post. See %redirects_link% for more information.'
+    flickr:
+        copy_to: 'Copy to Flickr'
+        logged_in: 'You are logged in as %username_link%.'
+        title: 'Title:'
+        description: 'Description:'
+        is_public: 'Public'
+        is_friend: 'Friend'
+        is_family: 'Famiy'
 settings:
     title: 'Site Settings'
     location_legend: 'GPS tracking'

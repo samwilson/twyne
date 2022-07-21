@@ -11,10 +11,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use SymfonyCasts\Bundle\ResetPassword\Controller\ResetPasswordControllerTrait;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
+use SymfonyCasts\Bundle\ResetPassword\Exception\TooManyPasswordRequestsException;
 use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
 
 class ResetPasswordController extends ControllerBase
@@ -55,6 +56,9 @@ class ResetPasswordController extends ControllerBase
         }
         try {
             $resetToken = $this->resetPasswordHelper->generateResetToken($user);
+        } catch (TooManyPasswordRequestsException $e) {
+            $this->addFlash(self::FLASH_NOTICE, 'Password reset .');
+            return $this->redirectToRoute('reset_check');
         } catch (ResetPasswordExceptionInterface $e) {
             // Pretend, if anything went wrong.
             return $this->redirectToRoute('reset_check');
@@ -94,7 +98,7 @@ class ResetPasswordController extends ControllerBase
      */
     public function reset(
         Request $request,
-        UserPasswordEncoderInterface $passwordEncoder,
+        UserPasswordHasherInterface $passwordHasher,
         string $token = null
     ): Response {
         if ($token) {
@@ -137,7 +141,7 @@ class ResetPasswordController extends ControllerBase
         $this->resetPasswordHelper->removeResetRequest($token);
 
         // Encode the plain password, and set it.
-        $user->setPassword($passwordEncoder->encodePassword($user, $pass));
+        $user->setPassword($passwordHasher->hashPassword($user, $pass));
         $em = $this->getDoctrine()->getManager();
         $em->persist($user);
         $em->flush();

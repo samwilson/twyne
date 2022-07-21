@@ -12,11 +12,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class ContactController extends ControllerBase
 {
-
     /**
      * @Route("/contacts", name="contacts")
      * @IsGranted("ROLE_ADMIN")
@@ -54,7 +53,7 @@ class ContactController extends ControllerBase
         ContactRepository $contactRepository,
         UserGroupRepository $userGroupRepository,
         EntityManagerInterface $entityManager,
-        UserPasswordEncoderInterface $passwordEncoder
+        UserPasswordHasherInterface $passwordHasher
     ) {
         $id = $request->get('id');
         $contact = $id ? $contactRepository->find($id) : new Contact();
@@ -71,7 +70,7 @@ class ContactController extends ControllerBase
             $user->setContact($contact);
             if (!$user->getPassword()) {
                 // If this is a new user, create a random password.
-                $user->setPassword($passwordEncoder->encodePassword($user, uniqid()));
+                $user->setPassword($passwordHasher->hashPassword($user, uniqid()));
             }
             $user->setGroups(new ArrayCollection());
             foreach ($request->get('user_groups', []) as $groupId => $value) {

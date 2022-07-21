@@ -8,7 +8,6 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class MapControllerTest extends ControllerTestBase
 {
-
     public function testKeyNotConfigured()
     {
         $client = static::createClient();

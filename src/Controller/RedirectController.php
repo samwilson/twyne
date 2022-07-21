@@ -2,23 +2,14 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Entity\Contact;
 use App\Entity\Redirect;
-use App\Entity\UserGroup;
-use App\Repository\ContactRepository;
 use App\Repository\RedirectRepository;
-use App\Repository\UserGroupRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class RedirectController extends ControllerBase
 {
-
     /**
      * @Route("/redirects", name="redirects")
      * @IsGranted("ROLE_ADMIN")

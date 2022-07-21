@@ -10,7 +10,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class Settings
 {
-
     /** @var SettingRepository */
     private $settingRepository;
 

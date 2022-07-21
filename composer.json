@@ -1,8 +1,8 @@
 {
     "name": "samwilson/twyne",
-    "type": "project",
     "description": "A web-based journal for writing and photography.",
     "license": "GPL-3.0-or-later",
+    "type": "project",
     "require": {
         "php": ">=7.3",
         "ext-ctype": "*",
@@ -13,7 +13,6 @@
         "ext-json": "*",
         "addwiki/mediawiki-api": "^2.7",
         "alexandret/doctrine2-spatial": "^2.0",
-        "christian-riesen/otp": "^2.7",
         "composer/package-versions-deprecated": "^1.11",
         "doctrine/doctrine-bundle": "^2.1",
         "doctrine/doctrine-migrations-bundle": "^3.0",
@@ -22,23 +21,35 @@
         "league/commonmark": "^1.6",
         "league/flysystem-aws-s3-v3": "^1.0",
         "samwilson/phpflickr": "^4.14",
-        "sensio/framework-extra-bundle": "^5.6",
-        "symfony/console": "5.2.*",
-        "symfony/dotenv": "5.2.*",
-        "symfony/flex": "^1.3.1",
-        "symfony/framework-bundle": "5.2.*",
-        "symfony/http-client": "5.2.*",
-        "symfony/mailer": "5.2.*",
+        "sensio/framework-extra-bundle": "^6.0",
+        "spomky-labs/otphp": "^10.0",
+        "symfony/console": "5.4.*",
+        "symfony/dotenv": "5.4.*",
+        "symfony/framework-bundle": "5.4.*",
+        "symfony/http-client": "5.4.*",
+        "symfony/mailer": "5.4.*",
         "symfony/monolog-bundle": "^3.6",
-        "symfony/process": "5.2.*",
-        "symfony/security-bundle": "5.2.*",
-        "symfony/translation": "5.2.*",
-        "symfony/twig-bundle": "5.2.*",
+        "symfony/process": "5.4.*",
+        "symfony/security-bundle": "5.4.*",
+        "symfony/translation": "5.4.*",
+        "symfony/twig-bundle": "5.4.*",
         "symfony/webpack-encore-bundle": "^1.7",
-        "symfony/yaml": "5.2.*",
+        "symfony/yaml": "5.4.*",
         "symfonycasts/reset-password-bundle": "^1.1",
         "twig/extra-bundle": "^2.12 || ^3.0",
         "twig/twig": "^2.12 || ^3.0"
+    },
+    "require-dev": {
+        "dama/doctrine-test-bundle": "^6.3",
+        "ergebnis/composer-normalize": "^2.5",
+        "mediawiki/minus-x": "^1.1",
+        "squizlabs/php_codesniffer": "^3.3",
+        "symfony/browser-kit": "5.4.*",
+        "symfony/css-selector": "5.4.*",
+        "symfony/maker-bundle": "^1.21",
+        "symfony/phpunit-bridge": "^5.4",
+        "symfony/stopwatch": "^5.4",
+        "symfony/web-profiler-bundle": "^5.4"
     },
     "replace": {
         "paragonie/random_compat": "2.*",
@@ -52,19 +63,20 @@
     "conflict": {
         "symfony/symfony": "*"
     },
-    "require-dev": {
-        "dama/doctrine-test-bundle": "^6.3",
-        "ergebnis/composer-normalize": "^2.5",
-        "mediawiki/minus-x": "^1.1",
-        "squizlabs/php_codesniffer": "^3.3",
-        "symfony/browser-kit": "5.2.*",
-        "symfony/css-selector": "5.2.*",
-        "symfony/maker-bundle": "^1.21",
-        "symfony/phpunit-bridge": "^5.2",
-        "symfony/stopwatch": "^5.2",
-        "symfony/web-profiler-bundle": "^5.2"
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Tests\\": "tests/"
+        }
     },
     "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true
+        },
         "optimize-autoloader": true,
         "platform": {
             "php": "7.3"
@@ -77,30 +89,16 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "5.2.*"
-        }
-    },
-    "autoload": {
-        "psr-4": {
-            "App\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "App\\Tests\\": "tests/"
+            "require": "5.4.*"
         }
     },
     "scripts": {
         "post-install-cmd": [
-            "@auto-scripts"
+            "./bin/console cache:clear"
         ],
         "post-update-cmd": [
-            "@auto-scripts"
+            "./bin/console cache:clear"
         ],
-        "auto-scripts": {
-            "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd"
-        },
         "docs": [
             "cd docs && make html SPHINXOPTS=\"-W\""
         ],

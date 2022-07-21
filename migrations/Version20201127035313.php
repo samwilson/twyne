@@ -9,7 +9,6 @@ use Doctrine\Migrations\AbstractMigration;
 
 final class Version20201127035313 extends AbstractMigration
 {
-
     public function getDescription(): string
     {
         return 'Add point location to posts.';

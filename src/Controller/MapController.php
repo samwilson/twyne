@@ -19,7 +19,6 @@ use App\Repository\TrackPointRepository;
 
 class MapController extends ControllerBase
 {
-
     private $mapTilesViewUrl;
     private $mapTilesViewConfig;
     private $mapTilesEditUrl;

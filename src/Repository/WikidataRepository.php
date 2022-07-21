@@ -11,7 +11,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class WikidataRepository
 {
-
     /** @var string */
     private $wikidataUrl;
 

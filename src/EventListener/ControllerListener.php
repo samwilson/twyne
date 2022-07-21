@@ -5,6 +5,7 @@ namespace App\EventListener;
 use App\Controller\ControllerBase;
 use App\Controller\SecurityController;
 use App\Controller\ResetPasswordController;
+use App\Controller\SettingController;
 use App\Repository\RedirectRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,7 +16,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ControllerListener
 {
-
     private $redirectRepository;
 
     public function __construct(RedirectRepository $redirectRepository)
@@ -55,10 +55,11 @@ class ControllerListener
         /** @var ControllerBase $controller */
         $controller = $event->getController()[0];
 
-        // Some controllers are special and don't need interfering with.
+        // Some controllers or methods are special and don't need interfering with.
         if (
             $controller instanceof SecurityController
             || $controller instanceof ResetPasswordController
+            || $event->getRequest()->attributes->get('_controller') == SettingController::class . '::frontendFile'
         ) {
             return;
         }

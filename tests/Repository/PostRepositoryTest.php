@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class PostRepositoryTest extends RepositoryTestBase
 {
-
     public function testAuthor()
     {
         // Test author.

@@ -12,7 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class UserGroup
 {
-
     /** @var int ID of the public group. */
     public const PUBLIC = 1;
 

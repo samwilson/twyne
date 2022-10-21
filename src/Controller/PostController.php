@@ -32,7 +32,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PostController extends ControllerBase
 {
-
     /**
      * @Route("/", name="home")
      */

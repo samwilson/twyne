@@ -12,7 +12,6 @@ use Doctrine\ORM\Query\SqlWalker;
  */
 class YearFunction extends FunctionNode
 {
-
     public $date;
 
     public function parse(Parser $parser)
@@ -23,7 +22,7 @@ class YearFunction extends FunctionNode
         $parser->match(Lexer::T_CLOSE_PARENTHESIS);
     }
 
-    public function getSql(SqlWalker $sqlWalker)
+    public function getSql(SqlWalker $sqlWalker): string
     {
         return 'YEAR(' . $this->date->dispatch($sqlWalker) . ')';
     }

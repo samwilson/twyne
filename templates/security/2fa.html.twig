@@ -22,7 +22,7 @@
         </p>
 
         <p>
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token('2fa') }}">
+            <input type="hidden" name="token" value="{{ csrf_token('2fa') }}">
             <span class="field size-1">
                 <input type="submit" value="Enable 2FA" />
             </span>

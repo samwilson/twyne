@@ -25,7 +25,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class TagRepository extends ServiceEntityRepository
 {
-
     /** @var RedirectRepository */
     private $redirectRepository;
 
@@ -143,9 +142,8 @@ class TagRepository extends ServiceEntityRepository
             . ' WHERE post.view_group_id IN (' . $groupList . ')'
             . ' GROUP BY tag.id'
             . ' ORDER BY posts_count DESC';
-        $stmt = $this->getEntityManager()->getConnection()->query($sql);
-        $stmt->execute();
-        $data = $stmt->fetchAll();
+        $stmt = $this->getEntityManager()->getConnection()->executeQuery($sql);
+        $data = $stmt->fetchAllAssociative();
         // Find the max.
         $maxPostCount = 0;
         foreach ($data as $datum) {

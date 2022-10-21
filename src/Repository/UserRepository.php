@@ -7,8 +7,7 @@ use App\Entity\User;
 use App\Entity\UserGroup;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Otp\Otp;
-use ParagonIE\ConstantTime\Encoding as ConstantTimeEncoding;
+use OTPHP\TOTP;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -21,7 +20,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
-
     /** @var UserGroupRepository */
     private $userGroupRepository;
 
@@ -77,7 +75,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function checkTwoFA(string $secret, string $key): bool
     {
         $sanitizedKey = preg_replace('/[^0-9]/', '', $key);
-        $otp = new Otp();
-        return $otp->checkTotp(ConstantTimeEncoding::base32DecodeUpper($secret), $sanitizedKey);
+        $otp = TOTP::create($secret);
+        return $otp->verify($sanitizedKey);
     }
 }

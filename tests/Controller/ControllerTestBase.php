@@ -9,8 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ControllerTestBase extends WebTestCase
 {
-
-    public function setUp()
+    public function setUp(): void
     {
         // Set a fake clock time of 2020-11-15 07:36:41 and register all our classes that use the time() function.
         ClockMock::withClockMock(1605425801);

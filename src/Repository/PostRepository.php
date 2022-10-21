@@ -28,7 +28,6 @@ use Symfony\Component\Process\Process;
  */
 class PostRepository extends ServiceEntityRepository
 {
-
     /** @var ContactRepository */
     private $contactRepository;
 
@@ -134,8 +133,7 @@ class PostRepository extends ServiceEntityRepository
             . " LIMIT 1000";
         $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
         $stmt->bindParam('wkt', $wkt);
-        $stmt->execute();
-        return $stmt->fetchAll();
+        return $stmt->executeQuery()->fetchAllAssociative();
     }
 
     public function createNew(): Post
@@ -153,10 +151,9 @@ class PostRepository extends ServiceEntityRepository
     public function getYears(): array
     {
         $sql = "SELECT YEAR(date) AS year FROM post GROUP BY YEAR(date) ORDER BY year DESC";
-        $stmt = $this->getEntityManager()->getConnection()->query($sql);
-        $stmt->execute();
+        $stmt = $this->getEntityManager()->getConnection()->executeQuery($sql);
         $years = [];
-        foreach ($stmt->fetchAll() as $row) {
+        foreach ($stmt->fetchAllAssociative() as $row) {
             $years[] = $row['year'];
         }
         return $years;
@@ -178,11 +175,11 @@ class PostRepository extends ServiceEntityRepository
             ORDER BY month DESC";
         $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
         $stmt->bindParam('year', $year);
-        $stmt->execute();
+        $results = $stmt->executeQuery();
         $months = [];
         $fmt = new IntlDateFormatter(null, IntlDateFormatter::LONG, IntlDateFormatter::NONE);
         $fmt->setPattern('MMMM');
-        foreach ($stmt->fetchAll() as $row) {
+        foreach ($results->fetchAllAssociative() as $row) {
             $months[$row['month']] = [
                 'name' => $fmt->format(mktime(0, 0, 0, $row['month'], 1, $year)),
                 'count' => $row['count'],

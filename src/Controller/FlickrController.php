@@ -17,7 +17,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class FlickrController extends ControllerBase
 {
-
     private function getPhpFlickr(Settings $settings): PhpFlickr
     {
         $phpFlickr = new PhpFlickr($settings->flickrApiKey(), $settings->flickrApiSecret());

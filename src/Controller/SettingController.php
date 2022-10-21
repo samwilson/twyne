@@ -13,7 +13,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class SettingController extends ControllerBase
 {
-
     /**
      * @Route("/settings", name="settings_save", methods={"POST"})
      * @isGranted("ROLE_ADMIN")

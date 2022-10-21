@@ -6,7 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class SecurityControllerTest extends WebTestCase
 {
-
     public function testRegisterAndLogin()
     {
         $client = static::createClient();
@@ -41,6 +40,8 @@ class SecurityControllerTest extends WebTestCase
             'password' => 'test123',
             '_csrf_token' => '123',
         ], 'POST');
-        $this->assertResponseRedirects('/');
+        $this->assertResponseRedirects('/login');
+        $client->followRedirect();
+        $this->assertSelectorTextContains('.message.success', 'Thanks for registering');
     }
 }

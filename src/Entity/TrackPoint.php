@@ -12,7 +12,6 @@ use DateTimeInterface;
  */
 class TrackPoint
 {
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

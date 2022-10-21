@@ -13,7 +13,6 @@ use League\CommonMark\Extension\SmartPunct\SmartPunctExtension;
  */
 class Markdown
 {
-
     /**
      * Convert Markdown to HTML.
      *

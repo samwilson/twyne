@@ -26,7 +26,7 @@ jobs:
       matrix:
         os: [ 'ubuntu-latest' ]
         # All supported PHP versions https://www.php.net/supported-versions.php
-        php: [ '7.3', '7.4', '8.0' ]
+        php: [ '7.4', '8.0', '8.1' ]
         db: [ 'mariadb:10.3', 'mariadb:10.4', 'mariadb:10.5', 'mysql:5.7', 'mysql:8.0' ]
 
     runs-on: ${{ matrix.os }}

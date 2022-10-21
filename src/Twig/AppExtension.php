@@ -3,7 +3,7 @@
 namespace App\Twig;
 
 use App\Markdown;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use LongitudeOne\Spatial\PHP\Types\Geometry\Point;
 use Symfony\Component\Console\Helper\Helper;
 use Symfony\Component\Process\Process;
 use Twig\Extension\AbstractExtension;

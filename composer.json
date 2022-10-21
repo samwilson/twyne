@@ -4,7 +4,7 @@
     "license": "GPL-3.0-or-later",
     "type": "project",
     "require": {
-        "php": ">=7.3",
+        "php": ">=7.4",
         "ext-ctype": "*",
         "ext-curl": "*",
         "ext-dom": "*",
@@ -12,7 +12,6 @@
         "ext-intl": "*",
         "ext-json": "*",
         "addwiki/mediawiki-api": "^2.7",
-        "alexandret/doctrine2-spatial": "^2.0",
         "composer/package-versions-deprecated": "^1.11",
         "doctrine/doctrine-bundle": "^2.1",
         "doctrine/doctrine-migrations-bundle": "^3.0",
@@ -20,6 +19,7 @@
         "endroid/qr-code": "^4.2",
         "league/commonmark": "^1.6",
         "league/flysystem-aws-s3-v3": "^1.0",
+        "longitude-one/doctrine-spatial": "^3.0",
         "samwilson/phpflickr": "^4.14",
         "sensio/framework-extra-bundle": "^6.0",
         "spomky-labs/otphp": "^10.0",
@@ -79,7 +79,7 @@
         },
         "optimize-autoloader": true,
         "platform": {
-            "php": "7.3"
+            "php": "7.4"
         },
         "preferred-install": {
             "*": "dist"

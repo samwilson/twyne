@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\TrackPointRepository;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use LongitudeOne\Spatial\PHP\Types\Geometry\Point;
 use Doctrine\ORM\Mapping as ORM;
 use DateTimeInterface;
 

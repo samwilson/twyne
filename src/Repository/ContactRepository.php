@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Contact;
+use App\Entity\User;
+use App\Entity\UserGroup;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -28,5 +30,18 @@ class ContactRepository extends ServiceEntityRepository
             $this->getEntityManager()->persist($contact);
         }
         return $contact;
+    }
+
+    public function getRecentPosts(Contact $contact, int $num, ?User $user = null): array
+    {
+        $groupList = $user ? $user->getGroupIdList() : UserGroup::PUBLIC;
+        $sql = "SELECT id, title, url
+            FROM post
+            WHERE author_id = :author_id AND view_group_id IN ($groupList)
+            ORDER BY date DESC
+            LIMIT $num";
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->bindValue('author_id', $contact->getId());
+        return $stmt->executeQuery()->fetchAllAssociative();
     }
 }

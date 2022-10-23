@@ -38,7 +38,7 @@
             <p>The most recent 100 posts by this user are listed.</p>
         {% endif %}
         <ol>
-            {% for post in contact.posts.slice(0, 100) %}
+            {% for post in recent_posts %}
                 <li>
                     <a href="{{ path('post_view', {id:post.id}) }}">P{{ post.id}}:</a> {{ post.title }}
                     {% if post.url %}

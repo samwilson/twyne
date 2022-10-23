@@ -102,6 +102,7 @@ class ContactController extends ControllerBase
         }
         return $this->render('contact/view.html.twig', [
             'contact' => $contact,
+            'recent_posts' => $contactRepository->getRecentPosts($contact, 100, $this->getUser()),
         ]);
     }
 }

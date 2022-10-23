@@ -5,7 +5,7 @@ namespace App\Command;
 use App\Entity\Post;
 use App\Filesystems;
 use App\Repository\PostRepository;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use LongitudeOne\Spatial\PHP\Types\Geometry\Point;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

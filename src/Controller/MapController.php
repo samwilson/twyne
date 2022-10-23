@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use DateTime;
 use DateTimeZone;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use LongitudeOne\Spatial\PHP\Types\Geometry\Point;
 use App\Entity\TrackPoint;
 use App\Repository\TrackPointRepository;
 

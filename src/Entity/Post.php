@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PostRepository;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use LongitudeOne\Spatial\PHP\Types\Geometry\Point;
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;

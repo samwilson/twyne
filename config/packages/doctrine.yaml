@@ -2,10 +2,10 @@ doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
         types:
-            geometry:   CrEOF\Spatial\DBAL\Types\GeometryType
-            point:      CrEOF\Spatial\DBAL\Types\Geometry\PointType
-            polygon:    CrEOF\Spatial\DBAL\Types\Geometry\PolygonType
-            linestring: CrEOF\Spatial\DBAL\Types\Geometry\LineStringType
+            geometry:   LongitudeOne\Spatial\DBAL\Types\GeometryType
+            point:      LongitudeOne\Spatial\DBAL\Types\Geometry\PointType
+            polygon:    LongitudeOne\Spatial\DBAL\Types\Geometry\PolygonType
+            linestring: LongitudeOne\Spatial\DBAL\Types\Geometry\LineStringType
 
     orm:
         auto_generate_proxy_classes: true
@@ -23,10 +23,10 @@ doctrine:
                 year:  App\Doctrine\YearFunction
                 month: App\Doctrine\MonthFunction
             numeric_functions:
-                st_contains:   CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STContains
-                contains:      CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Contains
-                st_area:       CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Area
-                geomfromtext:  CrEOF\Spatial\ORM\Query\AST\Functions\MySql\GeomFromText
-                st_intersects: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STIntersects
-                st_buffer:     CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STBuffer
-                point:         CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Point
+                st_contains:   LongitudeOne\Spatial\ORM\Query\AST\Functions\MySql\STContains
+                contains:      LongitudeOne\Spatial\ORM\Query\AST\Functions\MySql\Contains
+                st_area:       LongitudeOne\Spatial\ORM\Query\AST\Functions\MySql\Area
+                geomfromtext:  LongitudeOne\Spatial\ORM\Query\AST\Functions\MySql\GeomFromText
+                st_intersects: LongitudeOne\Spatial\ORM\Query\AST\Functions\MySql\STIntersects
+                st_buffer:     LongitudeOne\Spatial\ORM\Query\AST\Functions\MySql\STBuffer
+                point:         LongitudeOne\Spatial\ORM\Query\AST\Functions\MySql\Point

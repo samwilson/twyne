@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6ed71e32e437e680d79618bc57c31b42",
+    "content-hash": "e4910d03cb20ebf3b05873e9ab5a4378",
     "packages": [
         {
             "name": "addwiki/mediawiki-api",
@@ -169,77 +169,6 @@
                 "source": "https://github.com/addwiki/mediawiki-datamodel/tree/2.8.0"
             },
             "time": "2021-02-16T19:46:19+00:00"
-        },
-        {
-            "name": "alexandret/doctrine2-spatial",
-            "version": "2.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Alexandre-T/doctrine2-spatial.git",
-                "reference": "84bc0aad3a169b05b9561f8fdf1c417d7ccd3c5d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Alexandre-T/doctrine2-spatial/zipball/84bc0aad3a169b05b9561f8fdf1c417d7ccd3c5d",
-                "reference": "84bc0aad3a169b05b9561f8fdf1c417d7ccd3c5d",
-                "shasum": ""
-            },
-            "require": {
-                "creof/geo-parser": "~2.0",
-                "creof/wkb-parser": "~2.0",
-                "creof/wkt-parser": "~2.0",
-                "doctrine/orm": "^2.7.0",
-                "ext-json": "*",
-                "ext-mbstring": "*",
-                "php": "^7.2"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.16",
-                "php-coveralls/php-coveralls": "~1.0",
-                "phpmd/phpmd": "@stable",
-                "phpunit/phpcov": "*",
-                "phpunit/phpunit": "*",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "CrEOF\\Spatial": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Derek Lambert",
-                    "email": "dlambert@dereklambert.com"
-                },
-                {
-                    "name": "Alexandre Tranchant",
-                    "email": "alexandre.tranchant@gmail.com"
-                }
-            ],
-            "description": "Doctrine2 multi-platform support for spatial types and functions",
-            "keywords": [
-                "database",
-                "dbal",
-                "geography",
-                "geometry",
-                "gis",
-                "mysql",
-                "opengis",
-                "orm",
-                "postgis",
-                "postgresql",
-                "spatial"
-            ],
-            "support": {
-                "source": "https://github.com/Alexandre-T/doctrine2-spatial/tree/2.0.0"
-            },
-            "abandoned": true,
-            "time": "2020-04-01T11:14:04+00:00"
         },
         {
             "name": "aws/aws-crt-php",
@@ -1193,16 +1122,16 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "3.3.8",
+            "version": "3.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "f873a820227bc352d023791775a01f078a30dfe1"
+                "reference": "a5a58773109c0abb13e658c8ccd92aeec8d07f9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/f873a820227bc352d023791775a01f078a30dfe1",
-                "reference": "f873a820227bc352d023791775a01f078a30dfe1",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/a5a58773109c0abb13e658c8ccd92aeec8d07f9e",
+                "reference": "a5a58773109c0abb13e658c8ccd92aeec8d07f9e",
                 "shasum": ""
             },
             "require": {
@@ -1210,21 +1139,21 @@
                 "doctrine/cache": "^1.11|^2.0",
                 "doctrine/deprecations": "^0.5.3|^1",
                 "doctrine/event-manager": "^1.0",
-                "php": "^7.3 || ^8.0",
+                "php": "^7.4 || ^8.0",
                 "psr/cache": "^1|^2|^3",
                 "psr/log": "^1|^2|^3"
             },
             "require-dev": {
-                "doctrine/coding-standard": "9.0.0",
-                "jetbrains/phpstorm-stubs": "2022.1",
-                "phpstan/phpstan": "1.8.2",
+                "doctrine/coding-standard": "10.0.0",
+                "jetbrains/phpstorm-stubs": "2022.2",
+                "phpstan/phpstan": "1.8.3",
                 "phpstan/phpstan-strict-rules": "^1.3",
-                "phpunit/phpunit": "9.5.21",
+                "phpunit/phpunit": "9.5.24",
                 "psalm/plugin-phpunit": "0.17.0",
                 "squizlabs/php_codesniffer": "3.7.1",
-                "symfony/cache": "^5.2|^6.0",
-                "symfony/console": "^2.7|^3.0|^4.0|^5.0|^6.0",
-                "vimeo/psalm": "4.24.0"
+                "symfony/cache": "^5.4|^6.0",
+                "symfony/console": "^4.4|^5.4|^6.0",
+                "vimeo/psalm": "4.27.0"
             },
             "suggest": {
                 "symfony/console": "For helpful console commands such as SQL execution and import of files."
@@ -1284,7 +1213,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/dbal/issues",
-                "source": "https://github.com/doctrine/dbal/tree/3.3.8"
+                "source": "https://github.com/doctrine/dbal/tree/3.4.5"
             },
             "funding": [
                 {
@@ -1300,29 +1229,29 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-08-05T15:35:35+00:00"
+            "time": "2022-09-23T17:48:57+00:00"
         },
         {
             "name": "doctrine/deprecations",
-            "version": "v0.5.3",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/deprecations.git",
-                "reference": "9504165960a1f83cc1480e2be1dd0a0478561314"
+                "reference": "0e2a4f1f8cdfc7a92ec3b01c9334898c806b30de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/deprecations/zipball/9504165960a1f83cc1480e2be1dd0a0478561314",
-                "reference": "9504165960a1f83cc1480e2be1dd0a0478561314",
+                "url": "https://api.github.com/repos/doctrine/deprecations/zipball/0e2a4f1f8cdfc7a92ec3b01c9334898c806b30de",
+                "reference": "0e2a4f1f8cdfc7a92ec3b01c9334898c806b30de",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1|^8.0"
             },
             "require-dev": {
-                "doctrine/coding-standard": "^6.0|^7.0|^8.0",
-                "phpunit/phpunit": "^7.0|^8.0|^9.0",
-                "psr/log": "^1.0"
+                "doctrine/coding-standard": "^9",
+                "phpunit/phpunit": "^7.5|^8.5|^9.5",
+                "psr/log": "^1|^2|^3"
             },
             "suggest": {
                 "psr/log": "Allows logging deprecations via PSR-3 logger implementation"
@@ -1341,9 +1270,9 @@
             "homepage": "https://www.doctrine-project.org/",
             "support": {
                 "issues": "https://github.com/doctrine/deprecations/issues",
-                "source": "https://github.com/doctrine/deprecations/tree/v0.5.3"
+                "source": "https://github.com/doctrine/deprecations/tree/v1.0.0"
             },
-            "time": "2021-03-21T12:59:47+00:00"
+            "time": "2022-05-02T15:47:09+00:00"
         },
         {
             "name": "doctrine/doctrine-bundle",
@@ -1875,33 +1804,36 @@
         },
         {
             "name": "doctrine/migrations",
-            "version": "3.4.2",
+            "version": "3.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/migrations.git",
-                "reference": "f9b4c8032276460afd9dfa62fb215734b4380d90"
+                "reference": "61c6ef3a10b7df43c3b6388a184754f26e58700a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/migrations/zipball/f9b4c8032276460afd9dfa62fb215734b4380d90",
-                "reference": "f9b4c8032276460afd9dfa62fb215734b4380d90",
+                "url": "https://api.github.com/repos/doctrine/migrations/zipball/61c6ef3a10b7df43c3b6388a184754f26e58700a",
+                "reference": "61c6ef3a10b7df43c3b6388a184754f26e58700a",
                 "shasum": ""
             },
             "require": {
                 "composer-runtime-api": "^2",
-                "doctrine/dbal": "^2.11 || ^3.0",
-                "doctrine/deprecations": "^0.5.3",
+                "doctrine/dbal": "^3.3",
+                "doctrine/deprecations": "^0.5.3 || ^1",
                 "doctrine/event-manager": "^1.0",
                 "friendsofphp/proxy-manager-lts": "^1.0",
-                "php": "^7.2 || ^8.0",
+                "php": "^7.4 || ^8.0",
                 "psr/log": "^1.1.3 || ^2 || ^3",
-                "symfony/console": "^3.4 || ^4.4.16 || ^5.0 || ^6.0",
-                "symfony/stopwatch": "^3.4 || ^4.0 || ^5.0 || ^6.0"
+                "symfony/console": "^4.4.16 || ^5.4 || ^6.0",
+                "symfony/stopwatch": "^4.4 || ^5.4 || ^6.0"
+            },
+            "conflict": {
+                "doctrine/orm": "<2.12"
             },
             "require-dev": {
                 "doctrine/coding-standard": "^9",
-                "doctrine/orm": "^2.6",
-                "doctrine/persistence": "^1.3 || ^2.0",
+                "doctrine/orm": "^2.12",
+                "doctrine/persistence": "^2 || ^3",
                 "doctrine/sql-formatter": "^1.0",
                 "ergebnis/composer-normalize": "^2.9",
                 "ext-pdo_sqlite": "*",
@@ -1910,10 +1842,10 @@
                 "phpstan/phpstan-phpunit": "^1.1",
                 "phpstan/phpstan-strict-rules": "^1.1",
                 "phpstan/phpstan-symfony": "^1.1",
-                "phpunit/phpunit": "^8.5 || ^9.4",
-                "symfony/cache": "^3.4.26 || ^4.2.12 || ^5.0 || ^6.0",
-                "symfony/process": "^3.4 || ^4.0 || ^5.0 || ^6.0",
-                "symfony/yaml": "^3.4 || ^4.0 || ^5.0 || ^6.0"
+                "phpunit/phpunit": "^9.5",
+                "symfony/cache": "^4.4 || ^5.4 || ^6.0",
+                "symfony/process": "^4.4 || ^5.4 || ^6.0",
+                "symfony/yaml": "^4.4 || ^5.4 || ^6.0"
             },
             "suggest": {
                 "doctrine/sql-formatter": "Allows to generate formatted SQL with the diff command.",
@@ -1961,7 +1893,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/migrations/issues",
-                "source": "https://github.com/doctrine/migrations/tree/3.4.2"
+                "source": "https://github.com/doctrine/migrations/tree/3.5.2"
             },
             "funding": [
                 {
@@ -1977,7 +1909,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-04-01T06:38:22+00:00"
+            "time": "2022-08-04T14:29:49+00:00"
         },
         {
             "name": "doctrine/orm",
@@ -2301,21 +2233,21 @@
         },
         {
             "name": "endroid/qr-code",
-            "version": "4.3.5",
+            "version": "4.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/endroid/qr-code.git",
-                "reference": "5630e192948b466d418608ecce697465d20260af"
+                "reference": "b60873b14e2ca7bf3c3746f5e032023095a7e05c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/endroid/qr-code/zipball/5630e192948b466d418608ecce697465d20260af",
-                "reference": "5630e192948b466d418608ecce697465d20260af",
+                "url": "https://api.github.com/repos/endroid/qr-code/zipball/b60873b14e2ca7bf3c3746f5e032023095a7e05c",
+                "reference": "b60873b14e2ca7bf3c3746f5e032023095a7e05c",
                 "shasum": ""
             },
             "require": {
-                "bacon/bacon-qr-code": "^2.0",
-                "php": "^7.3||^8.0"
+                "bacon/bacon-qr-code": "^2.0.5",
+                "php": "^7.4||^8.0"
             },
             "require-dev": {
                 "endroid/quality": "dev-master",
@@ -2361,7 +2293,7 @@
             ],
             "support": {
                 "issues": "https://github.com/endroid/qr-code/issues",
-                "source": "https://github.com/endroid/qr-code/tree/4.3.5"
+                "source": "https://github.com/endroid/qr-code/tree/4.6.0"
             },
             "funding": [
                 {
@@ -2369,7 +2301,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-09-17T07:50:43+00:00"
+            "time": "2022-10-04T17:13:41+00:00"
         },
         {
             "name": "friendsofphp/proxy-manager-lts",
@@ -2786,49 +2718,39 @@
         },
         {
             "name": "laminas/laminas-code",
-            "version": "3.4.1",
+            "version": "4.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-code.git",
-                "reference": "1cb8f203389ab1482bf89c0e70a04849bacd7766"
+                "reference": "0337d9265bc2e6376babad8c511500821620cb30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-code/zipball/1cb8f203389ab1482bf89c0e70a04849bacd7766",
-                "reference": "1cb8f203389ab1482bf89c0e70a04849bacd7766",
+                "url": "https://api.github.com/repos/laminas/laminas-code/zipball/0337d9265bc2e6376babad8c511500821620cb30",
+                "reference": "0337d9265bc2e6376babad8c511500821620cb30",
                 "shasum": ""
             },
             "require": {
-                "laminas/laminas-eventmanager": "^2.6 || ^3.0",
-                "laminas/laminas-zendframework-bridge": "^1.0",
-                "php": "^7.1"
-            },
-            "conflict": {
-                "phpspec/prophecy": "<1.9.0"
-            },
-            "replace": {
-                "zendframework/zend-code": "self.version"
+                "php": ">=7.4, <8.2"
             },
             "require-dev": {
-                "doctrine/annotations": "^1.7",
+                "doctrine/annotations": "^1.13.2",
                 "ext-phar": "*",
-                "laminas/laminas-coding-standard": "^1.0",
-                "laminas/laminas-stdlib": "^2.7 || ^3.0",
-                "phpunit/phpunit": "^7.5.16 || ^8.4"
+                "laminas/laminas-coding-standard": "^2.3.0",
+                "laminas/laminas-stdlib": "^3.6.1",
+                "phpunit/phpunit": "^9.5.10",
+                "psalm/plugin-phpunit": "^0.17.0",
+                "vimeo/psalm": "^4.13.1"
             },
             "suggest": {
                 "doctrine/annotations": "Doctrine\\Common\\Annotations >=1.0 for annotation features",
                 "laminas/laminas-stdlib": "Laminas\\Stdlib component"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.4.x-dev",
-                    "dev-develop": "3.5.x-dev",
-                    "dev-dev-4.0": "4.0.x-dev"
-                }
-            },
             "autoload": {
+                "files": [
+                    "polyfill/ReflectionEnumPolyfill.php"
+                ],
                 "psr-4": {
                     "Laminas\\Code\\": "src/"
                 }
@@ -2841,7 +2763,8 @@
             "homepage": "https://laminas.dev",
             "keywords": [
                 "code",
-                "laminas"
+                "laminas",
+                "laminasframework"
             ],
             "support": {
                 "chat": "https://laminas.dev/chat",
@@ -2851,135 +2774,13 @@
                 "rss": "https://github.com/laminas/laminas-code/releases.atom",
                 "source": "https://github.com/laminas/laminas-code"
             },
-            "time": "2019-12-31T16:28:24+00:00"
-        },
-        {
-            "name": "laminas/laminas-eventmanager",
-            "version": "3.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laminas/laminas-eventmanager.git",
-                "reference": "a93fd278c97b2d41ebbce5ba048a24e3e6f580ba"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-eventmanager/zipball/a93fd278c97b2d41ebbce5ba048a24e3e6f580ba",
-                "reference": "a93fd278c97b2d41ebbce5ba048a24e3e6f580ba",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.3 || ~8.0.0 || ~8.1.0"
-            },
-            "conflict": {
-                "zendframework/zend-eventmanager": "*"
-            },
-            "require-dev": {
-                "container-interop/container-interop": "^1.1",
-                "laminas/laminas-coding-standard": "~2.2.1",
-                "laminas/laminas-stdlib": "^3.6",
-                "phpbench/phpbench": "^1.1",
-                "phpspec/prophecy-phpunit": "^2.0",
-                "phpunit/phpunit": "^9.5.5"
-            },
-            "suggest": {
-                "container-interop/container-interop": "^1.1, to use the lazy listeners feature",
-                "laminas/laminas-stdlib": "^2.7.3 || ^3.0, to use the FilterChain feature"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Laminas\\EventManager\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Trigger and listen to events within a PHP application",
-            "homepage": "https://laminas.dev",
-            "keywords": [
-                "event",
-                "eventmanager",
-                "events",
-                "laminas"
-            ],
-            "support": {
-                "chat": "https://laminas.dev/chat",
-                "docs": "https://docs.laminas.dev/laminas-eventmanager/",
-                "forum": "https://discourse.laminas.dev",
-                "issues": "https://github.com/laminas/laminas-eventmanager/issues",
-                "rss": "https://github.com/laminas/laminas-eventmanager/releases.atom",
-                "source": "https://github.com/laminas/laminas-eventmanager"
-            },
             "funding": [
                 {
                     "url": "https://funding.communitybridge.org/projects/laminas-project",
                     "type": "community_bridge"
                 }
             ],
-            "time": "2021-09-07T22:35:32+00:00"
-        },
-        {
-            "name": "laminas/laminas-zendframework-bridge",
-            "version": "1.4.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laminas/laminas-zendframework-bridge.git",
-                "reference": "88bf037259869891afce6504cacc4f8a07b24d0f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-zendframework-bridge/zipball/88bf037259869891afce6504cacc4f8a07b24d0f",
-                "reference": "88bf037259869891afce6504cacc4f8a07b24d0f",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.3 || ~8.0.0 || ~8.1.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^9.3",
-                "psalm/plugin-phpunit": "^0.15.1",
-                "squizlabs/php_codesniffer": "^3.5",
-                "vimeo/psalm": "^4.6"
-            },
-            "type": "library",
-            "extra": {
-                "laminas": {
-                    "module": "Laminas\\ZendFrameworkBridge"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "src/autoload.php"
-                ],
-                "psr-4": {
-                    "Laminas\\ZendFrameworkBridge\\": "src//"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Alias legacy ZF class names to Laminas Project equivalents.",
-            "keywords": [
-                "ZendFramework",
-                "autoloading",
-                "laminas",
-                "zf"
-            ],
-            "support": {
-                "forum": "https://discourse.laminas.dev/",
-                "issues": "https://github.com/laminas/laminas-zendframework-bridge/issues",
-                "rss": "https://github.com/laminas/laminas-zendframework-bridge/releases.atom",
-                "source": "https://github.com/laminas/laminas-zendframework-bridge"
-            },
-            "funding": [
-                {
-                    "url": "https://funding.communitybridge.org/projects/laminas-project",
-                    "type": "community_bridge"
-                }
-            ],
-            "time": "2021-12-21T14:34:37+00:00"
+            "time": "2022-09-13T10:33:30+00:00"
         },
         {
             "name": "league/commonmark",
@@ -3290,6 +3091,83 @@
             "time": "2022-04-17T13:12:02+00:00"
         },
         {
+            "name": "longitude-one/doctrine-spatial",
+            "version": "3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/longitude-one/doctrine-spatial.git",
+                "reference": "c7d2cfbf952ee1a4b44fbf30bf73d06ce3ccaa14"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/longitude-one/doctrine-spatial/zipball/c7d2cfbf952ee1a4b44fbf30bf73d06ce3ccaa14",
+                "reference": "c7d2cfbf952ee1a4b44fbf30bf73d06ce3ccaa14",
+                "shasum": ""
+            },
+            "require": {
+                "creof/geo-parser": "~2.2",
+                "creof/wkb-parser": "~2.3",
+                "creof/wkt-parser": "~2.2",
+                "doctrine/orm": "^2.8.0",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "php": "^7.4|^8.0"
+            },
+            "replace": {
+                "creof/doctrine2-spatial": "*"
+            },
+            "require-dev": {
+                "cache/array-adapter": "^1.1",
+                "dg/bypass-finals": "^1.3",
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "php-coveralls/php-coveralls": "^2.4",
+                "phpmd/phpmd": "^2.10",
+                "phpunit/phpcov": "^8.2",
+                "phpunit/phpunit": "^9.5",
+                "squizlabs/php_codesniffer": "^3.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "LongitudeOne\\Spatial": "lib/",
+                    "LongitudeOne\\Spatial\\Tests": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Derek Lambert",
+                    "email": "dlambert@dereklambert.com"
+                },
+                {
+                    "name": "Alexandre Tranchant",
+                    "email": "alexandre.tranchant@gmail.com"
+                }
+            ],
+            "description": "Doctrine2 multi-platform support for spatial types and functions",
+            "keywords": [
+                "database",
+                "dbal",
+                "geography",
+                "geometry",
+                "gis",
+                "mysql",
+                "opengis",
+                "orm",
+                "postgis",
+                "postgresql",
+                "spatial"
+            ],
+            "support": {
+                "issues": "https://github.com/longitude-one/doctrine-spatial/issues",
+                "source": "https://github.com/longitude-one/doctrine-spatial/tree/3.0.2"
+            },
+            "time": "2022-02-15T13:12:43+00:00"
+        },
+        {
             "name": "monolog/monolog",
             "version": "2.8.0",
             "source": {
@@ -3570,20 +3448,20 @@
         },
         {
             "name": "psr/container",
-            "version": "1.1.1",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/container.git",
-                "reference": "8622567409010282b7aeebe4bb841fe98b58dcaf"
+                "reference": "513e0666f7216c7459170d56df27dfcefe1689ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/container/zipball/8622567409010282b7aeebe4bb841fe98b58dcaf",
-                "reference": "8622567409010282b7aeebe4bb841fe98b58dcaf",
+                "url": "https://api.github.com/repos/php-fig/container/zipball/513e0666f7216c7459170d56df27dfcefe1689ea",
+                "reference": "513e0666f7216c7459170d56df27dfcefe1689ea",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2.0"
+                "php": ">=7.4.0"
             },
             "type": "library",
             "autoload": {
@@ -3612,9 +3490,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-fig/container/issues",
-                "source": "https://github.com/php-fig/container/tree/1.1.1"
+                "source": "https://github.com/php-fig/container/tree/1.1.2"
             },
-            "time": "2021-03-05T17:36:06+00:00"
+            "time": "2021-11-05T16:50:12+00:00"
         },
         {
             "name": "psr/event-dispatcher",
@@ -8816,35 +8694,35 @@
         },
         {
             "name": "ergebnis/composer-normalize",
-            "version": "2.20.0",
+            "version": "2.28.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/composer-normalize.git",
-                "reference": "c172e90a0afa77f2665031dfde3fccb9415bddd7"
+                "reference": "ec75a2bf751f6fec165e9ea0262655b8ca397e5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/composer-normalize/zipball/c172e90a0afa77f2665031dfde3fccb9415bddd7",
-                "reference": "c172e90a0afa77f2665031dfde3fccb9415bddd7",
+                "url": "https://api.github.com/repos/ergebnis/composer-normalize/zipball/ec75a2bf751f6fec165e9ea0262655b8ca397e5c",
+                "reference": "ec75a2bf751f6fec165e9ea0262655b8ca397e5c",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^2.0.0",
-                "ergebnis/json-normalizer": "^1.0.3",
-                "ergebnis/json-printer": "^3.1.1",
-                "justinrainbow/json-schema": "^5.2.11",
+                "ergebnis/json-normalizer": "~2.1.0",
+                "ergebnis/json-printer": "^3.2.0",
+                "justinrainbow/json-schema": "^5.2.12",
                 "localheinz/diff": "^1.1.1",
-                "php": "^7.3 || ^8.0"
+                "php": "^7.4 || ^8.0"
             },
             "require-dev": {
-                "composer/composer": "^2.2.1",
-                "ergebnis/license": "^1.1.0",
-                "ergebnis/php-cs-fixer-config": "^3.4.0",
-                "fakerphp/faker": "^1.17.0",
-                "phpunit/phpunit": "^9.5.11",
-                "psalm/plugin-phpunit": "~0.16.1",
-                "symfony/filesystem": "^5.4.0",
-                "vimeo/psalm": "^4.16.1"
+                "composer/composer": "^2.3.9",
+                "ergebnis/license": "^1.2.0",
+                "ergebnis/php-cs-fixer-config": "^4.4.0",
+                "fakerphp/faker": "^1.19.0",
+                "phpunit/phpunit": "^9.5.21",
+                "psalm/plugin-phpunit": "~0.17.0",
+                "symfony/filesystem": "^5.4.9",
+                "vimeo/psalm": "^4.24.0"
             },
             "type": "composer-plugin",
             "extra": {
@@ -8881,49 +8759,38 @@
                 "issues": "https://github.com/ergebnis/composer-normalize/issues",
                 "source": "https://github.com/ergebnis/composer-normalize"
             },
-            "funding": [
-                {
-                    "url": "https://github.com/localheinz",
-                    "type": "github"
-                }
-            ],
-            "time": "2021-12-28T11:05:22+00:00"
+            "time": "2022-07-05T16:09:10+00:00"
         },
         {
             "name": "ergebnis/json-normalizer",
-            "version": "1.0.3",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/json-normalizer.git",
-                "reference": "4a7f064ce34d5a2e382564565cdd433dbc5b9494"
+                "reference": "2039eb11131a243b9204bf51219baa08935e6b1d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/json-normalizer/zipball/4a7f064ce34d5a2e382564565cdd433dbc5b9494",
-                "reference": "4a7f064ce34d5a2e382564565cdd433dbc5b9494",
+                "url": "https://api.github.com/repos/ergebnis/json-normalizer/zipball/2039eb11131a243b9204bf51219baa08935e6b1d",
+                "reference": "2039eb11131a243b9204bf51219baa08935e6b1d",
                 "shasum": ""
             },
             "require": {
-                "ergebnis/json-printer": "^3.1.1",
+                "ergebnis/json-printer": "^3.2.0",
+                "ergebnis/json-schema-validator": "^2.0.0",
                 "ext-json": "*",
-                "justinrainbow/json-schema": "^5.2.10",
-                "php": "^7.2 || ^8.0"
+                "justinrainbow/json-schema": "^5.2.11",
+                "php": "^7.4 || ^8.0"
             },
             "require-dev": {
-                "ergebnis/license": "^1.1.0",
-                "ergebnis/php-cs-fixer-config": "^2.10.0",
-                "ergebnis/phpstan-rules": "~0.15.3",
-                "ergebnis/test-util": "^1.4.0",
-                "infection/infection": "~0.15.3",
-                "jangregor/phpstan-prophecy": "~0.8.1",
-                "phpstan/extension-installer": "^1.1.0",
-                "phpstan/phpstan": "~0.12.80",
-                "phpstan/phpstan-deprecation-rules": "~0.12.6",
-                "phpstan/phpstan-phpunit": "~0.12.17",
-                "phpstan/phpstan-strict-rules": "~0.12.9",
-                "phpunit/phpunit": "^8.5.14",
-                "psalm/plugin-phpunit": "~0.12.2",
-                "vimeo/psalm": "^3.18"
+                "ergebnis/data-provider": "^1.0.0",
+                "ergebnis/license": "^1.2.0",
+                "ergebnis/php-cs-fixer-config": "^3.4.0",
+                "fakerphp/faker": "^1.17.0",
+                "infection/infection": "~0.25.5",
+                "phpunit/phpunit": "^9.5.11",
+                "psalm/plugin-phpunit": "~0.16.1",
+                "vimeo/psalm": "^4.17.0"
             },
             "type": "library",
             "autoload": {
@@ -8957,41 +8824,35 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-03-06T13:33:57+00:00"
+            "time": "2022-01-04T11:19:55+00:00"
         },
         {
             "name": "ergebnis/json-printer",
-            "version": "3.1.1",
+            "version": "3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/json-printer.git",
-                "reference": "e4190dadd9937a77d8afcaf2b6c42a528ab367d6"
+                "reference": "651cab2b7604a6b338d0d16749f5ea0851a68005"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/json-printer/zipball/e4190dadd9937a77d8afcaf2b6c42a528ab367d6",
-                "reference": "e4190dadd9937a77d8afcaf2b6c42a528ab367d6",
+                "url": "https://api.github.com/repos/ergebnis/json-printer/zipball/651cab2b7604a6b338d0d16749f5ea0851a68005",
+                "reference": "651cab2b7604a6b338d0d16749f5ea0851a68005",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-mbstring": "*",
-                "php": "^7.2 || ^8.0"
+                "php": "^7.4 || ^8.0"
             },
             "require-dev": {
-                "ergebnis/license": "^1.0.0",
-                "ergebnis/php-cs-fixer-config": "^2.2.1",
-                "ergebnis/phpstan-rules": "~0.15.2",
-                "ergebnis/test-util": "^1.1.0",
-                "infection/infection": "~0.15.3",
-                "phpstan/extension-installer": "^1.0.4",
-                "phpstan/phpstan": "~0.12.40",
-                "phpstan/phpstan-deprecation-rules": "~0.12.5",
-                "phpstan/phpstan-phpunit": "~0.12.16",
-                "phpstan/phpstan-strict-rules": "~0.12.4",
-                "phpunit/phpunit": "^8.5.8",
-                "psalm/plugin-phpunit": "~0.11.0",
-                "vimeo/psalm": "^3.14.2"
+                "ergebnis/license": "^1.1.0",
+                "ergebnis/php-cs-fixer-config": "^3.4.0",
+                "fakerphp/faker": "^1.17.0",
+                "infection/infection": "~0.25.5",
+                "phpunit/phpunit": "^9.5.11",
+                "psalm/plugin-phpunit": "~0.16.1",
+                "vimeo/psalm": "^4.16.1"
             },
             "type": "library",
             "autoload": {
@@ -9026,7 +8887,78 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-08-30T12:17:03+00:00"
+            "time": "2021-12-27T12:39:13+00:00"
+        },
+        {
+            "name": "ergebnis/json-schema-validator",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ergebnis/json-schema-validator.git",
+                "reference": "dacd8a47c1cc2c426ec71e952da3609ebe901fac"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ergebnis/json-schema-validator/zipball/dacd8a47c1cc2c426ec71e952da3609ebe901fac",
+                "reference": "dacd8a47c1cc2c426ec71e952da3609ebe901fac",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "justinrainbow/json-schema": "^5.2.10",
+                "php": "^7.4 || ^8.0"
+            },
+            "require-dev": {
+                "ergebnis/composer-normalize": "^2.18.0",
+                "ergebnis/data-provider": "^1.0.0",
+                "ergebnis/license": "^1.1.0",
+                "ergebnis/php-cs-fixer-config": "~3.4.0",
+                "fakerphp/faker": "^1.17.0",
+                "infection/infection": "~0.25.3",
+                "phpunit/phpunit": "~9.5.10",
+                "psalm/plugin-phpunit": "~0.16.1",
+                "vimeo/psalm": "^4.15.0"
+            },
+            "type": "library",
+            "extra": {
+                "composer-normalize": {
+                    "indent-size": 2,
+                    "indent-style": "space"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Ergebnis\\Json\\SchemaValidator\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andreas Möller",
+                    "email": "am@localheinz.com"
+                }
+            ],
+            "description": "Provides a JSON schema validator, building on top of justinrainbow/json-schema.",
+            "homepage": "https://github.com/ergebnis/json-schema-validator",
+            "keywords": [
+                "json",
+                "schema",
+                "validator"
+            ],
+            "support": {
+                "issues": "https://github.com/ergebnis/json-schema-validator/issues",
+                "source": "https://github.com/ergebnis/json-schema-validator"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/localheinz",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-12-13T16:54:56+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -9793,7 +9725,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.3",
+        "php": ">=7.4",
         "ext-ctype": "*",
         "ext-curl": "*",
         "ext-dom": "*",
@@ -9803,7 +9735,7 @@
     },
     "platform-dev": [],
     "platform-overrides": {
-        "php": "7.3"
+        "php": "7.4"
     },
     "plugin-api-version": "2.3.0"
 }

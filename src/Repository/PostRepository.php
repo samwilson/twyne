@@ -6,7 +6,7 @@ use App\Entity\Post;
 use App\Entity\Syndication;
 use App\Entity\User;
 use App\Entity\UserGroup;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use LongitudeOne\Spatial\PHP\Types\Geometry\Point;
 use DateTime;
 use DateTimeZone;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;

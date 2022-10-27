@@ -53,7 +53,7 @@
             </p>
             <p>
                 Is <abbr title="Two-factor authentication">2FA</abbr> configured?
-                {% if contact.user.twoFASecret %}&check;{% else %}&cross;{% endif %}
+                {% if contact.user and contact.user.twoFASecret %}&check;{% else %}&cross;{% endif %}
             </p>
             <p><strong>Groups:</strong></p>
             <p class="fields">

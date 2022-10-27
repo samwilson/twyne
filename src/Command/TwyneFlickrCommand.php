@@ -328,7 +328,7 @@ class TwyneFlickrCommand extends Command
             'latitude' => $photo['latitude'],
             'longitude' => $photo['longitude'],
             'view_group' => $viewGroup,
-            'tags' => join('; ', $tags),
+            'tags' => $tags,
             'new_syndication' => ['url' => $photoUrl, 'label' => 'Flickr'],
         ];
         $this->postRepository->saveFromRequest($post, new Request([], $requestParams), $uploadedFile);

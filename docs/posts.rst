@@ -40,7 +40,7 @@ Author
 
 A Post must have an author (even if that author is the ever-prolific "anon.").
 A site's default author can be set with the ``APP_MAIN_CONTACT`` environment variable,
-which is a reference to the ID of whichever Contact should be the default
+which is a reference to the ID of whichever :ref:`Contact <contacts>` should be the default
 (usually this is the first user, which is created at install-time).
 
 Title

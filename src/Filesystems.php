@@ -80,6 +80,17 @@ class Filesystems
         return $this->tempRoot() . $tempFilePath;
     }
 
+    /**
+     * Remove the local temp copy of a file.
+     *
+     * @return bool Whether the deletion succeeded.
+     */
+    public function removeLocalTempFile(File $file): bool
+    {
+        $tempFilePath = 'local_tmp/' . $file->getPost()->getId() . '.' . $file->getExtension();
+        return $this->temp()->delete($tempFilePath);
+    }
+
     public function write(Filesystem $fs, File $file, string $filePath)
     {
         $storagePath = $this->getDataStoragePath($file);

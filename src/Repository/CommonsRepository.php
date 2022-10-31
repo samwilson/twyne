@@ -71,20 +71,12 @@ class CommonsRepository
      */
     public function upload(Post $post, string $title, string $text, string $caption, array $depicts): array
     {
-        //$outStream = $this->filesystems->read($post->getFile(), File::SIZE_FULL);
-        $tempFilePath = 'commons/' . $post->getId() . '.' . $post->getFile()->getExtension();
-        $tempFs = $this->filesystems->temp();
-        // if (!$tempFs->has($tempFilePath)) {
-        //     $tempFs->writeStream($tempFilePath, $outStream);
-        // }
-        // $fullTempPath = $this->filesystems->tempRoot() . $tempFilePath;
-        $fullTempPath = $this->filesystems->getLocalTempFilepath($post->getFile(), $tempFilePath);
+        $fullTempPath = $this->filesystems->getLocalTempFilepath($post->getFile());
         $api = $this->getMediaWikiApi();
         $uploader = new CommonsFileUploader($api);
         $uploadResult = $uploader->uploadWithResult($title, $fullTempPath, $text);
-        $tempFs->delete($tempFilePath);
-
-        if ($uploadResult['upload']['result'] !== 'Success') {
+        $this->filesystems->removeLocalTempFile($post->getFile());
+        if (isset($uploadResult['upload']['warnings'])) {
             return $uploadResult['upload'];
         }
 

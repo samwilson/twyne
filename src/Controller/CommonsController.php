@@ -108,9 +108,10 @@ class CommonsController extends ControllerBase
                 $formattedVal = is_string($val) ? $val : var_export($val, true);
                 $this->addFlash(self::FLASH_ERROR, "Unable to upload to Commons. $key: $formattedVal");
             }
+        } else {
+            $this->addFlash(self::FLASH_SUCCESS, 'Uploaded: ' . $uploaded['url']);
         }
 
-        $this->addFlash(self::FLASH_SUCCESS, 'Uploaded: ' . $uploaded['url']);
         return $this->redirectToRoute('post_view', ['id' => $id]);
     }
 }

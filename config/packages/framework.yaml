@@ -5,7 +5,7 @@ framework:
 
     session:
         name: twyne
-        handler_id: null
+        handler_id: session.handler.native_file
         storage_factory_id: session.storage.factory.native
         save_path: "%kernel.project_dir%/var/sessions/%kernel.environment%"
         cookie_secure: auto

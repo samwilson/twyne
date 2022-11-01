@@ -72,7 +72,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     /**
      * @inheritDoc
      */
-    public function authenticate(Request $request) /* : Passport; */
+    public function authenticate(Request $request): Passport
     {
         $credentials = [
             'username' => $request->request->get('username'),

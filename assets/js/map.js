@@ -94,10 +94,14 @@ map.on('click', clickEvent => {
 
 const dateInput = document.querySelector('input[name="date"]');
 let estimatedMarker = null;
-dateInput.addEventListener('change', (event) => {
-    setEstimatedLocation(event.target.value);
-});
-setEstimatedLocation(dateInput.value);
+if (dateInput) {
+    dateInput.addEventListener('change', (event) => {
+        setEstimatedLocation(event.target.value);
+    });
+    setEstimatedLocation(dateInput.value);
+} else {
+    setEstimatedLocation('');
+}
 
 function setEstimatedLocation (date) {
     // eslint-disable-next-line no-undef

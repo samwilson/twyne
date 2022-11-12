@@ -99,7 +99,7 @@ if (dateInput) {
         setEstimatedLocation(event.target.value);
     });
     setEstimatedLocation(dateInput.value);
-} else {
+} else if (!mapData || !mapData.latitude || !mapData.longitude) {
     setEstimatedLocation('');
 }
 

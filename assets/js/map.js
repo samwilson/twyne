@@ -49,7 +49,7 @@ function moveMap () {
 
 // Marker.
 let marker = null;
-let defaultView = [-32.054178, 115.7475];
+let defaultView = [0, 0];
 const mapData = document.getElementById('map').dataset;
 if (mapData && mapData.latitude && mapData.longitude) {
     defaultView = new L.LatLng(mapData.latitude, mapData.longitude);
@@ -92,15 +92,47 @@ map.on('click', clickEvent => {
     moveMarker(clickEvent.latlng);
 });
 
+const dateInput = document.querySelector('input[name="date"]');
+let estimatedMarker = null;
+dateInput.addEventListener('change', (event) => {
+    setEstimatedLocation(event.target.value);
+});
+setEstimatedLocation(dateInput.value);
+
+function setEstimatedLocation (date) {
+    // eslint-disable-next-line no-undef
+    const geojsonUrl = appBaseUrl + 'map/estimates.json?date=' + date;
+    const dataRequest = new XMLHttpRequest();
+    dataRequest.addEventListener('load', function () {
+        const data = JSON.parse(this.responseText);
+        const estimatedLatLng = [data.lat, data.lng];
+        if (estimatedMarker === null) {
+            estimatedMarker = new L.Marker(estimatedLatLng, {
+                icon: getIcon('send', [23, 23], [23, 0])
+            });
+            map.addLayer(estimatedMarker);
+        } else {
+            estimatedMarker.setLatLng(estimatedLatLng);
+        }
+        map.setView(estimatedLatLng, 12);
+    });
+    dataRequest.open('GET', geojsonUrl);
+    dataRequest.send();
+}
+
+function getIcon (name, size, anchor) {
+    return L.icon({
+        iconUrl: '/build/images/' + name + '.png',
+        iconRetinaUrl: '/build/images/' + name + '-2x.png',
+        iconSize: size,
+        iconAnchor: anchor
+    });
+}
+
 function makeMarker (latLng) {
     marker = new L.Marker(latLng, {
         draggable: mapData.edit,
-        icon: L.icon({
-            iconUrl: '/build/images/map-pin.png',
-            iconRetinaUrl: '/build/images/map-pin-2x.png',
-            iconSize: [20, 24],
-            iconAnchor: [10, 24]
-        })
+        icon: getIcon('map-pin', [20, 24], [10, 24])
     });
     map.addLayer(marker);
     marker.on('dragend', dragEvent => {

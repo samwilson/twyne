@@ -3,19 +3,19 @@
 namespace App\Controller;
 
 use App\Controller\ControllerBase;
+use App\Entity\TrackPoint;
 use App\Repository\PostRepository;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Repository\TrackPointRepository;
 use App\Settings;
-use Psr\Log\LoggerInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Response;
 use DateTime;
 use DateTimeZone;
+use Doctrine\ORM\EntityManagerInterface;
 use LongitudeOne\Spatial\PHP\Types\Geometry\Point;
-use App\Entity\TrackPoint;
-use App\Repository\TrackPointRepository;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class MapController extends ControllerBase
 {
@@ -36,6 +36,15 @@ class MapController extends ControllerBase
         $this->mapTilesViewConfig = $mapTilesViewConfig;
         $this->mapTilesEditUrl = $mapTilesEditUrl;
         $this->mapTilesEditConfig = $mapTilesEditConfig;
+    }
+
+    /**
+     * @Route("/map/estimates.json", name="mapestimates")
+     */
+    public function estimatedLocations(Request $request, PostRepository $postRepository): Response
+    {
+        $data = $postRepository->findLocationByDate($request->query->get('date'), $this->getUser());
+        return new JsonResponse($data);
     }
 
     /**

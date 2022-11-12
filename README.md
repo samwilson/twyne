@@ -11,3 +11,4 @@ The user manual is at [twyne.readthedocs.io](https://twyne.readthedocs.io/).
 ## Attribution
 
 * [assets/img/feed-icon.png](https://commons.wikimedia.org/wiki/File:Feed-icon.svg) Originally distributed by the Mozilla Foundation under a MPL/GPL/LGPL tri-license.
+* [Feather Icons](https://feathericons.com), MIT license.

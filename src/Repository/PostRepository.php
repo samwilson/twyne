@@ -11,7 +11,6 @@ use DateTime;
 use DateTimeZone;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\AbstractQuery;
-use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Query\Expr\OrderBy;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -112,6 +111,70 @@ class PostRepository extends ServiceEntityRepository
             ->orderBy('p.date', 'DESC')
             ->getQuery()
             ->getResult();
+    }
+
+    public function findLocationByDate(?string $date, ?User $user)
+    {
+        try {
+            $datetime = new DateTime($date ?? '@' . time(), new DateTimeZone('Z'));
+        } catch (Exception $e) {
+            return [
+                'error' => 'invalid-date',
+            ];
+        }
+        $qb1 = $this->createQueryBuilderForPosts($user);
+        $out = $qb1
+            ->andWhere($qb1->expr()->orX('p.date < :date', 'p.date = :date'))
+            ->andWhere('p.location IS NOT NULL')
+            ->setParameter('date', $datetime->format('Y-m-d H:m:s'))
+            ->orderBy('p.date', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+        /** @var Post */
+        $prev = $out[0] ?? null;
+
+        if ($date === null) {
+            return [
+                'lat' => $prev->getLocation()->getLatitude(),
+                'lng' => $prev->getLocation()->getLongitude(),
+            ];
+        }
+
+        $qb2 = $this->createQueryBuilderForPosts($user);
+        $nextResult = $qb2
+            ->andWhere($qb2->expr()->orX('p.date > :date', 'p.date = :date'))
+            ->andWhere('p.location IS NOT NULL')
+            ->setParameter('date', $datetime->format('Y-m-d H:m:s'))
+            ->orderBy('p.date', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+        /** @var Post */
+        $next = $nextResult[0] ?? null;
+
+        if ($next === null) {
+            return [
+                'lat' => $prev->getLocation()->getLatitude(),
+                'lng' => $prev->getLocation()->getLongitude(),
+            ];
+        }
+
+        // This could all be done in one query,
+        // but MariaDB doesn't support ST_LineInterpolatePoint yet: https://jira.mariadb.org/browse/MDEV-17398
+        // @todo Move interpolation logic into SQL.
+
+        $timeDiff = $next->getDate()->getTimestamp() - $prev->getDate()->getTimestamp();
+        $timeFrac = ( $datetime->getTimestamp() - $prev->getDate()->getTimestamp() ) / $timeDiff;
+        $xDiff = ( $next->getLocation()->getX() - $prev->getLocation()->getX() ) * $timeFrac;
+        $yDiff = ( $next->getLocation()->getY() - $prev->getLocation()->getY() ) * $timeFrac;
+        $xFinal = $prev->getLocation()->getX() + $xDiff;
+        $yFinal = $prev->getLocation()->getY() + $yDiff;
+
+        return [
+            'lat' => $yFinal,
+            'lng' => $xFinal,
+        ];
     }
 
     public function findByBoundingBox(string $neLat, string $neLng, string $swLat, string $swLng, ?User $user = null)

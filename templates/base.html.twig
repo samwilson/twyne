@@ -32,7 +32,7 @@
                         <li>Logged in as {{ app.user.username }}</li>
                         <li><a href="{{ path('logout') }}">Log out</a></li>
                     {% else %}
-                        <li><a href="{{ path('login') }}">Login</a></li>
+                        <li><a href="{{ path('login') }}">{{'security.log_in'|trans}}</a></li>
                     {% endif %}
                 </ul>
             </nav>

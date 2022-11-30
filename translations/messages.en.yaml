@@ -7,6 +7,9 @@ forms:
     save: Save
     cancel: Cancel
     delete: Delete
+security:
+    log_in: 'Log in'
+    remember_me: 'Remember me'
 posts:
     replies: 'Replies'
     save_tooltip: 'Save the full version of this file'

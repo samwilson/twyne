@@ -18,7 +18,7 @@ should be asked on the `issue tracker`_ on Github
 For any question that you ask,
 we will endevour to fix up the manual to make it clearer about that topic.
 
-.. _`indieweb`: https://indieweb.org/
+.. _`indieweb`: https://indieweb.org/Twyne
 .. _`issue tracker`: https://github.com/samwilson/twyne/issues
 
 .. toctree::

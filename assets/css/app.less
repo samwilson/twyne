@@ -166,6 +166,11 @@ form {
     .field.size-2 { flex: 2; }
     .field.size-4 { flex: 4; }
     .field.size-6 { flex: 6; }
+
+    @media @mobile {
+      // Each field gets its own line on small screens.
+      display: block;
+    }
   }
 
   textarea,

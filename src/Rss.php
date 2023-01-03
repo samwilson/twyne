@@ -75,7 +75,7 @@ class Rss
     {
         $item = $this->dom->createElement('item');
 
-        $title = $this->dom->createElement('title', $post->getTitle() ?: 'Post ' . $post->getId());
+        $title = $this->dom->createElement('title', $post->getTitle() ?: 'P' . $post->getId());
         $item->appendChild($title);
 
         if ($post->getBody()) {

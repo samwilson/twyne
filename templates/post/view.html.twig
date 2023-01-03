@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {% if post.title %}{{ post.title }}{% else %}Post {{ post.id }}{% endif %}
+    {% if post.title %}{{ post.title }}{% else %}P{{ post.id }}{% endif %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -41,7 +41,8 @@
                         {{ post.url }}
                     {% else %}
                         {{ path('post_view', {id:post.inReplyTo.id}) }}
-                    {% endif %}" class="u-in-reply-to">
+                    {% endif %}"
+                    class="u-in-reply-to">
                         {%- if post.inReplyTo.title -%}
                             {{ post.inReplyTo.title }}
                         {%- else -%}
@@ -52,7 +53,10 @@
             </p>
         {% endif %}
 
-        <h1 class="p-name" itemprop="name">{{ post.title }}</h1>
+        <h1 class="p-name" itemprop="name">
+            {% if post.title %}{{ post.title }}{% else %}P{{ post.id }}{% endif %}
+        </h1>
+
         <p class="meta" itemprop="author">
             By
             {% if post.author.homepage %}<a href="{{ post.author.homepage }}" rel="author" class="p-url">{% endif %}{#

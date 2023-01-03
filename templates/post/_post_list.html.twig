@@ -10,13 +10,19 @@
                                 {{ post.inReplyTo.url }}
                             {% else %}
                                 {{ path('post_view', {id:post.inReplyTo.id}) }}
-                            {% endif %}" class="u-in-reply-to">{{ post.inReplyTo.title }}</a>
+                            {% endif %}" class="u-in-reply-to">
+                                {%- if post.inReplyTo.title -%}
+                                    {{ post.inReplyTo.title }}
+                                {%- else -%}
+                                    P{{ post.inReplyTo.id }}
+                                {%- endif -%}
+                            </a>
                         </p>
                     {% endif %}
                     <h2 class="p-name">
                         <a href="{% if post.url %}{{ post.url }}{% else %}{{ path('post_view', {id: post.id}) }}{% endif %}"
                             class="u-url">
-                            {% if post.title %}{{ post.title }}{% else %}Post {{ post.id }}{% endif %}
+                            {% if post.title %}{{ post.title }}{% else %}P{{ post.id }}{% endif %}
                         </a>
                     </h2>
                 </div>

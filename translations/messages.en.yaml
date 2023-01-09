@@ -12,6 +12,7 @@ security:
     remember_me: 'Remember me'
 posts:
     replies: 'Replies'
+    download_link: 'Download'
     save_tooltip: 'Save the full version of this file'
     delete:
         gone-will-be-added: 'An HTTP status of "410 Gone" will be added for this post. See %redirects_link% for more information.'

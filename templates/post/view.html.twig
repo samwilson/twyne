@@ -126,17 +126,12 @@
             <p>
                 <img src="{{ path('file', {id:post.id, size:'D', ext:'jpg'}) }}" alt="Image of the file attached to this post." />
             </p>
-            <ul>
-                <li>
-                    URL:
-                    <a href="{{ url('file', {id:post.id, size:'F', ext:post.file.extension}) }}">
-                        {{ url('file', {id:post.id, size:'F', ext:post.file.extension}) }}
-                    </a>
-                </li>
-                <li>Size: {{ post.file.size|format_memory }}</li>
-                <li>SHA1 checksum: {{ post.file.checksum }}</li>
-                <li>Type: {{ post.file.mimeType }}</li>
-            </ul>
+            <p>
+                <a href="{{ url('file', {id:post.id, size:'F', ext:post.file.extension}) }}" title="{{'posts.save_tooltip'|trans}}" target="_base">
+                    {{'posts.download_link'|trans}}
+                </a>
+                ({{ post.file.size|format_memory }})
+            </p>
         {% endif %}
 
         {% if post.location %}

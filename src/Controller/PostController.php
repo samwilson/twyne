@@ -314,9 +314,10 @@ class PostController extends ControllerBase
     }
 
     /**
+     * @Route("/P{id}.{ext}", name="post_view_ext", requirements={"id"="\d+", "ext"="(html|tex)"})
      * @Route("/P{id}", name="post_view", requirements={"id"="\d+"})
      */
-    public function viewPost($id, PostRepository $postRepository)
+    public function viewPost($id, PostRepository $postRepository, ?string $ext = null)
     {
         $post = $postRepository->find($id);
         if (!$post) {
@@ -325,12 +326,23 @@ class PostController extends ControllerBase
         if (!$post->canBeViewedBy($this->getUser())) {
             throw $this->createAccessDeniedException();
         }
-        return $this->render('post/view.html.twig', [
+        $viewName = 'post/view.html.twig';
+        if ($ext) {
+            $viewName = "post/view_standalone.$ext.twig";
+        }
+        $response = new Response();
+        if ($ext == 'tex') {
+            $response->headers->set('Content-Disposition', 'inline');
+            $response->headers->set('Content-Type', 'text/plain');
+        } else {
+            $response->headers->set('Content-Type', 'text/html');
+        }
+        return $this->render($viewName, [
             'post' => $post,
             'replies' => $postRepository->findReplies($post, $this->getUser()),
             'prev_post' => $postRepository->findPrevByDate($post, $this->getUser()),
             'next_post' => $postRepository->findNextByDate($post, $this->getUser()),
-        ]);
+        ], $response);
     }
 
     /**

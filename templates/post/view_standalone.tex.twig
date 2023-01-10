@@ -1,0 +1,17 @@
+\documentclass{article}
+
+\usepackage[a4paper]{geometry}
+
+\title{ {% if post.title %}{{ post.title }}{% else %}P{{ post.id }}{% endif %} }
+
+\author{ {{ post.author.name }} }
+
+\date{ {{ post.date.format('Y F j (l), g:iA') }} }
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+{{ post.body|markdownToLatex }}
+
+\end{document}

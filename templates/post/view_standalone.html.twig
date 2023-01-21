@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{{ post.title }}</title>
+    </head>
+    <body>
+        <h1>{{ post.title }}</h1>
+        <p>
+            {{ post.author.name }},
+            {{ post.date.format('Y F j (l), g:iA') }}
+        </p>
+
+        {{ post.body|markdownToHtml }}
+
+        {% if post.file %}
+            <p>
+                <img src="{{ path('file', {id:post.id, size:'D', ext:'jpg'}) }}" />
+            </p>
+        {% endif %}
+
+    </body>
+</html>

@@ -19,6 +19,7 @@ class AppExtension extends AbstractExtension
             // parameter: ['is_safe' => ['html']]
             // Reference: https://twig.symfony.com/doc/2.x/advanced.html#automatic-escaping
             new TwigFilter('markdownToHtml', [$this, 'markdownToHtml'], ['is_safe' => ['html']]),
+            new TwigFilter('markdownToLatex', [$this, 'markdownToLatex'], ['is_safe' => ['html']]),
             new TwigFilter('format_memory', [$this, 'formatMemory'], ['is_safe' => ['html']]),
         ];
     }
@@ -63,6 +64,15 @@ class AppExtension extends AbstractExtension
         }
         $md = new Markdown();
         return $md->toHtml($in);
+    }
+
+    public function markdownToLatex(?string $in): string
+    {
+        if (!$in) {
+            return '';
+        }
+        $md = new Markdown();
+        return $md->toLatex($in);
     }
 
     public function formatMemory(string $bytes): string

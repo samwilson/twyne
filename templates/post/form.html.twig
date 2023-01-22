@@ -87,7 +87,7 @@
             </span>
         </p>
         <p>
-            <label for="tags">Tags (semicolon-separated):</label>
+            <label for="tags">{{'posts.tags_label'|trans}}</label>
             <select multiple id="tags" name="tags[]" class="app-select2" tabindex="80">
                 {% for tag in post.tags %}
                     <option value="{{ tag.title }}" selected>{{ tag.title }}</option>

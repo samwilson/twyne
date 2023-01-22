@@ -182,12 +182,11 @@ class TagRepository extends ServiceEntityRepository
      * @param User|null $user
      * @return array
      */
-    public function search(string $term, int $pageNum, ?User $user = null): array
+    public function search(string $term, int $pageNum, int $pageSize, ?User $user = null): array
     {
         if (empty($term)) {
             return [];
         }
-        $pageSize = 20;
         $groupList = $user ? $user->getGroupIdList() : false;
         if (!$groupList) {
             $groupList = UserGroup::PUBLIC;

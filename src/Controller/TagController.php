@@ -70,16 +70,19 @@ class TagController extends ControllerBase
      */
     public function tagSearchJson(
         Request $request,
-        TagRepository $tagRepository,
-        WikidataRepository $wikidataRepository
+        TagRepository $tagRepository
     ) {
         $q = $request->get('q', '');
         $page = (int)$request->get('page', 1);
-        $tagsResults = $tagRepository->search($q, $page, $this->getUser());
+        $pageSize = 20;
+        $tagsResults = $tagRepository->search($q, $page, $pageSize, $this->getUser());
         $tags = [
             'results' => [],
         ];
-        if ($page === 1) {
+        if ($page === 1 && count($tagsResults) >= $pageSize) {
+            // This is a bit of a cheat: we don't really know if there are more,
+            // but rather than count the full result set every time it's easier
+            // to just keep getting pages till there are no more.
             $tags['pagination'] = ['more' => true];
         }
         foreach ($tagsResults as $tag) {
@@ -87,16 +90,6 @@ class TagController extends ControllerBase
                 'id' => $tag->getTitle(),
                 'text' => $tag->getTitle(),
             ];
-        }
-        // If not many local results are found, augment them with Wikidata items.
-        if ($q && $page > 1 && count($tags['results']) < 10) {
-            $wikidata = $wikidataRepository->search($q);
-            foreach ($wikidata['results'] as $result) {
-                $tags['results'][] = [
-                    'id' => $result['text'],
-                    'text' => $result['text'] . ' (' . $result['id'] . ' - ' . $result['description'] . ')',
-                ];
-            }
         }
         return new JsonResponse($tags);
     }

@@ -200,6 +200,7 @@ class TagRepository extends ServiceEntityRepository
             ->setParameter('q', "%$term%")
             ->andWhere('p.view_group IN (' . $groupList . ')')
             ->orderBy('t.title', 'DESC')
+            ->groupBy('t.id')
             ->setMaxResults($pageSize)
             ->setFirstResult(($pageNum - 1) * $pageSize)
             ->getQuery()

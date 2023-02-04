@@ -25,9 +25,11 @@ jobs:
     strategy:
       matrix:
         os: [ 'ubuntu-latest' ]
-        # All supported PHP versions https://www.php.net/supported-versions.php
-        php: [ '7.4', '8.0', '8.1' ]
-        db: [ 'mariadb:10.3', 'mariadb:10.4', 'mariadb:10.5', 'mysql:5.7', 'mysql:8.0' ]
+        # All supported PHP versions (only dropping unsupported when necessary). https://www.php.net/supported-versions.php
+        php: [ '7.4', '8.0', '8.1', '8.2' ]
+        # MariaDB: Oldest and newest supported. https://mariadb.org/download
+        # MySQL: previous and current GA versions. https://dev.mysql.com/downloads/mysql/
+        db: [ 'mariadb:10.3.37', 'mariadb:10.10.2', 'mysql:5.7', 'mysql:8.0' ]
 
     runs-on: ${{ matrix.os }}
 
@@ -51,12 +53,10 @@ jobs:
         # This differs from what's in the matrix, so we do it manually below.
       run: |
         export SERVER_VERSION="8.0"
-        if [ "${{ matrix.db }}" = "mariadb:10.3" ]; then
-            SERVER_VERSION="mariadb-10.3.23"
-        elif [ "${{ matrix.db }}" = "mariadb:10.4" ]; then
-            SERVER_VERSION="mariadb-10.4.14"
-        elif [ "${{ matrix.db }}" = "mariadb:10.5" ]; then
-            SERVER_VERSION="mariadb-10.5.5"
+        if [ "${{ matrix.db }}" = "mariadb:10.3.37" ]; then
+            SERVER_VERSION="mariadb-10.3.37"
+        elif [ "${{ matrix.db }}" = "mariadb:10.10.2" ]; then
+            SERVER_VERSION="mariadb-10.11.1"
         elif [ "${{ matrix.db }}" = "mysql:5.7" ]; then
             SERVER_VERSION="5.7"
         fi

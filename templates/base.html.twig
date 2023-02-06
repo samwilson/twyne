@@ -15,8 +15,26 @@
     </head>
     <body>
         <header>
+            <div class="opaque-underlay"></div>
+            <nav class="main-menu menu-closed">
+                <div>
+                    <img src="{{ asset('build/images/menu.svg') }}" alt="Main menu icon." />
+                </div>
+                <ul>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li><a href="{{ path('contacts') }}">Contacts</a></li>
+                        <li><a href="{{ path('settings') }}">Settings</a></li>
+                    {% endif %}
+                    {% if app.user %}
+                        <li><span>Logged in as {{ app.user.username }}</span></li>
+                        <li><a href="{{ path('logout') }}">Log out</a></li>
+                    {% else %}
+                        <li><a href="{{ path('login') }}">{{'security.log_in'|trans}}</a></li>
+                    {% endif %}
+                <ul>
+            </nav>
             <h1><a href="{{ path('home') }}">{{ settings.siteName }}</a></h1>
-            <nav>
+            <nav class="main-nav">
                 <ul>
                     <li><a href="{{ path('home') }}">Home</a></li>
                     <li><a href="{{ path('tags') }}">Tags</a></li>
@@ -25,14 +43,6 @@
                     {% if is_granted('ROLE_ADMIN') %}
                         <li><a href="{{ path('post_create') }}">New post</a></li>
                         <li><a href="{{ path('post_upload') }}">Upload</a></li>
-                        <li><a href="{{ path('contacts') }}">Contacts</a></li>
-                        <li><a href="{{ path('settings') }}">Settings</a></li>
-                    {% endif %}
-                    {% if app.user %}
-                        <li>Logged in as {{ app.user.username }}</li>
-                        <li><a href="{{ path('logout') }}">Log out</a></li>
-                    {% else %}
-                        <li><a href="{{ path('login') }}">{{'security.log_in'|trans}}</a></li>
                     {% endif %}
                 </ul>
             </nav>

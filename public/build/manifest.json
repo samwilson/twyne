@@ -1,6 +1,6 @@
 {
-  "build/app.css": "/build/app.5e9a0e52.css",
-  "build/app.js": "/build/app.6dc3586a.js",
+  "build/app.css": "/build/app.72b68240.css",
+  "build/app.js": "/build/app.89a670f8.js",
   "build/map.css": "/build/map.fa728e1a.css",
   "build/map.js": "/build/map.3c3bd4fc.js",
   "build/frontend.css": "/build/frontend.709f92e8.css",
@@ -17,6 +17,7 @@
   "build/images/layers.png": "/build/images/layers.416d9136.png",
   "build/images/map-pin.png": "/build/images/map-pin.png",
   "build/images/send.png": "/build/images/send.png",
+  "build/images/menu.svg": "/build/images/menu.svg",
   "build/images/map-pin.svg": "/build/images/map-pin.svg",
   "build/images/send.svg": "/build/images/send.svg",
   "build/images/wikidata-logo.png": "/build/images/wikidata-logo.png"

@@ -4,6 +4,7 @@
 @import "security";
 @import "contact";
 @import "tags";
+@import "site-header";
 
 @font-color: #283434;
 @font-color-light: #768282;
@@ -112,35 +113,6 @@ body > footer {
 a {
   color: #4e4efa;
   text-decoration: none;
-}
-
-body > header {
-  flex: 2;
-  text-align: center;
-  border-bottom: @border-primary;
-  padding: 0.5rem;
-  background-color: #f1f8f2;
-  a { color: @font-color; }
-
-  h1 {
-    color: @font-color;
-    margin: 0;
-    font-variant: small-caps;
-    letter-spacing: 0.1em;
-  }
-
-  nav ul {
-    display: flex;
-    flex-wrap: wrap;
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  nav ul li {
-    flex: 1;
-    padding: 0 0.2em;
-  }
 }
 
 a:hover {

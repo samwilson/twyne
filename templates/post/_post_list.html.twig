@@ -2,36 +2,11 @@
     {% for post in posts %}
         <li class="post h-entry">
             <header>
-                <div class="titles">
-                    {% if post.inReplyTo %}
-                        <p class="in-reply-to">
-                            In reply to:
-                            <a href="{% if post.inReplyTo.url %}
-                                {{ post.inReplyTo.url }}
-                            {% else %}
-                                {{ path('post_view', {id:post.inReplyTo.id}) }}
-                            {% endif %}" class="u-in-reply-to">
-                                {%- if post.inReplyTo.title -%}
-                                    {{ post.inReplyTo.title }}
-                                {%- else -%}
-                                    P{{ post.inReplyTo.id }}
-                                {%- endif -%}
-                            </a>
-                        </p>
-                    {% endif %}
-                    <h2 class="p-name">
-                        <a href="{% if post.url %}{{ post.url }}{% else %}{{ path('post_view', {id: post.id}) }}{% endif %}"
-                            class="u-url">
-                            {% if post.title %}{{ post.title }}{% else %}P{{ post.id }}{% endif %}
-                        </a>
-                    </h2>
-                </div>
                 <span class="author u-author h-card">
-                    By
                     {% if post.author.homepage %}<a href="{{ post.author.homepage }}" rel="author" class="p-url">{% endif %}{#
                         #}<span class="p-name">{{ post.author.name }}</span>{#
                     #}{% if post.author.homepage %}</a>{% endif %}{#
-                    #}.
+                    #}
                 </span>
                 <a href="{{ path('month', {year: post.date.format('Y'), month:post.date.format('m')}) }}" class="date">
                     <time datetime="{{ post.date.format('Y-m-d\\TH:i:s\\Z') }}" class="dt-published">
@@ -40,6 +15,36 @@
                 </a>
             </header>
             <article class="e-content">
+                {% if post.title or post.inReplyTo %}
+                    <div class="titles">
+                        {% if post.inReplyTo %}
+                            {% set replyToLink %}
+                                <a href="{% if post.inReplyTo.url %}
+                                    {{ post.inReplyTo.url }}
+                                {% else %}
+                                    {{ path('post_view', {id:post.inReplyTo.id}) }}
+                                {% endif %}" class="u-in-reply-to"><strong>
+                                    {%- if post.inReplyTo.title -%}
+                                        {{ post.inReplyTo.title }}
+                                    {%- else -%}
+                                        this post
+                                    {%- endif -%}
+                                </strong></a>
+                            {% endset %}
+                            <p class="in-reply-to">
+                                {{ 'posts.in_reply_to'|trans( { '%link%': replyToLink, '%author%': post.inReplyTo.author.name } )|raw }}
+                            </p>
+                        {% endif %}
+                        {% if post.title %}
+                            <h2 class="p-name">
+                                <a href="{% if post.url %}{{ post.url }}{% else %}{{ path('post_view', {id: post.id}) }}{% endif %}"
+                                    class="u-url">
+                                    {{ post.title }}
+                                </a>
+                            </h2>
+                        {% endif %}
+                    </div>
+                {% endif %}
                 {% if post.file %}
                     <p class="file">
                         <img src="{{ path('file', {id: post.id, size: 'D', ext: 'jpg'}) }}"

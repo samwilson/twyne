@@ -13,6 +13,7 @@ security:
 posts:
     tags_label: 'Tags:'
     replies: 'Replies'
+    in_reply_to: 'In reply to %link% by %author%.'
     download_link: 'Download'
     save_tooltip: 'Save the full version of this file'
     delete:

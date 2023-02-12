@@ -9,10 +9,9 @@
             year: 'numeric',
             month: 'long',
             day: 'numeric',
-            weekday: 'long',
             hour: 'numeric',
             minute: 'numeric'
         };
-        timeEl.innerText = date.toLocaleString([], options) + '.';
+        timeEl.innerText = date.toLocaleString([], options);
     });
 }());

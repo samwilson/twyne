@@ -13,22 +13,16 @@ h1 { text-align: center; }
     header {
       display: flex;
       background-color: #f4f6fb;
-      padding: 0 0 0.2em 0;
+      padding: 0.2em 0;
       align-items: center;
 
       & > * { padding: 0 0.8em; }
 
-      .titles {
-        flex: 2;
+      a { color: inherit; }
 
-        p,
-        h2 {
-          margin: 0;
-          padding: 0;
-        }
+      .author {
+        font-weight: bolder;
       }
-
-      .in-reply-to { font-size: smaller; }
 
       a.date {
         flex: 1;
@@ -48,8 +42,26 @@ h1 { text-align: center; }
       }
     }
 
+    .titles {
+      text-align: center;
+
+      .in-reply-to { font-size: smaller; }
+      h2 { font-size: 1.3em; }
+
+      p,
+      h2 {
+        margin: 0;
+        padding: 0;
+      }
+
+      a {
+        color: inherit;
+      }
+    }
+
     article {
       padding: 10px;
+      p:first-child { margin-top: 0; }
       p.file { text-align: center; }
       img { max-width: 100%; }
     }

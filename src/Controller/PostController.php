@@ -20,14 +20,14 @@ use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
 use IntlDateFormatter;
 use PHPUnit\Util\Json;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PostController extends ControllerBase
@@ -84,7 +84,7 @@ class PostController extends ControllerBase
         CommonsRepository $commonsRepository,
         $id = null
     ) {
-        $post = $id ? $postRepository->find($id) : new Post();
+        $post = $id ? $postRepository->find($id) : $postRepository->factory();
         if ($request->get('in_reply_to')) {
             $post->setInReplyTo($postRepository->find($request->get('in_reply_to')));
         }

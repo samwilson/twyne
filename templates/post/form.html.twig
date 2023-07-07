@@ -59,7 +59,7 @@
                 <label for="view_group">Viewers:</label>
                 <select name="view_group" id="view_group" tabindex="50">
                     {% for g in user_groups %}
-                        <option value="{{ g.id }}" {% if post.isSelectedGroup(g) %}selected{% endif %}>{{ g.name }}</option>
+                        <option value="{{ g.id }}" {% if post.getViewGroup.id == g.id %}selected{% endif %}>{{ g.name }}</option>
                     {% endfor %}
                 </select>
             </span>

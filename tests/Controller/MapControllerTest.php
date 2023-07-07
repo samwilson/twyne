@@ -2,8 +2,8 @@
 
 namespace App\Tests;
 
-use App\Tests\Controller\ControllerTestBase;
 use App\Repository\TrackPointRepository;
+use App\Tests\Controller\ControllerTestBase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class MapControllerTest extends ControllerTestBase

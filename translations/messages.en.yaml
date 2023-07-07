@@ -28,6 +28,7 @@ posts:
         is_family: 'Famiy'
 settings:
     title: 'Site Settings'
+    default_group: 'Default group:'
     location_legend: 'GPS tracking'
     overland_key: 'Overland key:'
     overland_help: "Enter the following URL in %overland_link% as the 'Receiver Endpoint':"

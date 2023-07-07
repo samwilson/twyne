@@ -4,6 +4,8 @@ namespace App;
 
 use App\Entity\Contact;
 use App\Entity\Setting;
+use App\Entity\User;
+use App\Entity\UserGroup;
 use App\Repository\ContactRepository;
 use App\Repository\SettingRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -124,6 +126,11 @@ class Settings
             $this->mainContact = $this->contactRepository->find($this->mainContactId ?? 1);
         }
         return $this->mainContact;
+    }
+
+    public function defaultGroup(): int
+    {
+        return (int)($this->getData()['default_group'] ?? UserGroup::PUBLIC);
     }
 
     public function getSiteJs(): string

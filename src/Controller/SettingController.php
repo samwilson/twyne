@@ -2,13 +2,14 @@
 
 namespace App\Controller;
 
+use App\Repository\UserGroupRepository;
 use App\Settings;
-use Samwilson\PhpFlickr\PhpFlickr;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\HttpFoundation\Response;
 use OAuth\Common\Storage\Session;
+use Samwilson\PhpFlickr\PhpFlickr;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class SettingController extends ControllerBase
@@ -31,10 +32,11 @@ class SettingController extends ControllerBase
      * @Route("/settings", name="settings")
      * @isGranted("ROLE_ADMIN")
      */
-    public function index()
+    public function index(UserGroupRepository $userGroupRepository)
     {
         return $this->render('setting/index.html.twig', [
             'controller_name' => 'SettingController',
+            'user_groups' => $userGroupRepository->findAll(),
         ]);
     }
 

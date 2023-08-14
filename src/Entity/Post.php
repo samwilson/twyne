@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\PostRepository;
-use LongitudeOne\Spatial\PHP\Types\Geometry\Point;
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
@@ -12,6 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
 use Doctrine\ORM\Mapping\Table;
+use LongitudeOne\Spatial\PHP\Types\Geometry\Point;
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
@@ -237,6 +237,10 @@ class Post
     public function setInReplyTo(?self $in_reply_to): self
     {
         $this->in_reply_to = $in_reply_to;
+        if (!$this->getId()) {
+            // For new posts, set the view group to match the parent post.
+            $this->setViewGroup($in_reply_to->getViewGroup());
+        }
 
         return $this;
     }
@@ -328,22 +332,5 @@ class Post
             return true;
         }
         return $user && $user->isInGroup($this->getViewGroup());
-    }
-
-    /**
-     * Find out whether a given group should be selected for this post.
-     * @param UserGroup $group
-     * @return bool
-     */
-    public function isSelectedGroup(UserGroup $group): bool
-    {
-        $g = false;
-        if ($this->getViewGroup()) {
-            $g = $this->getViewGroup();
-        }
-        if ($this->getInReplyTo()) {
-            $g = $this->getInReplyTo()->getViewGroup();
-        }
-        return $g && $g->getId() == $group->getId();
     }
 }

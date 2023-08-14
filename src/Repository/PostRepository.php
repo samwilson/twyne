@@ -6,7 +6,7 @@ use App\Entity\Post;
 use App\Entity\Syndication;
 use App\Entity\User;
 use App\Entity\UserGroup;
-use LongitudeOne\Spatial\PHP\Types\Geometry\Point;
+use App\Settings;
 use DateTime;
 use DateTimeZone;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -16,6 +16,7 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use IntlDateFormatter;
+use LongitudeOne\Spatial\PHP\Types\Geometry\Point;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Process\Process;
@@ -42,13 +43,17 @@ class PostRepository extends ServiceEntityRepository
     /** @var UserGroupRepository */
     private $userGroupRepository;
 
+    /** @var Settings */
+    private $settings;
+
     public function __construct(
         ManagerRegistry $registry,
         ContactRepository $contactRepository,
         TagRepository $tagRepository,
         FileRepository $fileRepository,
         SyndicationRepository $syndicationRepository,
-        UserGroupRepository $userGroupRepository
+        UserGroupRepository $userGroupRepository,
+        Settings $settings
     ) {
         parent::__construct($registry, Post::class);
         $this->contactRepository = $contactRepository;
@@ -56,6 +61,7 @@ class PostRepository extends ServiceEntityRepository
         $this->fileRepository = $fileRepository;
         $this->syndicationRepository = $syndicationRepository;
         $this->userGroupRepository = $userGroupRepository;
+        $this->settings = $settings;
     }
 
     private function createQueryBuilderForPosts(?User $user = null): QueryBuilder
@@ -66,6 +72,14 @@ class PostRepository extends ServiceEntityRepository
         }
         return $this->createQueryBuilder('p')
             ->andWhere("p.view_group IN ($groupList)");
+    }
+
+    public function factory(): Post
+    {
+        $post = new Post();
+        $ug = $this->userGroupRepository->find($this->settings->defaultGroup());
+        $post->setViewGroup($ug);
+        return $post;
     }
 
     /**

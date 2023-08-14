@@ -18,8 +18,18 @@
         </p>
 
         <p class="fields">
-            <label for="user_registrations">Allow user registrations?</label>
-            <input id="user_registrations" type="checkbox" {% if settings.userRegistrations %}checked{% endif %} name="settings[user_registrations]" />
+            <span class="field size-1">
+                <label for="user_registrations">Allow user registrations?</label>
+                <input id="user_registrations" type="checkbox" {% if settings.userRegistrations %}checked{% endif %} name="settings[user_registrations]" />
+            </span>
+            <span class="field size-4">
+                <label for="default_group">{{ 'settings.default_group'|trans }}</label>
+                <select id="default_group" name="settings[default_group]">
+                    {% for group in user_groups %}
+                        <option value="{{ group.id }}" {% if group.id == settings.defaultGroup %}selected{% endif %}>{{ group.name }}</option>
+                    {% endfor %}
+                </select>
+            </span>
         </p>
 
         <p class="fields">

@@ -2,7 +2,7 @@
     "license": "GPL-3.0-or-later",
     "private": true,
     "devDependencies": {
-        "@symfony/webpack-encore": "^1.8.2",
+        "@symfony/webpack-encore": "^4.1.1",
         "codemirror": "^5.65.9",
         "core-js": "^3.26.0",
         "eslint": "^7.32.0",

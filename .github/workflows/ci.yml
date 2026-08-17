@@ -26,7 +26,7 @@ jobs:
       matrix:
         os: [ 'ubuntu-latest' ]
         # All supported PHP versions (only dropping unsupported when necessary). https://www.php.net/supported-versions.php
-        php: [ '7.4', '8.0', '8.1', '8.2' ]
+        php: [ '8.2', '8.3', '8.4', '8.5' ]
         # MariaDB: Oldest and newest supported. https://mariadb.org/download
         # MySQL: previous and current GA versions. https://dev.mysql.com/downloads/mysql/
         db: [ 'mariadb:10.3.37', 'mariadb:10.10.2', 'mysql:5.7', 'mysql:8.0' ]

@@ -107,7 +107,7 @@
             "./bin/console lint:yaml ./translations",
             "phpcs",
             "minus-x check .",
-            "phpunit --stop-on-failure --stop-on-error"
+            "phpunit --stop-on-failure --stop-on-error --display-deprecations --display-phpunit-deprecations"
         ]
     }
 }

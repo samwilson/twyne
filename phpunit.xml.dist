@@ -13,7 +13,7 @@
         <server name="APP_REQUIRE_2FA" value="false" />
         <server name="SHELL_VERBOSITY" value="-1" />
         <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
-        <server name="SYMFONY_PHPUNIT_VERSION" value="9.5" />
+        <server name="SYMFONY_PHPUNIT_VERSION" value="10.5" />
         <env name="KERNEL_CLASS" value="\App\Kernel" />
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled" />
     </php>
@@ -24,17 +24,13 @@
         </testsuite>
     </testsuites>
 
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">src</directory>
-        </whitelist>
-    </filter>
+<!--    <filter>-->
+<!--        <whitelist processUncoveredFilesFromWhitelist="true">-->
+<!--            <directory suffix=".php">src</directory>-->
+<!--        </whitelist>-->
+<!--    </filter>-->
 
      <extensions>
-        <extension class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension"/>
+         <bootstrap class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension"/>
     </extensions>
-
-    <listeners>
-        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
-    </listeners>
 </phpunit>

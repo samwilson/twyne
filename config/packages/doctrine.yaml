@@ -1,11 +1,14 @@
 doctrine:
     dbal:
-        url: '%env(resolve:DATABASE_URL)%'
         types:
             geometry:   LongitudeOne\Spatial\DBAL\Types\GeometryType
             point:      LongitudeOne\Spatial\DBAL\Types\Geometry\PointType
             polygon:    LongitudeOne\Spatial\DBAL\Types\Geometry\PolygonType
             linestring: LongitudeOne\Spatial\DBAL\Types\Geometry\LineStringType
+        connections:
+            default:
+                url: '%env(resolve:DATABASE_URL)%'
+                use_savepoints: true
 
     orm:
         auto_generate_proxy_classes: true

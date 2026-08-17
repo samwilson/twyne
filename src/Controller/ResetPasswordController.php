@@ -82,13 +82,7 @@ class ResetPasswordController extends ControllerBase
      */
     public function checkEmail(Request $request): Response
     {
-        $resetToken = $this->getTokenObjectFromSession();
-        if (!$resetToken) {
-            return $this->redirectToRoute('reset');
-        }
-        return $this->render('reset_password/check_email.html.twig', [
-            'resetToken' => $resetToken,
-        ]);
+        return $this->render('reset_password/check_email.html.twig');
     }
 
     /**

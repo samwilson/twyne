@@ -24,16 +24,29 @@ jobs:
 
     strategy:
       matrix:
-        os: [ 'ubuntu-latest' ]
-        # All supported PHP versions (only dropping unsupported when necessary). https://www.php.net/supported-versions.php
-        php: [ '8.2', '8.3', '8.4', '8.5' ]
-        # MariaDB: Oldest and newest supported. https://mariadb.org/download
-        # MySQL: previous and current GA versions. https://dev.mysql.com/downloads/mysql/
-        db: [ 'mariadb:10.3.37', 'mariadb:10.10.2', 'mysql:5.7', 'mysql:8.0' ]
+        # PHP: https://www.php.net/supported-versions.php
+        # MariaDB: https://mariadb.org/download
+        # MySQL: https://dev.mysql.com/downloads/mysql/
+        include:
+          # Minimum supported versions
+          - php: '8.2'
+            db: 'mariadb:10.6'
+          # Current stable versions
+          - php: '8.3'
+            db: 'mariadb:11.4'
+          # Forward compatibility
+          - php: '8.4'
+            db: 'mysql:9.1'
+          # Old PHP with new DB
+          - php: '8.2'
+            db: 'mysql:9.1'
+          # New PHP with old DB
+          - php: '8.4'
+            db: 'mariadb:10.6'
 
-    runs-on: ${{ matrix.os }}
+    runs-on: 'ubuntu-latest'
 
-    name: PHP ${{ matrix.php }} on ${{ matrix.os }} with ${{ matrix.db }}
+    name: PHP ${{ matrix.php }}, ${{ matrix.db }}
 
     steps:
     - name: Checkout

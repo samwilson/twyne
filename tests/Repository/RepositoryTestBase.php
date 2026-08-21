@@ -7,8 +7,8 @@ use App\Entity\Post;
 use App\Entity\Contact;
 use App\Repository\TagRepository;
 use App\Repository\PostRepository;
-use Symfony\Bridge\PhpUnit\ClockMock;
 use App\Test\Repository\PostRepositoryTest;
+use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 abstract class RepositoryTestBase extends KernelTestCase

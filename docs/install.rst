@@ -1,14 +1,14 @@
 Installing and upgrading
 ========================
 
-Prerequesites
+Prerequisites
 -------------
 
 To install and use Twyne,
 you need the following software on your web server:
 
 1. a web server with PHP 7.3 or above;
-2. MariaDB (10.3 or above) or MySQL (5.7 or above)
+2. MariaDB (10.3 or above) or MySQL (5.7 or above);
 3. command-line access to that server;
 4. the Git_ version control system;
 5. the PHP package manager, `Composer`_;
@@ -20,8 +20,8 @@ you need the following software on your web server:
 .. _ExifTool: https://exiftool.org/
 .. _ImageMagick: https://imagemagick.org/index.php
 
-Downloading
------------
+Installing
+----------
 
 First, clone the latest version of the source code
 into a non web-accessible location on your server:
@@ -30,7 +30,9 @@ into a non web-accessible location on your server:
 
    git clone https://github.com/samwilson/twyne.git /var/www/twyne
 
-Create a new database and grant access to it to a new user.
+And then copy `.env` to your own `.env.local` file that will hold all your own configuration.
+
+Next, create a new database and grant access to it to a new user.
 Add the details of this database and the user's credentials
 to the ``.env.local`` file in the ``DATABASE_URL`` key:
 
@@ -89,7 +91,7 @@ This script can be run automatically on a daily or weekly basis
 
 Prior to Twyne 0.30.0, location data was not read from any uploaded files that had GPS data in them
 (i.e. usually photographs).
-To retrospecively add this data, run
+To retrospectively add this data, run
 
 .. code-block:: shell
 

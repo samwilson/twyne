@@ -50,7 +50,7 @@ class PostRepositoryTest extends RepositoryTestBase
     /**
      * A post can be saved from data in a Request, including an uploaded file.
      *
-     * @dataProvider provideSaveFromRequest()
+     * @dataProvider provideSaveFromRequest
      */
     public function testSaveFromRequest($postParams, $filepath, $title, $date, $location = null)
     {
@@ -66,7 +66,7 @@ class PostRepositoryTest extends RepositoryTestBase
         $this->assertequals($location, $post->getLocation());
     }
 
-    public function provideSaveFromRequest()
+    public static function provideSaveFromRequest()
     {
         return [
             [

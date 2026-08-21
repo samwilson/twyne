@@ -26,7 +26,7 @@ class MarkdownTest extends TestCase
             ["foo\nbar", "<p>foo\nbar</p>"],
             ["foo\n\nbar", "<p>foo</p>\n<p>bar</p>"],
             // Lists.
-            ["auf\n\n* *emph* word\n* bar", "<p>auf</p>\n<ul>\n<li>\n<em>emph</em> word</li>\n<li>bar</li>\n</ul>"],
+            ["auf\n\n* *emph* word\n* bar", "<p>auf</p>\n<ul>\n<li><em>emph</em> word</li>\n<li>bar</li>\n</ul>"],
             ["1. foo\n2. bar\n", "<ol>\n<li>foo</li>\n<li>bar</li>\n</ol>"],
             ["1. foo\n2. bar\n\nbaz", "<ol>\n<li>foo</li>\n<li>bar</li>\n</ol>\n<p>baz</p>"],
             ['Not a list 10.20 just numbers.', '<p>Not a list 10.20 just numbers.</p>'],
